@@ -60,3 +60,37 @@
         transition: 200ms;
     }
 }
+
+.boton-regresar{
+    animation: breathing 1s infinite;
+}
+
+@keyframes breathing {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+/*backgorund space animation for error 404*/
+.background404{
+
+    background: gradient(linear, left top, right top, from(#000000), to(#353535), color-stop(0.5, #071033));
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    animation: space 10s infinite;
+}
+
+@keyframes space {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 100% 0;
+    }
+}
