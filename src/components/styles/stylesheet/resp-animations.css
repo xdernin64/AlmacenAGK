@@ -1,0 +1,62 @@
+@media (min-width: 770px) {
+    .option:hover {
+        font-family: 'Courier New', Courier, monospace;
+        background-color: #f8f8f8;
+        color: rgb(26, 26, 26);
+        height: 100%;
+        font-size: 19px;
+        font-weight: bold;
+        transition: 200ms;
+
+    }
+    .icon{
+        display: none;
+    }
+
+    /*animation hover nav from top to nav*/
+}
+
+@media (max-width: 770px) {
+    .navbar {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+
+        color: white;
+        text-align: center;
+    }
+    .logocomp{
+        display: none;
+    }
+    .link{
+        display: none;
+    }
+    /*animation hover nav from top to nav*/
+    .containernav{
+        
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        color: white;
+        justify-content: center;
+        width: 100%;
+        
+    }
+    .navbar{
+        height: auto;
+    }
+    .icon{
+        font-size: 30px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    .lista .active{
+        background-color: #f8f8f8;
+        color: rgb(26, 26, 26);
+        height: 100%;
+        font-size: 19px;
+        font-weight: bold;
+        transition: 200ms;
+    }
+}

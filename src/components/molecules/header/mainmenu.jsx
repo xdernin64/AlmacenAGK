@@ -1,25 +1,23 @@
-import { Link } from "react-router-dom";
 
+import { Link, NavLink } from "react-router-dom";
+import { FaHome, FaBoxes, FaShippingFast, FaUserAlt } from 'react-icons/fa';
 const MainMenu = () => {
     return (
-        <div className="w-full flex-end text-white">
 
-        
-        <ul className=" w-full flex ">
-            <li className="p-5">
-            <Link to="/">Home</Link>
-            </li>
-            <li className="p-5">
-            <Link to="/store">Almacen</Link>
-            </li>
-            <li className="p-5">
-            <Link to="/requests">Pedidos</Link>
-            </li>
-            <li className="p-5">
-            <Link to="/profile">Perfil</Link>
-            </li>
+        <ul className="lista w-full text-white flex justify-end text-lg font-bold   ">
+            <NavLink to="/"><li className="option p-5">
+                <FaHome className="icon" /> <span className="link">Home</span>
+            </li></NavLink>
+            <NavLink to="/stocks"><li className="option p-5">
+                <FaBoxes className="icon" /> <span className="link">Almacen</span>
+            </li></NavLink>
+            <NavLink to="/orders"><li className="option p-5">
+                <FaShippingFast className="icon" /> <span className="link">Pedidos</span>
+            </li></NavLink>
+            <NavLink to="/profile"><li className="option p-5">
+                <FaUserAlt className="icon" /> <span className="link">Perfil</span>
+            </li></NavLink>
         </ul>
-        </div>
     );
 }
 export default MainMenu;

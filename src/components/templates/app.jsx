@@ -8,13 +8,9 @@ const App = () => {
     return (
         <MainHeader >
             <Container>
-            
             <MainMenu />
             </Container>
         </MainHeader>
-
-
-
     )
 }
 export default App;

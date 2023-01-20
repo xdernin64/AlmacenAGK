@@ -5,6 +5,7 @@ import 'semantic-ui-css/semantic.min.css'
 import './components/styles/stylesheet/styles.css'
 import { RouterProvider } from 'react-router-dom'
 import router from './router/Router'
+import './components/styles/stylesheet/resp-animations.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <RouterProvider router={router} />
