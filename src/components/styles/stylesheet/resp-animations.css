@@ -12,11 +12,27 @@
     .icon{
         display: none;
     }
+    .navbar{
+        height: auto;
+    }
 
+    .contenido {
+        padding-top: 80px;
+    }
     /*animation hover nav from top to nav*/
 }
-
+.lista .active{
+    background-color: #f8f8f8;
+    color: rgb(26, 26, 26);
+    height: 100%;
+    font-size: 19px;
+    font-weight: bold;
+    transition: 200ms;
+}
 @media (max-width: 770px) {
+    .contenido {
+        padding-top: 3%;
+    }
     .navbar {
         position: fixed;
         left: 0;
@@ -51,14 +67,7 @@
         margin-left: 10px;
         margin-right: 10px;
     }
-    .lista .active{
-        background-color: #f8f8f8;
-        color: rgb(26, 26, 26);
-        height: 100%;
-        font-size: 19px;
-        font-weight: bold;
-        transition: 200ms;
-    }
+    
 }
 
 .boton-regresar{

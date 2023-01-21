@@ -6,11 +6,18 @@ import { Container } from "semantic-ui-react";
 const App = () => {
 
     return (
+        <>
         <MainHeader >
             <Container>
-            <MainMenu />
+                <MainMenu />
             </Container>
+            
         </MainHeader>
+        <div className="contenido max-w-256 m-auto">
+            <Container>
+                <Outlet />
+            </Container>
+        </div></>
     )
 }
 export default App;
