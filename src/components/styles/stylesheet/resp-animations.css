@@ -20,6 +20,14 @@
         padding-top: 80px;
     }
     /*animation hover nav from top to nav*/
+    .pagina{
+        margin-left: 21%;
+        margin-right: 21%;
+        margin-top: 2%;
+    }
+    .tittlepage{
+        font-size: 2.2rem;
+    }
 }
 .lista .active{
     background-color: #f8f8f8;
@@ -28,6 +36,7 @@
     font-size: 19px;
     font-weight: bold;
     transition: 200ms;
+    box-shadow: inset 1px 1px 6px 0px  #4b4b4b;
 }
 @media (max-width: 770px) {
     .contenido {
@@ -67,6 +76,16 @@
         margin-left: 10px;
         margin-right: 10px;
     }
+    .pagina{
+        margin-left: 3%;
+        margin-right: 3%;
+        
+    }
+    .tittlepage{
+        font-size: 1.7rem;
+        text-align: center;
+    }
+    
     
 }
 

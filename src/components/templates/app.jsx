@@ -3,21 +3,25 @@ import MainMenu from "../molecules/header/mainmenu"
 import MainHeader from "../organism/MainHeader";
 import { Container } from "semantic-ui-react";
 
-const App = () => {
+const App = ({ state }) => {
 
     return (
         <>
-        <MainHeader >
-            <Container>
-                <MainMenu />
-            </Container>
-            
-        </MainHeader>
-        <div className="contenido max-w-256 m-auto">
-            <Container>
-                <Outlet />
-            </Container>
-        </div></>
+            {state ? (<>
+                <MainHeader >
+                    <Container>
+                        <MainMenu />
+                    </Container>
+                
+                </MainHeader>
+                <div className="contenido max-w-256 m-auto">
+                    <Container>
+                        <Outlet />
+                    </Container>
+                </div>
+            </>) : (<></>)}
+
+        </>
     )
 }
 export default App;

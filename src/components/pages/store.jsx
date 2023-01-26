@@ -1,7 +1,8 @@
 const Store = () => {
     return (
-        <div className="store">
-            <h1>Store</h1>
+        <div className="store pagina">
+            <h1 className="tittlepage">Articulos</h1>
+            
         </div>
     );
 }
