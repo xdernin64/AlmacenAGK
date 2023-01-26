@@ -5,15 +5,10 @@ import { getUser } from "../../supabaseClient";
 
 const Profile  = () => {
     //use effect when user data is loaded
-    useEffect(()=>{
-        //get user data
-        console.log(getUser(Authstate().uid));
-        
-
-    },[Authstate().uid])
 
     function usuario () {
-        console.log();   
+        console.log(Authstate().uid); 
+        console.log(getUser("uPzimceD1pM9mfECPZjzWQFtMMC2"));     
     }
     return (
         <div className="pagina">
