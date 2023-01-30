@@ -68,4 +68,14 @@ tr:nth-child(even) {
 	font-family: AlfaSlabOne;
 	color: rgb(76, 76, 76);
 	border-bottom: 5px solid rgba(76, 76, 76, 0.514);
+	margin-bottom: 8%;
+}
+.loginp{
+	font-size: larger;
+	color: rgb(76, 76, 76);
+	font-weight: bolder;
+}
+
+.oscuro{
+	color: rgb(76, 76, 76);
 }

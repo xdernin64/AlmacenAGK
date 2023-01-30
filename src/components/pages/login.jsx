@@ -8,19 +8,18 @@ const Login = () => {
     const nav = useNavigate();
     const handleSubmit = (e) => {
         e.preventDefault();
-        const email = e.target.email.value+"@OHYE.COM";
+        const email = e.target.email.value + "@OHYE.COM";
         const password = e.target.password.value;
         signInWithEmailAndPassword(auth, email, password).then(
             (userCredentaial) => {
                 console.log(userCredentaial);
                 nav("/");
-                
+
             }).catch((err) => {
                 console.log(err);
-                nav("/error");
+                setError(err.message);
             })
     }
-
     return (
         <div className="max-h-full max-w-full">
 
@@ -32,17 +31,18 @@ const Login = () => {
                     </div>
                     <form onSubmit={handleSubmit}>
                         <div className="p-3">
-                            <label htmlFor="user" className="text-slate-600 text-lg font-bold">Usuario</label>
-                            <input type="text" className="border-b-blue-400 border-b-4 unborded" name="email" id="email" />
+                            <label htmlFor="user" className="text-slate-600 text-lg font-bold ">Usuario</label>
+                            <input type="text" placeholder="Ingresar su codigo..." className="border-b-blue-400 border-b-4 unborded text-center loginp" name="email" id="email" />
                         </div>
                         <div className="p-3">
                             <label htmlFor="password" className="text-slate-600 text-lg font-bold">Contraseña</label>
-                            <input type="password" className="border-b-blue-400 border-b-4 unborded" name="password" id="password" />
+                            <input type="password" placeholder="Ingresar su contraseña..." className="border-b-blue-400 border-b-4 unborded text-center loginp" name="password" id="password" />
                         </div>
 
                         <div className="w-100 text-center">
                             <button className="bg-sky-700 m-5 text-xl text-bold text-center" type="submit">Iniciar sesión</button>
                         </div>
+                        {error && <div className="w-100 text-center bg-red-200 text-red-700">Usuario y contraseña incorrectos</div>}
                     </form>
                 </div>
             </div>

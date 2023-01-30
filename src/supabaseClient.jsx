@@ -10,6 +10,9 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 */
 
 export const getUser = async (id) => {
-    const { data } = await supabase.from('Usuarios').select('*').eq('id', id)
-    return data
+    const { data,error } = await supabase.from('Usuarios').select()
+    // print all data 
+    console.log(data)
+    
+    return  data
 }
