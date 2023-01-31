@@ -1,12 +1,8 @@
 import { useEffect } from "react";
-import { Authstate } from "../../firebase";
+import { Authstate, logout } from "../../firebase";
 import { getUser } from "../../supabaseClient";
-
-
 const Profile = () => {
     //use effect when user data is loaded
-
-
     function usuario() {
 
         console.log(Authstate().uid);
@@ -16,9 +12,9 @@ const Profile = () => {
         <div className="pagina">
             <h1 className="tittlepage">Perfil de usuario</h1>
             <button className="text-black hidden" onClick={usuario}>Edit Profile</button>
-            <div className="flex flex-row  max-[770px]:flex-col-reverse h-full">
+            <div className="flex flex-row  max-[770px]:flex-col-reverse ">
                 <div className="basis-1/2">
-                    <div className="border-4 p-14 border-gdark  h-auto rounded-xl">
+                    <div className="border-4 max-[770px]:p-3 min-[770px]:p-14 border-gdark  h-auto rounded-xl">
                         <h2 className="font-bold text-3xl ocuro">Datos generales</h2>
                         <div className="datosp pt-4">
                             <div className="font-bold text-lg pt-2">Codigo:</div>
@@ -33,14 +29,14 @@ const Profile = () => {
                             <div className="border-b-4 border-gdark text-2xl m-3 text-gdark font-mono"> Area del usuario de area  </div>
                         </div>
                     </div>
-
                 </div>
                 <div className="basis-1/2">
-                    <img className=" border-4 min-[770px]:ml-10 mt-8 " src="https://cdn-icons-png.flaticon.com/512/3126/3126177.png" alt="Icono del usuario" />
-
+                    <img className=" border-4 min-[770px]:ml-10  " src="https://cdn-icons-png.flaticon.com/512/3126/3126177.png" alt="Icono del usuario" />
                 </div>
             </div>
-
+            <div className="flex justify-center">
+                <button onClick={logout} className="bg-red-500 m-10 text-xl mb-24"> Cerrar sesión</button>
+            </div>
         </div>
     );
 }
