@@ -19,7 +19,7 @@
     "@mui/material": "^5.11.5",
     "@mui/styled-engine-sc": "^5.11.0",
     "@react-icons/all-files": "^4.1.0",
-    "@supabase/supabase-js": "^2.4.0",
+    "@supabase/supabase-js": "^2.6.0",
     "cross-env": "^7.0.3",
     "env": "^0.0.2",
     "firebase": "^9.16.0",

@@ -8,11 +8,10 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 //supabase get data from user by id 
 
 */
-
-export const getUser = async (id) => {
-    const { data,error } = await supabase.from('Usuarios').select()
-    // print all data 
-    console.log(data)
-    
-    return  data
+export const signsupabase = async (email1,password1) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: email1,
+        password: password1,
+    })
+    console.log(data,error,email1,password1)
 }

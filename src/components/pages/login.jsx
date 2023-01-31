@@ -2,14 +2,21 @@ import { useState } from "react";
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { redirect, useNavigate } from "react-router-dom";
+import { signsupabase } from "../../supabaseClient";
 
 const Login = () => {
     const [error, setError] = useState();
     const nav = useNavigate();
     const handleSubmit = (e) => {
         e.preventDefault();
-        const email = e.target.email.value + "@OHYE.COM";
-        const password = e.target.password.value;
+        const email = e.target.email.value + "@ohye.com";
+        const password =  e.target.password.value;
+        //password simpletype to string
+        const strpassword = password.toString();
+        signsupabase(email, strpassword);
+        console.log(email, password);
+        
+        /*
         signInWithEmailAndPassword(auth, email, password).then(
             (userCredentaial) => {
                 console.log(userCredentaial);
@@ -18,7 +25,7 @@ const Login = () => {
             }).catch((err) => {
                 console.log(err);
                 setError(err.message);
-            })
+            })*/
     }
     return (
         <div className="max-h-full max-w-full">

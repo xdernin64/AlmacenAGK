@@ -1,17 +1,21 @@
 import { useEffect } from "react";
 import { Authstate, logout } from "../../firebase";
-import { getUser } from "../../supabaseClient";
+import {  supabase } from "../../supabaseClient";
+import { supabaseAnonKey, supabaseUrl } from "../../constants/env";
 const Profile = () => {
     //use effect when user data is loaded
-    function usuario() {
 
-        console.log(Authstate().uid);
-        console.log(getUser(Authstate().uid));
+    const datauuser = async () => {
+        const id=(Authstate().uid);
+        const { data, error } = await supabase.from('Usuarios').select()
+            console.log(supabaseUrl,supabaseAnonKey);
+            
+            console.log(data);      
     }
     return (
         <div className="pagina">
             <h1 className="tittlepage">Perfil de usuario</h1>
-            <button className="text-black hidden" onClick={usuario}>Edit Profile</button>
+            <button className="text-black " onClick={datauuser}>Edit Profile</button>
             <div className="flex flex-row  max-[770px]:flex-col-reverse ">
                 <div className="basis-1/2">
                     <div className="border-4 max-[770px]:p-3 min-[770px]:p-14 border-gdark  h-auto rounded-xl">
@@ -35,7 +39,7 @@ const Profile = () => {
                 </div>
             </div>
             <div className="flex justify-center">
-                <button onClick={logout} className="bg-red-500 m-10 text-xl mb-24"> Cerrar sesión</button>
+                <button onClick={logout} className="bg-red-500 m-10 text-xl max-[770px]:mb-24"> Cerrar sesión</button>
             </div>
         </div>
     );
