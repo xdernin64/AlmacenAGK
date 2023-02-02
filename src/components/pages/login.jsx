@@ -12,11 +12,11 @@ const Login = () => {
         const email = e.target.email.value + "@ohye.com";
         const password =  e.target.password.value;
         //password simpletype to string
-        const strpassword = password.toString();
+        /*const strpassword = password.toString();
         signsupabase(email, strpassword);
-        console.log(email, password);
+        console.log(email, password);*/
         
-        /*
+        
         signInWithEmailAndPassword(auth, email, password).then(
             (userCredentaial) => {
                 console.log(userCredentaial);
@@ -25,7 +25,7 @@ const Login = () => {
             }).catch((err) => {
                 console.log(err);
                 setError(err.message);
-            })*/
+            })
     }
     return (
         <div className="max-h-full max-w-full">
