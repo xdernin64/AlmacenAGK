@@ -28,7 +28,7 @@ const Profile = () => {
                                 <div>
                                     {user.map((item) => (
                                         < >
-                                        <div >
+                                        <div>
                                             <div className="font-bold text-lg pt-2">Codigo:</div>
                                             <div className="border-b-4 border-gdark text-2xl m-3 text-gdark font-mono"> {item.codigo}  </div>
                                             <div className="font-bold text-lg pt-2">Nombres:</div>
