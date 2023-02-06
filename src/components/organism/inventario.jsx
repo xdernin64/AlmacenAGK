@@ -14,22 +14,11 @@ import Loader from './loader';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { supabase } from '../../supabaseClient';
+import Modal from './modals/Modal';
 
-const mydata = [
-    {
-        COD: '1',
-        NAME: 'Articulo 1',
-        UM: 'UND',
-        ARTICLE_DESC: 'Articulo 1',
-    },
-    {
-        COD: '2',
-        NAME: 'Articulo 2',
-        UM: 'UND',
-        ARTICLE_DESC: 'Articulo 2',
-    }
-];
 const Tabla = () => {
+    const [openModal, setOpenModal] = useState(false);
+
     const [Articles, setArticles] = useState();
     const getArticles = async () => {
         const { data, error } = await supabase.from('Inventario')
@@ -40,8 +29,14 @@ const Tabla = () => {
         getArticles();
     }, []);
     return (
-        <>
+        <div className=' tablacontent'>
+        <Modal
+        open={openModal}
+        onClose={() => setOpenModal(false)} />
+
+
             {Articles !== undefined ? (
+
 
                 <MaterialReactTable
                     columns={artcolumns}
@@ -52,7 +47,7 @@ const Tabla = () => {
                     enablePinning
                     enableRowActions
                     enableRowSelection
-                    initialState={{ showColumnFilters: false }}
+                    initialState={{ showColumnFilters: false,columnVisibility: { URL: false }, density: 'compact' } }
                     positionToolbarAlertBanner="bottom"
                     //detalles de la tabla
                     renderDetailPanel={({ row }) => (
@@ -67,7 +62,7 @@ const Tabla = () => {
                                 alt="avatar"
                                 height={200}
                                 src={row.original.URL}
-                                
+
                                 loading="lazy"
                                 style={{ borderRadius: '50%' }}
                             />
@@ -112,10 +107,15 @@ const Tabla = () => {
 
                     renderTopToolbarCustomActions={({ table }) => {
                         const handleDeactivate = () => {
+                            setOpenModal(true);
+                            
                             table.getSelectedRowModel().flatRows.map((row) => {
                                 //alert('deactivating ' + row.getValue('COD'));
                                 
-                            });StaticExample();
+                                
+
+
+                            });
                         };
 
                         const handleActivate = () => {
@@ -138,7 +138,9 @@ const Tabla = () => {
                                     onClick={handleDeactivate}
                                     variant="contained"
                                 >
+                                    
                                     Eliminar
+
                                 </Button>
                                 <Button
                                     color="success"
@@ -147,6 +149,7 @@ const Tabla = () => {
                                     variant="contained"
                                 >
                                     Agregar
+
                                 </Button>
                                 <Button
                                     color="info"
@@ -160,7 +163,7 @@ const Tabla = () => {
                         );
                     }}
                 />) : (<Loader></Loader>)
-            }</>
+            }</div>
     );
 };
 export default Tabla;

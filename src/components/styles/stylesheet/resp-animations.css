@@ -47,9 +47,12 @@
         left: 0;
         bottom: 0;
         width: 100%;
-
+        margin-top: 10%;
         color: white;
         text-align: center;
+    }
+    .tablecontent{
+        padding-bottom: 14px !important;
     }
     .logocomp{
         display: none;
@@ -125,4 +128,10 @@
 
 .clearfix {
     overflow: auto;
-  }
+}
+@media (    -height: 770px) {
+    .tablecontent {
+        margin-bottom: 44px !important;
+    }
+
+}

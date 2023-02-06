@@ -22,5 +22,8 @@ export const artcolumns = [
     {
         accessorKey: 'URL',
         header: 'URL',
+        //hide this column
+        hide: false,
+
     }
 ]
