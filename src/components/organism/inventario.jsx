@@ -14,7 +14,6 @@ import Loader from './loader';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { supabase } from '../../supabaseClient';
-import StaticExample from './dtailart';
 
 const mydata = [
     {
@@ -67,7 +66,8 @@ const Tabla = () => {
                             <img
                                 alt="avatar"
                                 height={200}
-                                src={Articles.URL}
+                                src={row.original.URL}
+                                
                                 loading="lazy"
                                 style={{ borderRadius: '50%' }}
                             />

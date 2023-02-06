@@ -14,6 +14,13 @@ export const artcolumns = [
     {
         accessorKey: 'ARTICLE_DESC',
         header: 'Articulo',
+    },
+    {
+        accessorKey: 'STOCK',
+        header: 'Stock',
+    },
+    {
+        accessorKey: 'URL',
+        header: 'URL',
     }
-    
 ]
