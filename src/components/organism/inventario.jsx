@@ -6,7 +6,6 @@ import {
     ListItemIcon,
     MenuItem,
     Typography,
-    TextField,
 } from '@mui/material';
 import { AccountCircle, Send } from '@mui/icons-material';
 import { artcolumns } from '../../helpers/colums/articlecols';
@@ -15,29 +14,33 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { supabase } from '../../supabaseClient';
 import Modal from './modals/Modal';
+import withReactContent from 'sweetalert2-react-content';
+import Swal from 'sweetalert2';
+import { delarticle } from '../../helpers/CRUD/delarticle';
 
 const Tabla = () => {
     const [openModal, setOpenModal] = useState(false);
+    var [cod, setCod] = useState();
+    const MySwal = withReactContent(Swal);
 
     const [Articles, setArticles] = useState();
     const getArticles = async () => {
         const { data, error } = await supabase.from('Inventario')
-            .select('COD, NAME, UM, ARTICLE_DESC,URL').limit(16000)
+            .select('COD, NAME, UM, ARTICLE_DESC,URL').limit(16)
         setArticles(data);
     }
+    
     useEffect(() => {
         getArticles();
     }, []);
     return (
         <div className=' tablacontent'>
-        <Modal
-        open={openModal}
-        onClose={() => setOpenModal(false)} />
-
-
+            <Modal
+                open={openModal}
+                onClose={() => setOpenModal(false)}
+                cod={cod}
+            />
             {Articles !== undefined ? (
-
-
                 <MaterialReactTable
                     columns={artcolumns}
                     data={Articles}
@@ -47,35 +50,9 @@ const Tabla = () => {
                     enablePinning
                     enableRowActions
                     enableRowSelection
-                    initialState={{ showColumnFilters: false,columnVisibility: { URL: false }, density: 'compact' } }
+                    initialState={{ showColumnFilters: false, columnVisibility: { URL: false }, density: 'compact' }}
                     positionToolbarAlertBanner="bottom"
-                    //detalles de la tabla
-                    renderDetailPanel={({ row }) => (
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-around',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <img
-                                alt="avatar"
-                                height={200}
-                                src={row.original.URL}
-
-                                loading="lazy"
-                                style={{ borderRadius: '50%' }}
-                            />
-                            <Box sx={{ textAlign: 'center' }}>
-                                <Typography variant="h4">Signature Catch Phrase:</Typography>
-                                <Typography variant="h1">
-                                    &quot;{Articles.URL}&quot;
-                                </Typography>
-                            </Box>
-                        </Box>
-                    )}
                     //fin de detalles de la tabla
-
                     renderRowActionMenuItems={({ closeMenu }) => [
                         <MenuItem
                             key={0}
@@ -107,48 +84,69 @@ const Tabla = () => {
 
                     renderTopToolbarCustomActions={({ table }) => {
                         const handleDeactivate = () => {
-                            setOpenModal(true);
-                            
                             table.getSelectedRowModel().flatRows.map((row) => {
                                 //alert('deactivating ' + row.getValue('COD'));
-                                
-                                
+                                setCod(row.getValue('COD'));
+                                if (openModal === false) {
+                                    setOpenModal(true);
 
+                                } else {
+                                    setOpenModal(false);
 
+                                }
                             });
                         };
 
                         const handleActivate = () => {
                             table.getSelectedRowModel().flatRows.map((row) => {
-                                alert('activating ' + row.getValue('COD'));
+                                //alert('activating ' + row.getValue('COD'));
+                                MySwal.fire({
+                                    title: '¿Quieres eliminar de la lista?',
+                                    text: "No podrás recuperarlo luego!",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Sí, Eliminar!'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        delarticle(row.getValue('COD'));
+                                            Swal.fire(
+                                                'Elimininado!',
+                                                'El articulo fue eliminado.',
+                                                'success'
+                                            )
+                                    }
+                                })
+
                             });
                         };
 
                         const handleContact = () => {
                             table.getSelectedRowModel().flatRows.map((row) => {
-                                alert('contact ' + row.getValue('COD'));
+                                //  alert('contact ' + row.getValue('COD'));
+
                             });
                         };
 
                         return (
-                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <div>
+                            <div className='max-[770px]:grid min-[770px]:flex' style={{  gap: '0.5rem' }}>
                                 <Button
-                                    color="error"
+                                    color={`${openModal ? 'warning' : 'success'}`}
                                     disabled={!table.getIsSomeRowsSelected()}
                                     onClick={handleDeactivate}
                                     variant="contained"
                                 >
-                                    
-                                    Eliminar
-
+                                    {openModal ? 'Cerrar' : 'Agregar'}
                                 </Button>
                                 <Button
-                                    color="success"
+                                    color="error"
                                     disabled={!table.getIsSomeRowsSelected()}
                                     onClick={handleActivate}
                                     variant="contained"
                                 >
-                                    Agregar
+                                    Eliminar
 
                                 </Button>
                                 <Button
@@ -159,6 +157,7 @@ const Tabla = () => {
                                 >
                                     Ver Detalles
                                 </Button>
+                            </div>
                             </div>
                         );
                     }}

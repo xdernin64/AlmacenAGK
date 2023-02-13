@@ -13,7 +13,7 @@ import { Authstate } from "../firebase";
 const Routers = ({ state }) => {
     console.log(state);
     console.log(Authstate());
-
+    
     return (
         
             <BrowserRouter>

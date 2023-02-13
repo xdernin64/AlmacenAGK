@@ -16,14 +16,9 @@ export const artcolumns = [
         header: 'Articulo',
     },
     {
-        accessorKey: 'STOCK',
-        header: 'Stock',
-    },
-    {
         accessorKey: 'URL',
         header: 'URL',
         //hide this column
         hide: false,
-
     }
 ]
