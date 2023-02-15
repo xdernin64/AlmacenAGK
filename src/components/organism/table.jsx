@@ -15,7 +15,7 @@ const Example = () => {
 
         const { data, error } = await supabase
             .from('Stocks')
-            .select(`p_id(COD,NAME),user_id(apellidosynombres),date,area(area)`)
+            .select(`p_id(COD,NAME),user_id(apellidosynombres),date,area(area),quantity,tipo`)
             .order('created_at', { ascending: false })
 
         setArticles(data);
@@ -49,6 +49,14 @@ const Example = () => {
                 accessorKey: 'area.area',
 
                 header: 'Area',
+            },
+            {
+                accessorKey: 'quantity',
+                header: 'Cantidad',
+            },
+            {
+                accessorKey: 'tipo',
+                header: 'Tipo',
             },
         ],
         [],
