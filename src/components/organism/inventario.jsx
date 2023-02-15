@@ -26,7 +26,7 @@ const Tabla = () => {
     const [Articles, setArticles] = useState();
     const getArticles = async () => {
         const { data, error } = await supabase.from('Inventario')
-            .select('COD, NAME, UM, ARTICLE_DESC,URL').limit(16)
+            .select('COD, NAME, UM, ARTICLE_DESC,URL').limit()
         setArticles(data);
     }
     

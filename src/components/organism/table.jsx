@@ -1,51 +1,68 @@
-import { useState } from "react";
-import { supabase } from "../../supabaseClient";
-import { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from 'react';
+import MaterialReactTable from 'material-react-table';
+import { supabase } from '../../supabaseClient';
 
-const Table = () => {
-    //create table with supabase querys for articles and stocks 
+//nested data is ok, see accessorKeys in ColumnDef below
+
+
+
+
+
+const Example = () => {
     const [Articles, setArticles] = useState();
+
     const getArticles = async () => {
-        // make paginate for articles
-        const { data, error } = await supabase.from('Inventario')
-            .select('COD, NAME, UM, ARTICLE_DESC').limit(10)
-        console.log(data, error)
 
-
+        const { data, error } = await supabase
+            .from('Stocks')
+            .select(`p_id(COD,NAME),user_id(apellidosynombres),date,area(area)`)
+            .order('created_at', { ascending: false })
 
         setArticles(data);
     }
+    console.log(Articles);
+
     useEffect(() => {
         getArticles();
     }, []);
-    return (
-        <div className="table">
-            <table className="table-auto">
-                <thead>
-                    <tr>
-                        <th className="border-4 border-gdark p-3">Codigo</th>
-                        <th className="border-4 border-gdark p-3">Nombre</th>
-                        <th className="border-4 border-gdark p-3">Unidad de medida</th>
-                        <th className="border-4 border-gdark p-3">Descripcion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {Articles !== undefined && (
-                        <>
-                            {Articles.map((item) => (
-                                <tr key={item.COD}>
-                                    <td className="border-4 border-gdark p-3">{item.COD}</td>
-                                    <td className="border-4 border-gdark p-3">{item.NAME}</td>
-                                    <td className="border-4 border-gdark p-3">{item.UM}</td>
-                                    <td className="border-4 border-gdark p-3">{item.ARTICLE_DESC}</td>
-                                </tr>
-                            ))}
-                        </>
-                    )}
-                </tbody>
-            </table>
-        </div>
+    //should be memoized or stable
+    const columns = useMemo(
+        () => [
+            {
+                accessorKey: 'p_id.COD', //access nested data with dot notation
+                header: 'Codigo',
+            },
+            {
+                accessorKey: 'p_id.NAME',
+                header: 'Articulo',
+            },
+            {
+                accessorKey: 'user_id.apellidosynombres', //normal accessorKey
+                header: 'Usuario',
+
+            },
+            {
+                accessorKey: 'date',
+                header: 'Fecha',
+            },
+            {
+                accessorKey: 'area.area',
+
+                header: 'Area',
+            },
+        ],
+        [],
     );
 
-}
-export default Table;
+    return (
+        <>
+            {
+                Articles !== undefined ? (<MaterialReactTable columns={columns}
+                    data={Articles} />) : (<h1>loading</h1>)
+            }
+
+        </>
+    );
+};
+
+export default Example;
