@@ -3,11 +3,6 @@ import MaterialReactTable from 'material-react-table';
 import { supabase } from '../../supabaseClient';
 
 //nested data is ok, see accessorKeys in ColumnDef below
-
-
-
-
-
 const Example = () => {
     const [Articles, setArticles] = useState();
 
@@ -65,8 +60,12 @@ const Example = () => {
     return (
         <>
             {
-                Articles !== undefined ? (<MaterialReactTable columns={columns}
+                Articles !== undefined ? (<MaterialReactTable 
+                    enableRowSelection 
+                    columns={columns}
+                    positionToolbarAlertBanner="left"
                     data={Articles} />) : (<h1>loading</h1>)
+                    
             }
 
         </>

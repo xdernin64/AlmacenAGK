@@ -1,14 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import MaterialReactTable from 'material-react-table';
 import {
     Box,
     Button,
-    ListItemIcon,
-    MenuItem,
-    Typography,
+    IconButton,
+    Tooltip,
 } from '@mui/material';
-import { AccountCircle, Send } from '@mui/icons-material';
-import { artcolumns } from '../../helpers/colums/articlecols';
+import { Delete, Edit, Add } from '@mui/icons-material';
 import Loader from './loader';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -16,151 +14,125 @@ import { supabase } from '../../supabaseClient';
 import Modal from './modals/Modal';
 import withReactContent from 'sweetalert2-react-content';
 import Swal from 'sweetalert2';
-import { delarticle } from '../../helpers/CRUD/delarticle';
 
-const Tabla = () => {
-    const [openModal, setOpenModal] = useState(false);
-    var [cod, setCod] = useState();
+const Tabla = ({table,columnas,tablecols,customdel,customupd,colid,modalcod}) => {
+    const [createModalOpen, setCreateModalOpen] = useState(false);
+    const [validationErrors, setValidationErrors] = useState({});
+    const [tableData, setTableData] = useState();
+    const [selectedRow, setSelectedRow] = useState(null);
     const MySwal = withReactContent(Swal);
 
-    const [Articles, setArticles] = useState();
     const getArticles = async () => {
-        const { data, error } = await supabase.from('Inventario')
-            .select('COD, NAME, UM, ARTICLE_DESC,URL').limit()
-        setArticles(data);
+        const { data, error } = await supabase.from(table)
+            .select(columnas).limit()
+        setTableData(data);
+        console.log(error);
     }
-    
+    const handleCreateNewRow = (values) => {
+        tableData.push(values);
+        setTableData([...tableData]);
+    };
+
+    const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
+        if (!Object.keys(validationErrors).length) {
+            tableData[row.index] = values;
+            customupd(values);
+            console.log(values);
+            setTableData([...tableData]);
+            exitEditingMode();
+        }
+    };
+    const handleDeleteRow = useCallback(
+        (row) => {
+            MySwal.fire({
+                title: '¿Quieres eliminar de la lista?',
+                text: "No podrás recuperarlo luego!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, Eliminar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    customdel(row.getValue(colid)).then(() => {
+                    
+                    tableData.splice(row.index, 1);
+                    setTableData([...tableData]);
+                    });
+                    Swal.fire(
+                        'Elimininado!',
+                        'El articulo fue eliminado.',
+                        'success'
+                    )
+                }
+            })
+        },
+        [tableData],
+    );
+    const getCommonEditTextFieldProps = useCallback(
+        (cell) => {
+            return {
+                error: !!validationErrors[cell.id],
+                helperText: validationErrors[cell.id],
+
+            };
+        },
+        [validationErrors],
+    );
+
+    const handleCancelRowEdits = () => {
+        setValidationErrors({});
+    };
+    const columns = tablecols(getCommonEditTextFieldProps);
+
     useEffect(() => {
         getArticles();
     }, []);
     return (
-        <div className=' tablacontent'>
+        <div className=''>
             <Modal
-                open={openModal}
-                onClose={() => setOpenModal(false)}
-                cod={cod}
+                open={createModalOpen}
+                onClose={() => setCreateModalOpen(false)}
+                cod={selectedRow}
             />
-            {Articles !== undefined ? (
+            {tableData !== undefined ? (
                 <MaterialReactTable
-                    columns={artcolumns}
-                    data={Articles}
+                    columns={columns}
+                    data={tableData}
+                    editingMode="modal"
                     enableColumnFilterModes
                     enableColumnOrdering
                     enableGrouping
                     enablePinning
                     enableRowActions
-                    enableRowSelection
+                    enableEditing
+                    onEditingRowSave={handleSaveRowEdits}
+                    onEditingRowCancel={handleCancelRowEdits}
                     initialState={{ showColumnFilters: false, columnVisibility: { URL: false }, density: 'compact' }}
                     positionToolbarAlertBanner="bottom"
-                    //fin de detalles de la tabla
-                    renderRowActionMenuItems={({ closeMenu }) => [
-                        <MenuItem
-                            key={0}
-                            onClick={() => {
-                                // View profile logic...
-                                closeMenu();
-                            }}
-                            sx={{ m: 0 }}
-                        >
-                            <ListItemIcon>
-                                <AccountCircle />
-                            </ListItemIcon>
-                            View Profile
-                        </MenuItem>,
-                        <MenuItem
-                            key={1}
-                            onClick={() => {
-                                // Send email logic...
-                                closeMenu();
-                            }}
-                            sx={{ m: 0 }}
-                        >
-                            <ListItemIcon>
-                                <Send />
-                            </ListItemIcon>
-                            Send Email
-                        </MenuItem>,
-                    ]}
-
-                    renderTopToolbarCustomActions={({ table }) => {
-                        const handleDeactivate = () => {
-                            table.getSelectedRowModel().flatRows.map((row) => {
-                                //alert('deactivating ' + row.getValue('COD'));
-                                setCod(row.getValue('COD'));
-                                if (openModal === false) {
-                                    setOpenModal(true);
-
-                                } else {
-                                    setOpenModal(false);
-
-                                }
-                            });
-                        };
-
-                        const handleActivate = () => {
-                            table.getSelectedRowModel().flatRows.map((row) => {
-                                //alert('activating ' + row.getValue('COD'));
-                                MySwal.fire({
-                                    title: '¿Quieres eliminar de la lista?',
-                                    text: "No podrás recuperarlo luego!",
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#3085d6',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'Sí, Eliminar!'
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        delarticle(row.getValue('COD'));
-                                            Swal.fire(
-                                                'Elimininado!',
-                                                'El articulo fue eliminado.',
-                                                'success'
-                                            )
-                                    }
-                                })
-
-                            });
-                        };
-
-                        const handleContact = () => {
-                            table.getSelectedRowModel().flatRows.map((row) => {
-                                //  alert('contact ' + row.getValue('COD'));
-
-                            });
-                        };
-
-                        return (
-                            <div>
-                            <div className='max-[770px]:grid min-[770px]:flex' style={{  gap: '0.5rem' }}>
-                                <Button
-                                    color={`${openModal ? 'warning' : 'success'}`}
-                                    disabled={!table.getIsSomeRowsSelected()}
-                                    onClick={handleDeactivate}
-                                    variant="contained"
-                                >
-                                    {openModal ? 'Cerrar' : 'Agregar'}
-                                </Button>
-                                <Button
-                                    color="error"
-                                    disabled={!table.getIsSomeRowsSelected()}
-                                    onClick={handleActivate}
-                                    variant="contained"
-                                >
-                                    Eliminar
-
-                                </Button>
-                                <Button
-                                    color="info"
-                                    disabled={!table.getIsSomeRowsSelected()}
-                                    onClick={handleContact}
-                                    variant="contained"
-                                >
-                                    Ver Detalles
-                                </Button>
-                            </div>
-                            </div>
-                        );
-                    }}
+                    renderRowActions={({ row, table }) => (
+                        <Box sx={{ display: 'flex', gap: '1rem' }}>
+                            <Tooltip arrow placement="right" title="Add">
+                                <IconButton color="success" onClick={() => {
+                                    setCreateModalOpen(true)
+                                    setSelectedRow(row.getValue(modalcod))
+                                }}>
+                                    <Add />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip arrow placement="left" title="Edit">
+                                <IconButton onClick={() => table.setEditingRow(row)}>
+                                    <Edit />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip arrow title="Delete">
+                                <IconButton color="error" onClick={() => handleDeleteRow(row)}>
+                                    <Delete />
+                                </IconButton>
+                            </Tooltip>
+                            
+                        </Box>
+                    )}
                 />) : (<Loader></Loader>)
             }</div>
     );
