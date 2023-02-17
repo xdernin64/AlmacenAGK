@@ -49,7 +49,7 @@ const Modal = ({ open, onClose, cod,customf }) => {
                     showConfirmButton: false,
                     timer: 1500
                 })
-                customf;
+                customf();
             }
         }
         savearticle();
