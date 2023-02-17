@@ -51,6 +51,7 @@ export async function updatestock(data) {
             tipo :(data.quantity >= 0 ? "Ingreso" : "Egreso"),
             created_at : new Date(),
             user_id:Authstate().uid,
+            description : data.description
         }
         )
         .eq('tuid', data.tuid)

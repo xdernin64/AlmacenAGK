@@ -6,7 +6,7 @@ import {
     IconButton,
     Tooltip,
 } from '@mui/material';
-import { Delete, Edit, Add } from '@mui/icons-material';
+import { Delete, Edit, Add, Article } from '@mui/icons-material';
 import Loader from './loader';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -19,6 +19,7 @@ const Tabla = ({ table, columnas, tablecols, customdel, customupd, colid, modalc
     const [createModalOpen, setCreateModalOpen] = useState(false);
     const [validationErrors, setValidationErrors] = useState({});
     const [tableData, setTableData] = useState();
+    
     const [selectedRow, setSelectedRow] = useState(null);
     const MySwal = withReactContent(Swal);
 
@@ -46,10 +47,32 @@ const Tabla = ({ table, columnas, tablecols, customdel, customupd, colid, modalc
             else {
                 console.log(values);
                 //refresh the table
-                customupd(values);
-                exitEditingMode();
-            }
+                //swal to confirm update
+                MySwal.fire({
+                    title: '¿Quieres actualizar el articulo?',
+                    text: "No podrás recuperarlo luego!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, Actualizar!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        
+                        //render this component
+                        Swal.fire(
+                            'Actualizado!',
+                            'El articulo fue actualizado.',
+                            'success'
+                        )
+                        customupd(values);
+                        exitEditingMode();
+                        getArticles();
+                        //refresh the table
 
+                    }
+                })
+            }
         }
     };
     const handleDeleteRow = useCallback(
@@ -84,7 +107,6 @@ const Tabla = ({ table, columnas, tablecols, customdel, customupd, colid, modalc
             return {
                 error: !!validationErrors[cell.id],
                 helperText: validationErrors[cell.id],
-
             };
         },
         [validationErrors],
@@ -100,10 +122,17 @@ const Tabla = ({ table, columnas, tablecols, customdel, customupd, colid, modalc
     }, []);
     return (
         <div className=''>
+            
             <Modal
                 open={createModalOpen}
                 onClose={() => setCreateModalOpen(false)}
-                cod={selectedRow}
+                cod={selectedRow} customf={(containchild) => {
+                    if (containchild) {
+                        getArticles();
+                    }
+                    
+                }
+            }
             />
             {tableData !== undefined ? (
                 <MaterialReactTable

@@ -79,13 +79,18 @@ export const columnstocks = (getCommonEditTextFieldProps) => useMemo(
         },
         {
             accessorKey: 'area.area',
-            header: 'Area'
+            header: 'Area',
+            enableEditing: false,
         },
         {
             accessorKey: 'description',
             header: 'Detalles',
+            muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
+                ...getCommonEditTextFieldProps(cell),
+                type: 'text',
+            }),
         },
-        
+
 
         {
             accessorKey: 'p_id.COD', //access nested data with dot notation
@@ -108,7 +113,7 @@ export const columnstocks = (getCommonEditTextFieldProps) => useMemo(
             header: 'tuid',
             enableEditing: false,
         },
-        
+
 
     ],
     [],

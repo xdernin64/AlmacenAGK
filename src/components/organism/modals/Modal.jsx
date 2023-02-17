@@ -7,7 +7,7 @@ import { Authstate } from '../../../firebase';
 import Swal from 'sweetalert2';
 import { Button, ButtonBase, Dialog, IconButton } from '@mui/material';
 
-const Modal = ({ open, onClose, cod }) => {
+const Modal = ({ open, onClose, cod,customf }) => {
 
     const handlesubmit = (e) => {
         e.preventDefault();
@@ -49,6 +49,7 @@ const Modal = ({ open, onClose, cod }) => {
                     showConfirmButton: false,
                     timer: 1500
                 })
+                customf;
             }
         }
         savearticle();
