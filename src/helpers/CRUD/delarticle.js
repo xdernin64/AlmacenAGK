@@ -1,4 +1,12 @@
+import { Authstate } from "../../firebase";
 import { supabase } from "../../supabaseClient";
+export async function getareas() {
+    const { data, error } = await supabase
+        .from('AREAS')
+        .select('*')
+    console.log(data,error);
+    return data;
+}
 
 export async function delarticle(id) {
 
@@ -36,7 +44,15 @@ export async function delstock(id) {
 export async function updatestock(data) {
     const { error } = await supabase
         .from('Stocks')
-        .update(data)
-        .eq('tuid', data.COD)
+        .update(
+            {
+            date : data.date,
+            quantity : data.quantity,
+            tipo :(data.quantity >= 0 ? "Ingreso" : "Egreso"),
+            created_at : new Date(),
+            user_id:Authstate().uid,
+        }
+        )
+        .eq('tuid', data.tuid)
     console.log(error);
 }

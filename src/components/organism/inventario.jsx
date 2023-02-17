@@ -15,7 +15,7 @@ import Modal from './modals/Modal';
 import withReactContent from 'sweetalert2-react-content';
 import Swal from 'sweetalert2';
 
-const Tabla = ({table,columnas,tablecols,customdel,customupd,colid,modalcod}) => {
+const Tabla = ({ table, columnas, tablecols, customdel, customupd, colid, modalcod,containchild=false }) => {
     const [createModalOpen, setCreateModalOpen] = useState(false);
     const [validationErrors, setValidationErrors] = useState({});
     const [tableData, setTableData] = useState();
@@ -35,11 +35,21 @@ const Tabla = ({table,columnas,tablecols,customdel,customupd,colid,modalcod}) =>
 
     const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
         if (!Object.keys(validationErrors).length) {
+            if (!containchild) {
             tableData[row.index] = values;
             customupd(values);
-            console.log(values);
+            //spilce objects from values
+            console.log(values["p_id.COD"]);
+            //get value from p_id.COD
             setTableData([...tableData]);
-            exitEditingMode();
+            exitEditingMode();}
+            else {
+                console.log(values);
+                //refresh the table
+                customupd(values);
+                exitEditingMode();
+            }
+
         }
     };
     const handleDeleteRow = useCallback(
@@ -55,9 +65,9 @@ const Tabla = ({table,columnas,tablecols,customdel,customupd,colid,modalcod}) =>
             }).then((result) => {
                 if (result.isConfirmed) {
                     customdel(row.getValue(colid)).then(() => {
-                    
-                    tableData.splice(row.index, 1);
-                    setTableData([...tableData]);
+
+                        tableData.splice(row.index, 1);
+                        setTableData([...tableData]);
                     });
                     Swal.fire(
                         'Elimininado!',
@@ -130,7 +140,7 @@ const Tabla = ({table,columnas,tablecols,customdel,customupd,colid,modalcod}) =>
                                     <Delete />
                                 </IconButton>
                             </Tooltip>
-                            
+
                         </Box>
                     )}
                 />) : (<Loader></Loader>)

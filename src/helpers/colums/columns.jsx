@@ -1,9 +1,18 @@
-import React from 'react';
+import { MenuItem } from '@mui/material';
+import React, { useState } from 'react';
 import { useMemo } from 'react';
-export const columnsarticle= (getCommonEditTextFieldProps) => useMemo(
+import { getareas } from '../CRUD/delarticle';
+
+var areas = getareas();
+
+
+
+export const columnsarticle = (getCommonEditTextFieldProps) => useMemo(
+
     () => [
-        
+
         {
+
             accessorKey: 'NAME',
             header: 'Nombre',
             muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
@@ -48,31 +57,8 @@ export const columnsarticle= (getCommonEditTextFieldProps) => useMemo(
 export const columnstocks = (getCommonEditTextFieldProps) => useMemo(
     () => [
         {
-            accessorKey: 'p_id.COD', //access nested data with dot notation
-            header: 'Codigo',
-            enableEditing: false,
-        },
-        {
             accessorKey: 'p_id.NAME',
             header: 'Articulo',
-            enableEditing: false,
-        },
-        {
-            accessorKey: 'user_id.apellidosynombres', //normal accessorKey
-            header: 'Usuario',
-            enableEditing: false,
-        },
-        {
-            accessorKey: 'date',
-            header: 'Fecha',
-            muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-                ...getCommonEditTextFieldProps(cell),
-                type: 'date',
-            }),
-        },
-        {
-            accessorKey: 'area.area',
-            header: 'Area',
             enableEditing: false,
         },
         {
@@ -84,6 +70,34 @@ export const columnstocks = (getCommonEditTextFieldProps) => useMemo(
             }),
         },
         {
+            accessorKey: 'date',
+            header: 'Fecha',
+            muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
+                ...getCommonEditTextFieldProps(cell),
+                type: 'date',
+            }),
+        },
+        {
+            accessorKey: 'area.area',
+            header: 'Area'
+        },
+        {
+            accessorKey: 'description',
+            header: 'Detalles',
+        },
+        
+
+        {
+            accessorKey: 'p_id.COD', //access nested data with dot notation
+            header: 'Codigo',
+            enableEditing: false,
+        },
+        {
+            accessorKey: 'user_id.apellidosynombres', //normal accessorKey
+            header: 'Usuario',
+            enableEditing: false,
+        },
+        {
             accessorKey: 'tipo',
             header: 'Tipo',
             enableEditing: false,
@@ -93,7 +107,9 @@ export const columnstocks = (getCommonEditTextFieldProps) => useMemo(
             accessorKey: 'tuid',
             header: 'tuid',
             enableEditing: false,
-        }
+        },
+        
+
     ],
     [],
 );
