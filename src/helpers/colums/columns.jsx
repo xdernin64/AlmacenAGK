@@ -1,11 +1,7 @@
-import { MenuItem } from '@mui/material';
+import { Box, MenuItem } from '@mui/material';
 import React, { useState } from 'react';
 import { useMemo } from 'react';
 import { getareas } from '../CRUD/delarticle';
-
-var areas = getareas();
-
-
 
 export const columnsarticle = (getCommonEditTextFieldProps) => useMemo(
 
@@ -64,10 +60,28 @@ export const columnstocks = (getCommonEditTextFieldProps) => useMemo(
         {
             accessorKey: 'quantity',
             header: 'Cantidad',
+            aggregationFn: 'sum',
+            //required to render an aggregated cell, show the average salary in the group
+            AggregatedCell: ({ cell, table }) => (
+                <>
+                    Total de {' '}
+                    {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header}:{' '}
+                    <Box sx={
+                        cell.getValue() > 20 ? 
+                        ({ color: 'success.main', fontWeight: 'bold' }) : 
+                        cell.getValue() > 0 && ({ color: 'warning.main', fontWeight: 'bold'})
+                        
+                        }>
+                        {cell.getValue()}
+                    </Box>
+                </>
+            ),
+
             muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
                 ...getCommonEditTextFieldProps(cell),
                 type: 'number',
             }),
+
         },
         {
             accessorKey: 'date',

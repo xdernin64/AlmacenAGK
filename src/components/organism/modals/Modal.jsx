@@ -12,7 +12,6 @@ const Modal = ({ open, onClose, cod,customf }) => {
     const handlesubmit = (e) => {
         e.preventDefault();
         var tipo;
-        console.log('usercod: ' + Authstate().uid + ' cod: ' + cod + ' area: ' + e.target.area.value + ' cantidad: ' + e.target.cantidad.value + ' descripcion: ' + e.target.descripcion.value + ' fecha: ' + e.target.fecha.value);
         if (e.target.cantidad.value > 0) {
             tipo = 'Ingreso';
         } else if (e.target.cantidad.value < 0) {
@@ -45,17 +44,16 @@ const Modal = ({ open, onClose, cod,customf }) => {
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
-                    title: 'Your work has been saved',
+                    title: 'Datos guardados',
                     showConfirmButton: false,
                     timer: 1500
                 })
-                customf();
+                customf()
             }
         }
         savearticle();
 
     };
-    console.log(cod);
     //if (!open) return null;
     const [article, setArticle] = useState();
     const [area, setArea] = useState();

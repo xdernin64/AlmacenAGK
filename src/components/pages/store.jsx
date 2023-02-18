@@ -9,7 +9,12 @@ const Store = () => {
             <div>
                 <Tabla table="Inventario" columnas="COD, NAME, UM, ARTICLE_DESC,URL" 
                 tablecols={columnsarticle} customdel={delarticle}
-                customupd={updatearticle} colid="COD" modalcod="COD"
+                customupd={updatearticle} colid="COD" modalcod="COD" order="NAME"
+                initstate={
+                    {showColumnFilters: false,
+                            columnVisibility: { URL: false }, 
+                            density: 'compact'}
+                }
                 />
             </div>  
         </div>

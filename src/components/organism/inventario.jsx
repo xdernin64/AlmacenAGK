@@ -15,19 +15,20 @@ import Modal from './modals/Modal';
 import withReactContent from 'sweetalert2-react-content';
 import Swal from 'sweetalert2';
 
-const Tabla = ({ table, columnas, tablecols, customdel, customupd, colid, modalcod,containchild=false }) => {
+const Tabla = ({ table, columnas, tablecols, customdel, customupd, colid, modalcod,containchild=false,order,asc=true,initstate }) => {
     const [createModalOpen, setCreateModalOpen] = useState(false);
     const [validationErrors, setValidationErrors] = useState({});
     const [tableData, setTableData] = useState();
+    const [Requests, setRequests] = useState(false);
+
     
     const [selectedRow, setSelectedRow] = useState(null);
     const MySwal = withReactContent(Swal);
 
     const getArticles = async () => {
         const { data, error } = await supabase.from(table)
-            .select(columnas).limit()
+            .select(columnas).order(order, { ascending: asc });
         setTableData(data);
-        console.log(error);
     }
     const handleCreateNewRow = (values) => {
         tableData.push(values);
@@ -40,38 +41,20 @@ const Tabla = ({ table, columnas, tablecols, customdel, customupd, colid, modalc
             tableData[row.index] = values;
             customupd(values);
             //spilce objects from values
-            console.log(values["p_id.COD"]);
             //get value from p_id.COD
             setTableData([...tableData]);
             exitEditingMode();}
             else {
-                console.log(values);
-                //refresh the table
-                //swal to confirm update
-                MySwal.fire({
-                    title: '¿Quieres actualizar el articulo?',
-                    text: "No podrás recuperarlo luego!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Sí, Actualizar!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        
-                        //render this component
                         Swal.fire(
                             'Actualizado!',
                             'El articulo fue actualizado.',
                             'success'
                         )
+                        //getArticles();
+                        setRequests(false);
                         customupd(values);
                         exitEditingMode();
-                        getArticles();
-                        //refresh the table
-
-                    }
-                })
+                        
             }
         }
     };
@@ -118,21 +101,17 @@ const Tabla = ({ table, columnas, tablecols, customdel, customupd, colid, modalc
     const columns = tablecols(getCommonEditTextFieldProps);
 
     useEffect(() => {
+        setRequests(true);
         getArticles();
-    }, []);
+    }, [Requests]);
     return (
         <div className=''>
             
             <Modal
                 open={createModalOpen}
                 onClose={() => setCreateModalOpen(false)}
-                cod={selectedRow} customf={(containchild) => {
-                    if (containchild) {
-                        getArticles();
-                    }
-                    
-                }
-            }
+                cod={selectedRow} customf={()=> setRequests(false) }
+            
             />
             {tableData !== undefined ? (
                 <MaterialReactTable
@@ -147,7 +126,7 @@ const Tabla = ({ table, columnas, tablecols, customdel, customupd, colid, modalc
                     enableEditing
                     onEditingRowSave={handleSaveRowEdits}
                     onEditingRowCancel={handleCancelRowEdits}
-                    initialState={{ showColumnFilters: false, columnVisibility: { URL: false }, density: 'compact' }}
+                    initialState={initstate}
                     positionToolbarAlertBanner="bottom"
                     renderRowActions={({ row, table }) => (
                         <Box sx={{ display: 'flex', gap: '1rem' }}>
