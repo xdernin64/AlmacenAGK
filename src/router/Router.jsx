@@ -9,10 +9,13 @@ import Orders from "../components/pages/orders";
 import Protected from "../components/templates/protected";
 import { useState } from "react";
 import { Authstate } from "../firebase";
+import Btnfloat from "../components/templates/floatbutton";
+import PreOrders from "../components/pages/preOrders";
 
 const Routers = ({ state }) => {
     console.log(state);
     console.log(Authstate());
+    
     
     return (
         
@@ -25,10 +28,11 @@ const Routers = ({ state }) => {
                     <Route path="/profile" element={state ? (<Profile />) : (<Navigate replace to="/login" />)} />
                     <Route path="/orders" element={state ? (<Orders />) : (<Navigate replace to="/login" />)} />
                     <Route path="/login" element={state ? (<Navigate replace to="/" />) : (<Login />)} />
+                    <Route path="/pre-order" element={state ? (<PreOrders />) : (<Navigate replace to="/login" />)} />
                     <Route path="/" element={state ? (<Home />) : (<Navigate replace to="/login" />)} />
                     <Route path="*" element={state ? (<Error404 />) : (<Navigate replace to="/login" />)} />
-                    
                 </Routes>
+            
             </BrowserRouter>
         
     )

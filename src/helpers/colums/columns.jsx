@@ -68,8 +68,9 @@ export const columnstocks = (getCommonEditTextFieldProps) => useMemo(
                     {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header}:{' '}
                     <Box sx={
                         cell.getValue() > 20 ? 
-                        ({ color: 'success.main', fontWeight: 'bold' }) : 
-                        cell.getValue() > 0 && ({ color: 'warning.main', fontWeight: 'bold'})
+                        {color: 'success.main', fontWeight: 'bold'}  :
+                        (cell.getValue() < 20 && 
+                        {color: 'warning.main', fontWeight: 'bold'})
                         
                         }>
                         {cell.getValue()}

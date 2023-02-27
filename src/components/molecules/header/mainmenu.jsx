@@ -1,6 +1,7 @@
 
 import { Link, NavLink } from "react-router-dom";
 import { FaHome, FaBoxes, FaShippingFast, FaUserAlt } from 'react-icons/fa';
+import { AiOutlineDropbox } from 'react-icons/ai';
 const MainMenu = () => {
     return (
 
@@ -17,6 +18,10 @@ const MainMenu = () => {
             <NavLink to="/profile"><li className="option p-5">
                 <FaUserAlt className="icon" /> <span className="link">Perfil</span>
             </li></NavLink>
+            <NavLink to="/pre-order"><li className="option p-5">
+                    <AiOutlineDropbox className="icon" /> <span className="link">Pre-Orden</span>
+                </li>
+                </NavLink>
         </ul>
     );
 }

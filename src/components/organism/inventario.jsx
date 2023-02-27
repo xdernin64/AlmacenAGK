@@ -15,11 +15,11 @@ import Modal from './modals/Modal';
 import withReactContent from 'sweetalert2-react-content';
 import Swal from 'sweetalert2';
 
-const Tabla = ({ table, columnas, tablecols, customdel, customupd, colid, modalcod,containchild=false,order,asc=true,initstate }) => {
+const Tabla = ({ table, columnas, tablecols, customdel, customupd, colid, modalcod,containchild=false,order,asc=true,initstate,reltable=false }) => {
     const [createModalOpen, setCreateModalOpen] = useState(false);
     const [validationErrors, setValidationErrors] = useState({});
     const [tableData, setTableData] = useState();
-    const [Requests, setRequests] = useState(false);
+    const [Requests, setRequests] = useState(reltable);
 
     
     const [selectedRow, setSelectedRow] = useState(null);
@@ -129,7 +129,7 @@ const Tabla = ({ table, columnas, tablecols, customdel, customupd, colid, modalc
                     initialState={initstate}
                     positionToolbarAlertBanner="bottom"
                     renderRowActions={({ row, table }) => (
-                        <Box sx={{ display: 'flex', gap: '1rem' }}>
+                        <Box >
                             <Tooltip arrow placement="right" title="Add">
                                 <IconButton color="success" onClick={() => {
                                     setCreateModalOpen(true)

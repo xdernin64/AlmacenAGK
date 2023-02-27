@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:dev": "env-cmd -f .env.development yarn run build && firebase deploy -P dev",
+    "build:prod": "env-cmd -f .env.production yarn run build && firebase deploy -P prod"
   },
   "dependencies": {
     "@date-io/jalaali": "^2.16.1",
@@ -24,6 +26,7 @@
     "@supabase/supabase-js": "^2.6.0",
     "cross-env": "^7.0.3",
     "env": "^0.0.2",
+    "env-cmd": "^10.1.0",
     "firebase": "^9.17.1",
     "material-react-table": "^1.8.0",
     "moment": "^2.29.4",
@@ -36,6 +39,7 @@
     "react-loader-spinner": "^5.3.4",
     "react-qty-picker": "^1.0.6",
     "react-router-dom": "^6.7.0",
+    "react-select": "^5.7.0",
     "react-supabase": "^0.2.0",
     "react-table": "^7.8.0",
     "semantic-ui-css": "^2.5.0",

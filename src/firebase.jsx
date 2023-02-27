@@ -2,20 +2,21 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth,signOut } from "firebase/auth";
+import { fbapikey, fbappId, fbauthDomain, fbdatabaseURL, fbmessagingSenderId, fbprojectId, fbstorageBucket } from "./constants/env";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyClrqjJXZULheuWthbrSwyGGabCfBoE9Qw",
-    authDomain: "raca-app.firebaseapp.com",
-    databaseURL: "https://raca-app-default-rtdb.firebaseio.com",
-    projectId: "raca-app",
-    storageBucket: "raca-app.appspot.com",
-    messagingSenderId: "227085469237",
-    appId: "1:227085469237:web:e210ce7b182d19a7e6537c",
-    measurementId: "G-F16JK5G4RL"
+    apiKey: fbapikey,
+    authDomain: fbauthDomain,
+    databaseURL: fbdatabaseURL,
+    projectId: fbprojectId,
+    storageBucket: fbstorageBucket,
+    messagingSenderId: fbmessagingSenderId,
+    appId: fbappId,
+    measurementId: fbmessagingSenderId
 };
 
 // Initialize Firebase

@@ -1,13 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import Login from './components/pages/login'
 import 'semantic-ui-css/semantic.min.css'
 import './components/styles/stylesheet/styles.css'
-import { Router, RouterProvider } from 'react-router-dom'
 import Routers from './router/Router'
 import './components/styles/stylesheet/resp-animations.css'
 import { auth } from './firebase'
-import { onAuthStateChanged } from '@firebase/auth'
 import { Authstate } from './firebase'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
