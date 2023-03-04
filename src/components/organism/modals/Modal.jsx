@@ -58,11 +58,15 @@ const Modal = ({ open, onClose, cod, customf }) => {
         let dataa ={
             user_id: Authstate().uid,
             p_id: document.getElementById('cod').textContent,
+            product:document.getElementById('p-name').textContent,
             area: select.options[select.selectedIndex].value,
+            areaname: select.options[select.selectedIndex].text,
             quantity: document.getElementById('cantidad').value,
             description: document.getElementById('descripcion').value,
             date: document.getElementById('date').value,
-            tipo: document.getElementById('cantidad').value>=0 ? 'Ingreso' : 'Egreso'
+            tipo: document.getElementById('cantidad').value>=0 ? 'Ingreso' : 'Egreso',
+            url: document.getElementById('srcimage').src,
+            und: document.getElementById('umd').textContent
         }
         //save local 
         let local = JSON.parse(localStorage.getItem('local'));
@@ -91,6 +95,7 @@ const Modal = ({ open, onClose, cod, customf }) => {
             showConfirmButton: false,
             timer: 1500
         })
+        
         
     }
     //if (!open) return null;
@@ -134,11 +139,11 @@ const Modal = ({ open, onClose, cod, customf }) => {
                                         <React.Fragment key={index}>
                                             <div className='md:flex '>
                                                 <div className='flex flex-row justify-between  border border-gray-500 m-2 rounded-lg bg-white basis-6/6'>
-                                                    <img onClick={onClose} className="object-contain w-96 rounded-lg h-96 md:h-auto  md:rounded-none md:rounded-l-lg  " alt="" src={art.URL} />
+                                                    <img id="srcimage" onClick={onClose} className="object-contain w-96 rounded-lg h-96 md:h-auto  md:rounded-none md:rounded-l-lg  " alt="" src={art.URL} />
                                                 </div>
                                                 <div className="flex flex-col  p-6 basis-1/2">
                                                     <h5 id="cod" className="mb-2 text-2xl font-bold tracking-tight text-gray-300">{art.COD}</h5>
-                                                    <h2 className="text-2xl font-bold tracking-tight text-gray-100 dark:text-white">{art.NAME}</h2>
+                                                    <h2 id="p-name" className="text-2xl font-bold tracking-tight text-gray-100 dark:text-white">{art.NAME}</h2>
                                                     <p className="mb-2 text-gray-600 dark:text-gray-400">{art.DESCRIPCION}</p>
                                                 </div>
                                             </div>
@@ -155,7 +160,7 @@ const Modal = ({ open, onClose, cod, customf }) => {
                                                         }
                                                     </select>
                                                     <div className="flex mt-2 mb-2">
-                                                        <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                                        <span id="umd" className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
                                                             {art.UM}
                                                         </span>
                                                         <input type="number" id="cantidad" name='cantidad' className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ingrese cantidad" />
