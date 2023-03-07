@@ -14,7 +14,11 @@ const PreOrders = () => {
         setPreOrders(newItems);
         localStorage.setItem('local', JSON.stringify(newItems));
     };
-
+    const makeorder = (e) =>{
+        e.preventDefault();
+        const data = e.target[0].value;
+        console.log(data);
+    }
 
     useEffect(() => {
         setPreOrders(JSON.parse(localStorage.getItem('local')) || []);
@@ -32,9 +36,9 @@ const PreOrders = () => {
                 <p className="text-3xl font-mono font-bold">No hay articulos pre ordenados</p>
                 </div> :
                 <>
-                    <form>
+                    <form onSubmit={makeorder}>
                         <div className="grid grid-flow-col grid-cols-5">
-                        <input type="text" className="border-b-4 border-blue-900 unborded max-[770px]:col-span-3 col-span-4 text-xl" placeholder="Nombre del pedido" />
+                        <input type="text" className="border-b-4 border-sky-600 unborded max-[770px]:col-span-3 col-span-4 text-xl" placeholder="Nombre del pedido" />
                         <input type="submit" className="bg-teal-600 text-white cursor-pointer col-span-2" value="Hacer pedido"/>
                         </div>
                     </form>
