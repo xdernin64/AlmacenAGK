@@ -1,17 +1,15 @@
 {
   "hosting": {
-    "public": "public",
-    "site": "almacen-ohye",
+    "public": "buil",
+    "site": "ohye-almacen",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
+    "rewrites": [{
+      "source": "**",
+      "destination": "/index.html"
+    }]
   }
 }

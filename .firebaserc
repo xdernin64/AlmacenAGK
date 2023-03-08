@@ -1,5 +1,10 @@
 {
+  
   "projects": {
-    "default": "raca-app"
-  }
+    "default": "raca-app",
+    "dev": "raca-app"
+
+  },
+  "targets": {},
+  "etags": {}
 }
