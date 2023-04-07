@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { supabase } from "../../supabaseClient";
 import AddIcon from '@mui/icons-material/Add';
+import { Authstate } from "../../firebase";
+import { v4 as uuidv4 } from 'uuid';
 
 const PreOrders = () => {
     const [preOrders, setPreOrders] = useState([]);
@@ -14,10 +16,35 @@ const PreOrders = () => {
         setPreOrders(newItems);
         localStorage.setItem('local', JSON.stringify(newItems));
     };
-    const makeorder = (e) =>{
+    const makeorder = async (e) => {
         e.preventDefault();
-        const data = e.target[0].value;
-        console.log(data);
+        const articulos = JSON.parse(localStorage.getItem('local'));
+        const newid=uuidv4();
+
+        const {data, error} = await supabase.from('pedidos').upsert(
+            {
+                id: newid,
+                Name: (e.target.nombre.value).toUpperCase(),
+                user: Authstate().uid,
+                date: new Date(),
+                Estado: 'PENDIENTE',
+                
+            }, { returning: 'minimal' });
+        //insertar datos de local storage
+        
+        const listaproducts = articulos.map((articulo)=>({
+            codiproduct:articulo.p_id,
+            quantityproduct:parseInt(articulo.quantity),
+            codarea: articulo.area,
+            codpedido: newid,
+            date: articulo.date,
+            description: articulo.description
+        }));
+        const {error: inserterror} = await supabase.from('productos_pedidos').insert(listaproducts)
+        console.log(inserterror)
+        //limpiar local storage
+        localStorage.removeItem('local');
+        setPreOrders([]);
     }
 
     useEffect(() => {
@@ -32,14 +59,14 @@ const PreOrders = () => {
             <h1 className="tittlepage">Pre Orders</h1>
 
             {preOrders.length == 0 ? <div className="m-auto text-center ">
-                <img className="m-auto text-center" src="https://img.freepik.com/vector-premium/caja-entrega-abierta-paquete-carton-vacio-icono-caja-isometrica-aislado-sobre-fondo-blanco_53562-14562.jpg" alt="Sin ordenes" />
-                <p className="text-3xl font-mono font-bold">No hay articulos pre ordenados</p>
-                </div> :
+                <img className="m-auto text-center" src="https://cdn-icons-png.flaticon.com/512/7486/7486754.png" alt="Sin ordenes" />
+                <p className="text-3xl font-mono text-white w-auto font-bold">No hay articulos pre ordenados</p>
+            </div> :
                 <>
                     <form onSubmit={makeorder}>
                         <div className="grid grid-flow-col grid-cols-5">
-                        <input type="text" className="border-b-4 border-sky-600 unborded max-[770px]:col-span-3 col-span-4 text-xl" placeholder="Nombre del pedido" />
-                        <input type="submit" className="bg-teal-600 text-white cursor-pointer col-span-2" value="Hacer pedido"/>
+                            <input type="text" name="nombre" className="border-b-4 border-sky-600 unborded max-[770px]:col-span-3 col-span-4 text-xl" placeholder="Nombre del pedido" />
+                            <input type="submit" className="bg-teal-600 text-white cursor-pointer col-span-2" value="Hacer pedido" />
                         </div>
                     </form>
                 </>

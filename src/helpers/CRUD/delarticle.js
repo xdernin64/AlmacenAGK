@@ -39,6 +39,14 @@ export async function delstock(id) {
         .eq('tuid', id)
     console.log(erro1);
 }
+export const  delorderproduct = async (id) => {
+    const { error } = await supabase
+        .from('productos_pedidos')
+        .delete()
+        .eq('id', id)
+    console.log(error);
+}
+
 
 
 export async function updatestock(data) {
@@ -55,5 +63,26 @@ export async function updatestock(data) {
         }
         )
         .eq('tuid', data.tuid)
+    console.log(error);
+}
+export async function updateorder(data) {
+    const { error } = await supabase
+        .from('productos_pedidos')
+        .update(data)
+        .eq('id', data.id)
+    console.log(error);
+}
+export async function deleteorder(id) {
+    const { error1 } = await supabase
+        .from('productos_pedidos')
+        .delete()
+        .eq('codpedido', id)
+    console.log(error1);
+
+    const { error } = await supabase
+        .from('pedidos')
+        .delete()
+        .eq('id', id)
+
     console.log(error);
 }

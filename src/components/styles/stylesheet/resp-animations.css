@@ -15,6 +15,7 @@
     }
 
     .navbar {
+        background: #00000075;
         height: auto;
     }
 
@@ -50,6 +51,7 @@
     }
 
     .navbar {
+        background: #0000009d;
         position: fixed;
         left: 0;
         bottom: 0;

@@ -11,30 +11,30 @@ import { useState } from "react";
 import { Authstate } from "../firebase";
 import Btnfloat from "../components/templates/floatbutton";
 import PreOrders from "../components/pages/preOrders";
+import { useEffect } from "react";
 
 const Routers = ({ state }) => {
     console.log(state);
     console.log(Authstate());
-    
-    
+
     return (
-        
-            <BrowserRouter>
+
+        <BrowserRouter>
             <App state={state} />
-                <Routes>
-                    
-                    <Route path="/home" element={state ? (<Home />) : (<Navigate replace to="/login" />)} />
-                    <Route path="/stocks" element={state ? (<Store />) : (<Navigate replace to="/login" />)} />
-                    <Route path="/profile" element={state ? (<Profile />) : (<Navigate replace to="/login" />)} />
-                    <Route path="/orders" element={state ? (<Orders />) : (<Navigate replace to="/login" />)} />
-                    <Route path="/login" element={state ? (<Navigate replace to="/" />) : (<Login />)} />
-                    <Route path="/pre-order" element={state ? (<PreOrders />) : (<Navigate replace to="/login" />)} />
-                    <Route path="/" element={state ? (<Home />) : (<Navigate replace to="/login" />)} />
-                    <Route path="*" element={state ? (<Error404 />) : (<Navigate replace to="/login" />)} />
-                </Routes>
-            
-            </BrowserRouter>
-        
+            <Routes>
+
+                <Route path="/home" element={state ? (<Home />) : (<Navigate replace to="/login" />)} />
+                <Route path="/stocks" element={state ? (<Store />) : (<Navigate replace to="/login" />)} />
+                <Route path="/profile" element={state ? (<Profile />) : (<Navigate replace to="/login" />)} />
+                <Route path="/orders" element={state ? (<Orders />) : (<Navigate replace to="/login" />)} />
+                <Route path="/login" element={state ? (<Navigate replace to="/" />) : (<Login />)} />
+                <Route path="/pre-order" element={state ? (<PreOrders />) : (<Navigate replace to="/login" />)} />
+                <Route path="/" element={state ? (<Home />) : (<Navigate replace to="/login" />)} />
+                <Route path="*" element={state ? (<Error404 />) : (<Navigate replace to="/login" />)} />
+            </Routes>
+
+        </BrowserRouter>
+
     )
 }
 

@@ -21,7 +21,7 @@ const Profile = () => {
             <h1 className="tittlepage">Perfil de usuario</h1>
             <div className="flex flex-row  max-[770px]:flex-col-reverse ">
                 <div className="basis-1/2">
-                    <div className="border-4 max-[770px]:p-3 min-[770px]:p-14 border-gdark  h-auto rounded-xl">
+                    <div className="border-4 bg-gray-100 max-[770px]:p-3 min-[770px]:p-14 border-gdark  h-auto rounded-xl">
                         <h2 className="font-bold text-3xl ocuro">Datos generales</h2>
                         <div className="datosp pt-4">
                             {user !== null && (
