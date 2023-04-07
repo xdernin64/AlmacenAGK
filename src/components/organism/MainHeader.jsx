@@ -6,7 +6,7 @@ const MainHeader = ({ children }) => {
     return (
 
 
-        <div className="navbar fixed bg-gradient w-full h-20 z-10">
+        <div className="navbar fixed  w-full h-20 z-10">
             <Container>
                 <div className="containernav w-full m-auto flex items-center lg:max-w-256 ">
                     <Logo className="h-auto" />

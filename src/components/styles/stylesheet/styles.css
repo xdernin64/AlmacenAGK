@@ -1,6 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@font-face {
+	font-family: AlfaSlabOne;
+	src: url("../fonts/AlfaSlabOne-Regular.ttf");
+}
+body{
+	
+	background: linear-gradient(to bottom, rgba(0,120,134,1) 0%, rgba(27,64,96,1) 100%);
+	/*dont scroll background*/
+	background-attachment: fixed;
+	padding-bottom: 10%;
+	
+	
+}
 
 .bg-gradient {
   background: linear-gradient(to right, #1460bc, #2498ce, #36a3dd, #4482c4);
@@ -59,4 +72,19 @@ tr:nth-child(even) {
     border-top-width: 0px;
     border-left-width: 0px;
     border-right-width: 0px;
+}
+.tittlepage{
+	font-family: AlfaSlabOne;
+	color: rgba(241, 241, 241, 0.712);
+	border-bottom: 5px solid rgb(241, 241, 241,0.712);
+	margin-bottom: 2%;
+}
+.loginp{
+	font-size: larger;
+	color: rgb(76, 76, 76,0.712);
+	font-weight: bolder;
+}
+
+.oscuro{
+	color: rgb(76, 76, 76,0.712);
 }

@@ -9,59 +9,106 @@
         transition: 200ms;
 
     }
-    .icon{
+
+    .icon {
         display: none;
     }
 
+    .navbar {
+        background: #00000075;
+        height: auto;
+    }
+
+    .contenido {
+        padding-top: 80px;
+    }
+
     /*animation hover nav from top to nav*/
+    .pagina {
+        margin-left: 21%;
+        margin-right: 21%;
+        margin-top: 2%;
+    }
+
+    .tittlepage {
+        font-size: 2.2rem;
+    }
+}
+
+.lista .active {
+    background-color: #f8f8f8;
+    color: rgb(26, 26, 26);
+    height: 100%;
+    font-size: 19px;
+    font-weight: bold;
+    transition: 200ms;
+    box-shadow: inset 1px 1px 6px 0px #4b4b4b;
 }
 
 @media (max-width: 770px) {
+    .contenido {
+        padding-top: 3%;
+    }
+
     .navbar {
+        background: #0000009d;
         position: fixed;
         left: 0;
         bottom: 0;
         width: 100%;
-
+        margin-top: 10%;
         color: white;
         text-align: center;
     }
-    .logocomp{
+
+    .tablecontent {
+        padding-bottom: 14px !important;
+    }
+
+    .logocomp {
         display: none;
     }
-    .link{
+
+    .link {
         display: none;
     }
+
     /*animation hover nav from top to nav*/
-    .containernav{
-        
+    .containernav {
+
         left: 0;
         bottom: 0;
         width: 100%;
         color: white;
         justify-content: center;
         width: 100%;
-        
+
     }
-    .navbar{
+
+    .navbar {
         height: auto;
     }
-    .icon{
-        font-size: 30px;
-        margin-left: 10px;
-        margin-right: 10px;
+
+    .icon {
+        font-size: 35px;
     }
-    .lista .active{
-        background-color: #f8f8f8;
-        color: rgb(26, 26, 26);
-        height: 100%;
-        font-size: 19px;
-        font-weight: bold;
-        transition: 200ms;
+
+    .pagina {
+        margin-left: 3%;
+        margin-right: 3%;
+
     }
+
+    .tittlepage {
+        font-size: 1.7rem;
+        text-align: center;
+    }
+
+
+
 }
 
-.boton-regresar{
+.boton-regresar {
     animation: breathing 1s infinite;
 }
 
@@ -69,15 +116,18 @@
     0% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.1);
     }
+
     100% {
         transform: scale(1);
     }
 }
+
 /*backgorund space animation for error 404*/
-.background404{
+.background404 {
 
     background: gradient(linear, left top, right top, from(#000000), to(#353535), color-stop(0.5, #071033));
     background-size: 100% 100%;
@@ -90,7 +140,37 @@
     0% {
         background-position: 0 0;
     }
+
     100% {
         background-position: 100% 0;
     }
+}
+
+.clearfix {
+    overflow: auto;
+}
+
+@media (-height: 770px) {
+    .tablecontent {
+        margin-bottom: 44px !important;
+    }
+
+}
+
+.css-sq9qdz {
+    flex: none !important;
+}
+
+.swal2-container {
+    z-index: 20000 !important;
+}
+/* For Webkit-based browsers (Chrome, Safari and Opera) */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* For IE, Edge and Firefox */
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
