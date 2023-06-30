@@ -9,7 +9,7 @@ const Login = () => {
     const nav = useNavigate();
     const handleSubmit = (e) => {
         e.preventDefault();
-        const email = e.target.email.value + "@ohye.com";
+        const email = e.target.email.value;
         const password =  e.target.password.value;
         //password simpletype to string
         /*const strpassword = password.toString();
