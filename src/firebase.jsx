@@ -8,6 +8,7 @@ import { fbapikey, fbappId, fbauthDomain, fbdatabaseURL, fbmessagingSenderId, fb
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+console.log(fbapikey, fbauthDomain, fbdatabaseURL, fbprojectId, fbstorageBucket, fbmessagingSenderId, fbappId, fbmessagingSenderId);
 const firebaseConfig = {
     apiKey: fbapikey,
     authDomain: fbauthDomain,
@@ -20,7 +21,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export default app;
 export const Authstate = () => {

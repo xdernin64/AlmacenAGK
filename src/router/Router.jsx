@@ -24,11 +24,11 @@ const Routers = ({ state }) => {
             <Routes>
 
                 <Route path="/home" element={state ? (<Home />) : (<Navigate replace to="/login" />)} />
-                <Route path="/stocks" element={state ? (<Store />) : (<Navigate replace to="/login" />)} />
+                <Route path="/asistencia" element={state ? (<Store />) : (<Navigate replace to="/login" />)} />
                 <Route path="/profile" element={state ? (<Profile />) : (<Navigate replace to="/login" />)} />
-                <Route path="/orders" element={state ? (<Orders />) : (<Navigate replace to="/login" />)} />
+                <Route path="/horas-extras" element={state ? (<Orders />) : (<Navigate replace to="/login" />)} />
                 <Route path="/login" element={state ? (<Navigate replace to="/" />) : (<Login />)} />
-                <Route path="/pre-order" element={state ? (<PreOrders />) : (<Navigate replace to="/login" />)} />
+                <Route path="/usuarios" element={state ? (<PreOrders />) : (<Navigate replace to="/login" />)} />
                 <Route path="/" element={state ? (<Home />) : (<Navigate replace to="/login" />)} />
                 <Route path="*" element={state ? (<Error404 />) : (<Navigate replace to="/login" />)} />
             </Routes>
