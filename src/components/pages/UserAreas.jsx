@@ -7,6 +7,7 @@ import {
     TabPanel,
 } from "@material-tailwind/react";
 import Users from "../organism/tabs/Users";
+import Areas from "../organism/tabs/Areas";
 
 const UserAreas = () => {
     const [activeTab, setActiveTab] = React.useState("Usuarios");
@@ -20,8 +21,8 @@ const UserAreas = () => {
             value: "react",    
         },
         {
-            label: "Vue",
-            value: "vue",
+            label: "Areas",
+            value: "Areas",
         }
     ];
     return (
@@ -48,6 +49,10 @@ const UserAreas = () => {
                     <TabPanel value="Usuarios">
                         <Users />
                     </TabPanel>
+                    <TabPanel value="Areas">
+                        <Areas></Areas>
+                    </TabPanel>
+                    
                 </TabsBody>
             </Tabs></div>
     );

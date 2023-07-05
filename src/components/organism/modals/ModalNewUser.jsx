@@ -4,7 +4,7 @@ import { createUserData } from "../../../helpers/CRUD/CREATE/createuser";
 import { auth } from "../../../firebase";
 import Swal from "sweetalert2";
 
-const NewUserModal = ({ open, close }) => {
+const NewUserModal = ({ open, close , tipo} ) => {
     const [formData, setFormData] = useState({
         codigo: '',
         nombres: '',
@@ -18,11 +18,24 @@ const NewUserModal = ({ open, close }) => {
 
     const handleChange = (e) => {
         const value = e.target.type === 'text' ? e.target.value.toUpperCase() : e.target.value;
-        setFormData({
+        if(tipo=="add")
+        {
+            setFormData({
+                ...formData,
+                [e.target.name]: value,
+                tipo: "Sin usuario"
+
+            })
+        }
+        else {
+            setFormData({
             ...formData,
             [e.target.name]: value,
             uid: auth.currentUser.uid,
-        });
+            tipo: "Con usuario"
+        })
+        }
+        ;
     };
     //function to reset form after submit
     const resetForm = () => {
