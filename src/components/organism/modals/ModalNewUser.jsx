@@ -1,6 +1,8 @@
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { useState } from "react";
 import { createUserData } from "../../../helpers/CRUD/CREATE/createuser";
+import { auth } from "../../../firebase";
+import Swal from "sweetalert2";
 
 const NewUserModal = ({ open, close }) => {
     const [formData, setFormData] = useState({
@@ -15,16 +17,54 @@ const NewUserModal = ({ open, close }) => {
     //get submit data
 
     const handleChange = (e) => {
+        const value = e.target.type === 'text' ? e.target.value.toUpperCase() : e.target.value;
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value,
+            [e.target.name]: value,
+            uid: auth.currentUser.uid,
+        });
+    };
+    //function to reset form after submit
+    const resetForm = () => {
+        setFormData({
+            codigo: '',
+            nombres: '',
+            apellidos: '',
+            dni: '',
+            fechaNacimiento: '',
+            fechaIngreso: '',
+            numeroCelular: '',
         });
     };
 
     const usersubmit = (e) => {
         e.preventDefault();
         console.log(formData);
-        createUserData(formData);
+        // i want to use this function createUserData(formData) and after swall if success closing the modal  and if error show swal error and dont close the modal
+        createUserData(formData)
+            .then((res) => {
+                console.log(res);
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Datos guardados',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                resetForm();
+                close();
+            })
+            .catch((err) => {
+                console.log(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Algo salio mal! :(',
+                })
+            });
+
+
+
         // Aquí puedes realizar acciones adicionales con los datos del formulario, como enviarlos a un servidor
     };
 
@@ -50,6 +90,7 @@ const NewUserModal = ({ open, close }) => {
                                 className="border border-gray-400 p-2 w-full rounded-md"
                                 onChange={handleChange}
                                 value={formData.codigo}
+                                required
                             />
                         </div>
                         <div className="mb-4">
@@ -63,6 +104,7 @@ const NewUserModal = ({ open, close }) => {
                                 className="border border-gray-400 p-2 w-full rounded-md"
                                 onChange={handleChange}
                                 value={formData.nombres}
+                                required
                             />
                         </div>
                         <div className="mb-4">
@@ -76,6 +118,8 @@ const NewUserModal = ({ open, close }) => {
                                 className="border border-gray-400 p-2 w-full rounded-md"
                                 onChange={handleChange}
                                 value={formData.apellidos}
+                                required
+
                             />
                         </div>
                         <div className="mb-4">

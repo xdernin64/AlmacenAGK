@@ -12,6 +12,7 @@ import { Authstate } from "../firebase";
 import Btnfloat from "../components/templates/floatbutton";
 import PreOrders from "../components/pages/preOrders";
 import { useEffect } from "react";
+import UserAreas from "../components/pages/UserAreas";
 
 const Routers = ({ state }) => {
     console.log(state);
@@ -28,7 +29,7 @@ const Routers = ({ state }) => {
                 <Route path="/profile" element={state ? (<Profile />) : (<Navigate replace to="/login" />)} />
                 <Route path="/horas-extras" element={state ? (<Orders />) : (<Navigate replace to="/login" />)} />
                 <Route path="/login" element={state ? (<Navigate replace to="/" />) : (<Login />)} />
-                <Route path="/usuarios" element={state ? (<PreOrders />) : (<Navigate replace to="/login" />)} />
+                <Route path="/usuarios" element={state ? (<UserAreas />) : (<Navigate replace to="/login" />)} />
                 <Route path="/" element={state ? (<Home />) : (<Navigate replace to="/login" />)} />
                 <Route path="*" element={state ? (<Error404 />) : (<Navigate replace to="/login" />)} />
             </Routes>
