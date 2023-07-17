@@ -26,7 +26,7 @@ const UserAreas = () => {
         }
     ];
     return (
-        <div className="pagina">
+        <div className="pagina max-[770px]:mb-24">
             <Tabs value={activeTab} >
                 <TabsHeader 
                     className="rounded-none border-b-2  border-blue-gray-50 bg-transparent p-0"

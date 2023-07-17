@@ -9,15 +9,16 @@ const Areas = () => {
         setOpen(true);
     }
     return (
-        <div>
+        <div className="">
             <NewAreaModal open={open} close={() => setOpen(false)} />
             <div className="w-100 border-b-4  text-center">
                 <h1 className="text-2xl font-extrabold ">Gestion de areas</h1>
             </div>
-            <AccordionTable></AccordionTable>
+            <div className="parent-container max-w-full overflow-x-auto">
+                <AccordionTable></AccordionTable></div>
             <div>
                 <Button color="deep-purple" className="text-gray-800 m-2" onClick={openmodal}> agregar area</Button>
-        </div>
+            </div>
         </div>
     )
 }

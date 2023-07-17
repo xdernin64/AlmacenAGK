@@ -50,7 +50,7 @@ const AccordionTable = () => {
         const clickCallback = () => handleRowClick(item.areacod);
         const isExpanded = expandedRows.includes(item.areacod);
         const itemRows = [
-            <tr onClick={clickCallback} key={"row-data-" + item.areacod} className={`${isExpanded ? "bg-gray-100 rounded-t-lg" : ""}`}>
+            <tr onClick={clickCallback} key={"row-data-" + item.areacod} className={`${isExpanded ? "bg-gray-400 text-gray-950 rounded-t-lg" : ""}`}>
                 <td className={`px-6 py-4 whitespace-nowrap ${isExpanded ? "rounded-tl-lg" : ""}`}>
                     {isExpanded ? (
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -74,15 +74,15 @@ const AccordionTable = () => {
                     <td colSpan={3}>
                         {/* Add a new table to display subareas data */}
                         <div className="w-full overflow-x-auto">
-                            <table className="w-full mt-4 rounded-lg shadow-lg bg-white divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
+                            <table className="w-full mt-4 rounded-lg shadow-lg bg-gray-800 ">
+                                <thead className="bg-blue-900 ">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Código Subárea</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre Subárea</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción Subárea</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-50 uppercase tracking-wider">Código Subárea</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-50 uppercase tracking-wider">Nombre Subárea</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-50 uppercase tracking-wider">Descripción Subárea</th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                                <tbody className="bg-gray-300 text-gray-800 ">
                                     {(subareadata[item.areacod] || []).map((subarea) => (
                                         <tr key={subarea.subareacod}>
                                             <td className="px-6 py-4 whitespace-nowrap">{subarea.subareacod}</td>
@@ -107,11 +107,11 @@ const AccordionTable = () => {
         <>
             <NewSubAreaModal open={subareaopen} close={() => setSubareaopen(false)} areacod={selectedAreacod} areaname={selectedAreaname}></NewSubAreaModal>
             <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-700">
                     <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Codigo</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Area/Sub-area</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-50 uppercase tracking-wider">Codigo</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-50 uppercase tracking-wider">Area/Sub-area</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-50 uppercase tracking-wider">Descripción</th>
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">{data.map(renderItem)}</tbody>
