@@ -61,7 +61,7 @@ const NewSubAreaModal = ({ open, close ,areacod,areaname}) => {
         //return a dialog
         <Dialog open={open} onClose={close} fullWidth={true}
         maxWidth="xs">
-            <DialogTitle className="text-center">Nuevo SubareaArea</DialogTitle>
+            <DialogTitle className="text-center">Nuevo departamento</DialogTitle>
             <DialogContent>
                 <form onSubmit={subareasubmit}>
                     <div className="flex flex-col">
