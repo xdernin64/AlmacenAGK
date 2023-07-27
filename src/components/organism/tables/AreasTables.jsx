@@ -4,6 +4,8 @@ import { dbfirestore } from "../../../firebase";
 import NewSubAreaModal from "../modals/ModalNewSubArea";
 import { getdata } from "../../../helpers/CRUD/READ/GetAreasData";
 import { FaEdit, FaTrash } from 'react-icons/fa'; // Importamos los íconos de react-icons/fa
+import { deleteAreaData } from '../../../helpers/CRUD/DELETE/DelFunctions';
+import { deleteDataSwal } from '../../../helpers/Alerts/alerts';
 
 const AccordionTable = () => {
     const [data, setData] = useState([]);
@@ -59,7 +61,12 @@ const AccordionTable = () => {
 
     const handleDeleteArea = (areacod) => {
         // Implementa la lógica para eliminar el área usando el areacod
-        console.log(`Eliminar área con código: ${areacod}`);
+        deleteDataSwal(()=>deleteAreaData(areacod),
+        "Seguro que quieres eliminar la gerencia? Se eliminaran los departamentos y datos relacionados",
+        "Error al eliminar la gerencia",
+        "Gerencia y departamentos eliminados"
+        )
+    
     };
 
     const handleModifySubarea = (subareacod) => {

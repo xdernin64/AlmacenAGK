@@ -21,8 +21,8 @@ const UserAreas = () => {
             value: "react",    
         },
         {
-            label: "Areas",
-            value: "Areas",
+            label: "Gerencias",
+            value: "Gerencias",
         }
     ];
     return (
@@ -49,7 +49,7 @@ const UserAreas = () => {
                     <TabPanel value="Usuarios">
                         <Users />
                     </TabPanel>
-                    <TabPanel value="Areas">
+                    <TabPanel value="Gerencias">
                         <Areas></Areas>
                     </TabPanel>
                     
