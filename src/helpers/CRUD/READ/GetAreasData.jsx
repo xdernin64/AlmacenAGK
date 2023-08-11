@@ -1,13 +1,5 @@
 import { collection, doc, getDocs, onSnapshot, query } from "firebase/firestore";
 import { dbfirestore } from "../../../firebase";
-/*
-
-import { doc, onSnapshot } from "firebase/firestore";
-
-const unsub = onSnapshot(doc(db, "cities", "SF"), (doc) => {
-    console.log("Current data: ", doc.data());
-});
-*/
 export const getareasdata = async () => {
     const areas = [];
     const snapshot = await onSnapshot(doc(dbfirestore, "areas"));
@@ -42,3 +34,4 @@ export const getdata = (rutabd, consulta, callback) => {
     });
     return unsubscribe;
 };
+

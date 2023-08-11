@@ -1,5 +1,3 @@
-// i want to create a NewJobModal where consider only cod and name for that area
-//
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { useState } from "react";
 import Swal from "sweetalert2";

@@ -11,7 +11,7 @@ const dataprops = {
     areaname: '',
     areadesc: ''
 };
-const dialogtitle="Nuevo Area"
+const dialogtitle = "Nuevo Area"
 
 
 
@@ -69,7 +69,7 @@ const NewFormModal = ({ open, close }) => {
     return (
         //return a dialog
         <Dialog open={open} onClose={close} fullWidth={true}
-        maxWidth="xs">
+            maxWidth="xs">
             <DialogTitle className="text-center">Nuevo Area</DialogTitle>
             <DialogContent>
                 <form onSubmit={areasubmit}>

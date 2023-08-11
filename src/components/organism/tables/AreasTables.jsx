@@ -4,10 +4,10 @@ import { dbfirestore } from "../../../firebase";
 import NewSubAreaModal from "../modals/ModalNewSubArea";
 import { getdata } from "../../../helpers/CRUD/READ/GetAreasData";
 import { FaEdit, FaTrash } from 'react-icons/fa'; // Importamos los íconos de react-icons/fa
-import { deleteAreaData } from '../../../helpers/CRUD/DELETE/DelFunctions';
+import { deleteAreaData, deleteSubareaData } from '../../../helpers/CRUD/DELETE/DelFunctions';
 import { deleteDataSwal } from '../../../helpers/Alerts/alerts';
 
-const AccordionTable = () => {
+const AccordionTable = ({modif,aprops}) => {
     const [data, setData] = useState([]);
     const [subareadata, setSubareadata] = useState({});
     const [expandedRows, setExpandedRows] = useState([]);
@@ -49,34 +49,52 @@ const AccordionTable = () => {
                     [rowId]: results,
                 }));
             });
-            // Asegúrate de llamar a unsubscribe cuando ya no necesites escuchar cambios en los datos
         }
 
     };
 
     const handleModifyArea = (areacod) => {
         // Implementa la lógica para modificar el área usando el areacod
-        console.log(`Modificar área con código: ${areacod}`);
+        modif(true)
+        
+        // Encuentra el índice del área en el array data
+        const areaIndex = data.findIndex((area) => area.areacod === areacod);
+
+        if (areaIndex !== -1) {
+            // Imprimir todos los datos del área
+            const area = data[areaIndex];
+            aprops(area)
+        
+        } else {
+            console.log("Área no encontrada.");
+        }
     };
 
+
     const handleDeleteArea = (areacod) => {
-        // Implementa la lógica para eliminar el área usando el areacod
-        deleteDataSwal(()=>deleteAreaData(areacod),
-        "Seguro que quieres eliminar la gerencia? Se eliminaran los departamentos y datos relacionados",
-        "Error al eliminar la gerencia",
-        "Gerencia y departamentos eliminados"
+
+        deleteDataSwal(() => deleteAreaData(areacod, subareadata[areacod]),
+            "Seguro que quieres eliminar la gerencia? Se eliminaran los departamentos y datos relacionados",
+            "Error al eliminar la gerencia",
+            "Gerencia y departamentos eliminados"
         )
-    
     };
 
     const handleModifySubarea = (subareacod) => {
         // Implementa la lógica para modificar la subárea usando el subareacod
-        console.log(`Modificar subárea con código: ${subareacod}`);
+        console.log(`Modificar subárea con código: ${subareacod} `);
+        //print subareadata selected
+        console.log(subareadata[selectedAreacod]);
+
     };
 
-    const handleDeleteSubarea = (subareacod) => {
+    const handleDeleteSubarea = (areacod, subareacod) => {
         // Implementa la lógica para eliminar la subárea usando el subareacod
-        console.log(`Eliminar subárea con código: ${subareacod}`);
+        deleteDataSwal(() => deleteSubareaData(areacod, subareacod),
+            "Seguro que quieres eliminar el departamento? Se eliminaran los datos relacionados",
+            "Error al eliminar el departamento",
+            "Departamento eliminado"
+        )
     };
 
     const renderSubareas = (subareas) => {
@@ -95,7 +113,7 @@ const AccordionTable = () => {
                         </button>
                         <button
                             className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            onClick={() => handleDeleteSubarea(subarea.subareacod)}
+                            onClick={() => handleDeleteSubarea(subarea.areacod, subarea.subareacod)}
                         >
                             <FaTrash className="inline-block mr-1" /> Eliminar departamnto
                         </button>
@@ -155,7 +173,7 @@ const AccordionTable = () => {
                             </button>
                             <button
                                 className="bg-amber-300 hover:bg-amber-600 text-gray-900 py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                onClick={() => handleModifyArea(item.areacod)}
+                                onClick={() => handleModifyArea(item.areacod) }
                             >
                                 <FaTrash className="inline-block mr-1" /> Modificar Gerencia
                             </button>
