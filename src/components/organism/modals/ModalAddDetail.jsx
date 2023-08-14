@@ -53,10 +53,11 @@ const ModalAddDetail = ({ NameProps, PropsLabels, Dtittle, Props, onEdit, open, 
             
         }
     };
+    const pretittle = onEdit ? "Modificar " : "Agregar ";
 
     return (
         <Dialog open={open} onClose={close} maxWidth="xs" fullWidth={true}>
-            <DialogTitle className="text-center">{Dtittle}</DialogTitle>
+            <DialogTitle className="text-center">{pretittle+Dtittle}</DialogTitle>
             <DialogContent>
                 <form onSubmit={detailsubmit}>
                     <div className="row">

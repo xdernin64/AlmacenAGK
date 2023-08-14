@@ -10,16 +10,30 @@ import {
     MenuItem,
     Button,
 } from "@material-tailwind/react";
-const DetailTables = ({ detailname, detailnameprops }) => {
+import { deleteDataSwal } from '../../../helpers/Alerts/alerts';
+import { deleteDetailData } from '../../../helpers/CRUD/DELETE/DelFunctions';
+const DetailTables = ({ detailname, detailnameprops,detailprops,editing }) => {
     const [data, setData] = useState([]);
+    //const [detailprops, setDetailprops] = useState([]);
     const [propname1 = "", propname2 = "", propname3 = ""] = detailnameprops;
+    const handleModifDetails = (prop,name,nameprops) => {
+        detailprops(prop);
+        editing(true);
+        detailname(name);
+        detailnameprops(nameprops);
+    }
+    const handleModif = () => {
+        editing(true);
+    }
+
+
     useEffect(() => {
         const unsubscribe = getdata(`details/${detailname}/general`, null, (results) => {
             setData(results);
         });
         return () => unsubscribe();
     }, []);
-    const Menubuttons = () => {
+    const Menubuttons = ({ id,props,detailname,detailnameprops }) => {
         return (
             <Menu>
                 <MenuHandler>
@@ -27,16 +41,17 @@ const DetailTables = ({ detailname, detailnameprops }) => {
                 </MenuHandler>
                 <div className='bg-gray-700'>
                 <MenuList className='bg-blue-gray-600'>
-                    
-
-                   
-                    <MenuItem><EditIcon /> Editar</MenuItem>
-                    <MenuItem><DeleteIcon /> Eliminar</MenuItem> 
+                    <MenuItem 
+                    onClick={() =>handleModif()}
+                    ><EditIcon /> Editar</MenuItem>
+                    <MenuItem onClick={() => deleteDataSwal(
+                        (() => deleteDetailData(detailname, id)), "Se eliminaran todos los datos relacionados", "Error al eliminar los datos", "Datos eliminados correctamente"
+                    )}><DeleteIcon/> Eliminar</MenuItem> 
                 </MenuList></div>
             </Menu>
         );
-
     }
+    
 
     return (
         <>
@@ -53,8 +68,9 @@ const DetailTables = ({ detailname, detailnameprops }) => {
                     <tbody>
                         {data.map((item, index) => (
                             <tr key={index} className='border-b border-gray-800'>
-                                <td className='cursor-pointer'><Menubuttons /></td>
-                                <td>{item[propname1]}  </td>
+                                <td className='cursor-pointer'><Menubuttons id={item[propname1]} 
+                                props={item} detailname={detailname} detailnameprops={detailnameprops}/></td>
+                                <td>{item[propname1]}</td>
                                 <td>{item[propname2]}</td>
                                 <td>{item[propname3]}</td>
                             </tr>

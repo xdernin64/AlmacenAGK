@@ -2,6 +2,7 @@ import { remove, ref } from "firebase/database";
 import { dbase, dbfirestore } from "../../../firebase";
 import { doc, deleteDoc } from "firebase/firestore";
 import swal from "sweetalert";
+import { successMessage } from "../../Alerts/alerts";
 export const deleteSubareaData = async (areaCode, subareaCode) => {
     try {
         await deleteDoc(doc(dbfirestore, `areas/${areaCode}/subareas/`, subareaCode));
@@ -25,3 +26,14 @@ export const deleteAreaData = async (areaCode, subareaList) => {
         swal("Error!", "Error deleting data!", "error");
     }
 };
+export const deleteDetailData = async (detailname, detailcode) => {
+    console.log(detailname, detailcode);
+    try {
+        await deleteDoc(doc(dbfirestore, `details/${detailname}/general`, detailcode));
+        await remove(ref(dbase, `details/${detailname}/` + detailcode));
+        
+    } catch (error) {
+        console.error("Error deleting data: ", error);
+        swal("Error!", "Error deleting data!", "error");
+    }
+}
