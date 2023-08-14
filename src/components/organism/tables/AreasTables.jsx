@@ -14,6 +14,8 @@ const AccordionTable = ({modif,aprops}) => {
     const [subareaopen, setSubareaopen] = useState(false);
     const [selectedAreacod, setSelectedAreacod] = useState(null);
     const [selectedAreaname, setSelectedAreaname] = useState(null);
+    const [modifsub, setModifsub] = useState(false);
+    const [subareaprops, setSubareaprops] = useState([]);
 
     const subareaopenmodal = (item) => {
         setSubareaopen(!subareaopen);
@@ -27,9 +29,12 @@ const AccordionTable = ({modif,aprops}) => {
         });
         return () => unsubscribe();
     }, []);
-
-
-
+    useEffect(() => {
+        if(modifsub){
+            setSubareaopen(true);
+            
+        }
+    }, [modifsub]);
 
     const handleRowClick = (rowId) => {
         const currentExpandedRows = expandedRows;
@@ -82,9 +87,8 @@ const AccordionTable = ({modif,aprops}) => {
 
     const handleModifySubarea = (subareacod) => {
         // Implementa la lógica para modificar la subárea usando el subareacod
-        console.log(`Modificar subárea con código: ${subareacod} `);
-        //print subareadata selected
-        console.log(subareadata[selectedAreacod]);
+        setModifsub(true)
+        setSubareaprops(subareacod)
 
     };
 
@@ -107,7 +111,10 @@ const AccordionTable = ({modif,aprops}) => {
                     <div className="flex space-x-2">
                         <button
                             className="bg-amber-300 hover:bg-amber-600 text-gray-900 py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            onClick={() => handleModifySubarea(subarea.subareacod)}
+                            onClick={() => {
+                                setSelectedAreacod(subarea.areacod);
+                                setSelectedAreaname(subarea.areaname);
+                                handleModifySubarea(subarea)}}
                         >
                             <FaEdit className="inline-block mr-1" /> Modificar departamnto
                         </button>
@@ -194,7 +201,15 @@ const AccordionTable = ({modif,aprops}) => {
 
     return (
         <>
-            <NewSubAreaModal open={subareaopen} close={() => setSubareaopen(false)} areacod={selectedAreacod} areaname={selectedAreaname}></NewSubAreaModal>
+            <NewSubAreaModal open={subareaopen} close={() => {
+                setTimeout(() => {
+                    setModifsub(false);
+                    setSubareaprops([]);
+                }, 100);
+                setSubareaopen(false)}} 
+                areacod={selectedAreacod} areaname={selectedAreaname}
+                editsubarea={modifsub} subareaprops={subareaprops}
+            ></NewSubAreaModal>
             <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-700">
                     <tr>

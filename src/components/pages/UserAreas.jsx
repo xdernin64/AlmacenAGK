@@ -8,6 +8,7 @@ import {
 } from "@material-tailwind/react";
 import Users from "../organism/tabs/Users";
 import Areas from "../organism/tabs/Areas";
+import Gestion from "../organism/tabs/Gestion";
 
 const UserAreas = () => {
     const [activeTab, setActiveTab] = React.useState("Usuarios");
@@ -17,8 +18,8 @@ const UserAreas = () => {
             value: "Usuarios",
         },
         {
-            label: "React",
-            value: "react",    
+            label: "Detalles",
+            value: "Detalles",    
         },
         {
             label: "Gerencias",
@@ -47,10 +48,13 @@ const UserAreas = () => {
                 </TabsHeader>
                 <TabsBody>
                     <TabPanel value="Usuarios">
-                        <Users />
+                        {activeTab === "Usuarios" && <Users />}
+                    </TabPanel>
+                    <TabPanel value="Detalles">
+                        {activeTab === "Detalles" && <Gestion />}
                     </TabPanel>
                     <TabPanel value="Gerencias">
-                        <Areas></Areas>
+                        {activeTab === "Gerencias" && <Areas />}
                     </TabPanel>
                     
                 </TabsBody>

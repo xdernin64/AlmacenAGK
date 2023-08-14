@@ -1,6 +1,7 @@
-import swal from 'sweetalert';
+import Swal from "sweetalert2";
 
-export const deleteDataSwal = async (func,askingMessage, errorMessage, successMessage) => {
+
+export const deleteDataSwal = async (func, askingMessage, errorMessage, successMessage) => {
     const willDelete = await swal({
         title: "¿Estás seguro?",
         text: askingMessage,
@@ -21,3 +22,21 @@ export const deleteDataSwal = async (func,askingMessage, errorMessage, successMe
         swal("Cancelado", "No has eliminado nada", "info");
     }
 };
+export const successMessage = (tittle) => {
+    Swal.fire({
+        position: 'center',
+        title: tittle,
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1500
+    });
+}
+export const errorMessage = (tittle) => {
+    swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: tittle,
+        showConfirmButton: false,
+        timer: 1500
+    });
+}

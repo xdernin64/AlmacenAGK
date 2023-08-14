@@ -28,3 +28,7 @@ export const CreateSubareaData = async (subareaData,areacod) => {
     set(ref(dbase, 'subareas/' + subareaData.subareacod), subareaData);
 } 
 
+export const createdetailData = async (detailData,detailname,detailcod) => {
+    await setDoc(doc(dbfirestore, `details/${detailname}/general/`, detailcod ), detailData);
+    set(ref(dbase, 'details/' + detailname + '/' + detailcod), detailData);
+}
