@@ -1,24 +1,23 @@
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
-import { useEffect, useState } from "react";
 import { createdetailData } from "../../../helpers/CRUD/CREATE/createuser";
 import { UpdateDetailData } from "../../../helpers/CRUD/UPDATE/UpdateFunctions";
 import { errorMessage, successMessage } from "../../../helpers/Alerts/alerts";
 
-
-const ModalAddDetail = ({ NameProps, PropsLabels, Dtittle, Props, onEdit, open, close, dbname }) => {
-    // Verificar si existen los nombres de los campos antes de renderizar el formulario
+const ModalAddDetail = ({ NameProps, PropsLabels, Dtittle, Props, onEdit, opend, close, dbname }) => {
     if (!NameProps || NameProps.length !== 3) {
-        return null; // No renderizar nada si no hay nombres suficientes
+        return null;
     }
+    
 
-    const [name1, name2, name3] = NameProps;
-    const [label1 = "", label2 = "", label3 = ""] = PropsLabels;
+    const initialFormData = {
+        [NameProps[0]]: Props[NameProps[0]] || "",
+        [NameProps[1]]: Props[NameProps[1]] || "",
+        [NameProps[2]]: Props[NameProps[2]] || "",
+    };
 
-    const [formData, setFormData] = useState({
-        [name1]: "",
-        [name2]: "",
-        [name3]: "",
-    });
+    const [formData, setFormData] = useState(initialFormData);
+
     const handleChange = (e) => {
         const value = e.target.value.toUpperCase();
         setFormData({
@@ -26,66 +25,66 @@ const ModalAddDetail = ({ NameProps, PropsLabels, Dtittle, Props, onEdit, open, 
             [e.target.name]: value,
         });
     };
+
     const resetForm = () => {
-        setFormData({
-            [name1]: "",
-            [name2]: "",
-            [name3]: "",
-        });
+        setFormData(initialFormData);
+    };
+    const handleClose = () => {
+        resetForm();
+        close();
     };
 
     const detailsubmit = async (e) => {
         e.preventDefault();
-        console.log("this is my formData: " + JSON.stringify(formData));
-        console.log("this is my dbname: " + dbname + " and this is my formData[name1]: " + formData[name1]);
 
         const saveFunction = onEdit ? UpdateDetailData : createdetailData;
-        const aprovedmessage = onEdit ? "Datos actualizados" : "Datos guardados";
+        const message = onEdit ? "Datos actualizados" : "Datos guardados";
+
         try {
-            const rest = await saveFunction(formData, dbname,formData[name1]);
-            successMessage(aprovedmessage);
+            const result = await saveFunction(formData, dbname, formData[NameProps[0]]);
+            successMessage(message);
             resetForm();
             close();
-            
         } catch (error) {
-            console.log(error);
+            console.error(error);
             errorMessage("Error al guardar los datos");
-            
         }
     };
+
     const pretittle = onEdit ? "Modificar " : "Agregar ";
 
     return (
-        <Dialog open={open} onClose={close} maxWidth="xs" fullWidth={true}>
-            <DialogTitle className="text-center">{pretittle+Dtittle}</DialogTitle>
+        <Dialog open={opend} onClose={handleClose} maxWidth="xs" fullWidth={true}>
+            <DialogTitle className="text-center">{pretittle + Dtittle}</DialogTitle>
             <DialogContent>
                 <form onSubmit={detailsubmit}>
                     <div className="row">
-                        <div className="col-12 col-md-4">
-                            <div className="form-group">
-                                <label htmlFor={name1} className="text-lg">{label1}</label>
-                                <input type="text" className={`border-2 rounded-lg ${onEdit ? 'border-amber-500' : 'border-blue-500'}  p-1`} name={name1} value={formData[name1]} onChange={handleChange} />
-
+                        {NameProps.map((name, index) => (
+                            <div className="col-12 col-md-4" key={index}>
+                                <div className="form-group">
+                                    <label htmlFor={name} className="text-lg">
+                                        {PropsLabels[index]}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className={`border-2 rounded-lg ${onEdit ? 'border-amber-500' : 'border-blue-500'}  p-1`}
+                                        name={name}
+                                        value={formData[name]}
+                                        onChange={handleChange}
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-12 col-md-4">
-                            <div className="form-group">
-                                <label htmlFor={name2} className="text-lg">{label2}</label>
-                                <input type="text" className={`border-2 rounded-lg ${onEdit ? 'border-amber-500' : 'border-blue-500'}  p-1`} name={name2} value={formData[name2]} onChange={handleChange} />
-                            </div>
-                        </div>
-                        <div className="col-12 col-md-4">
-                            <div className="form-group">
-                                <label htmlFor={name3} className="text-lg">{label3}</label>
-                                <input type="text" className={`border-2 rounded-lg ${onEdit ? 'border-amber-500' : 'border-blue-500'}  p-1`} name={name3} value={formData[name3]} onChange={handleChange} />
-                            </div>
-                        </div>
+                        ))}
                     </div>
 
                     <div className="flex justify-center mt-4">
-                        <button type="submit" className={`${onEdit ? 'bg-amber-600 text-black' : 'bg-blue-600 text-white'}-500 px-4 py-2 rounded-lg`}>{onEdit ? "Modificar" : "Guardar"}</button>
+                        <button
+                            type="submit"
+                            className={`${onEdit ? 'bg-amber-600 text-black' : 'bg-blue-600 text-white'}-500 px-4 py-2 rounded-lg`}
+                        >
+                            {onEdit ? "Modificar" : "Guardar"}
+                        </button>
                     </div>
-
                 </form>
             </DialogContent>
         </Dialog>
@@ -93,3 +92,4 @@ const ModalAddDetail = ({ NameProps, PropsLabels, Dtittle, Props, onEdit, open, 
 }
 
 export default ModalAddDetail;
+

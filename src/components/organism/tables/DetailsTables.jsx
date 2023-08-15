@@ -8,24 +8,12 @@ import {
     MenuHandler,
     MenuList,
     MenuItem,
-    Button,
 } from "@material-tailwind/react";
 import { deleteDataSwal } from '../../../helpers/Alerts/alerts';
 import { deleteDetailData } from '../../../helpers/CRUD/DELETE/DelFunctions';
-const DetailTables = ({ detailname, detailnameprops,detailprops,editing }) => {
+const DetailTables = ({ detailname, detailnameprops, detailprops, editing, props, onClose }) => {
     const [data, setData] = useState([]);
-    //const [detailprops, setDetailprops] = useState([]);
     const [propname1 = "", propname2 = "", propname3 = ""] = detailnameprops;
-    const handleModifDetails = (prop,name,nameprops) => {
-        detailprops(prop);
-        editing(true);
-        detailname(name);
-        detailnameprops(nameprops);
-    }
-    const handleModif = () => {
-        editing(true);
-    }
-
 
     useEffect(() => {
         const unsubscribe = getdata(`details/${detailname}/general`, null, (results) => {
@@ -33,25 +21,50 @@ const DetailTables = ({ detailname, detailnameprops,detailprops,editing }) => {
         });
         return () => unsubscribe();
     }, []);
-    const Menubuttons = ({ id,props,detailname,detailnameprops }) => {
+
+    useEffect(() => {
+        if (!editing) {
+            resetForm();
+        }
+    }, [editing]);
+
+    const resetForm = () => {
+        props({});
+    };
+
+    const Menubuttons = ({ id, propdetail, detailname }) => {
         return (
             <Menu>
                 <MenuHandler>
                     <ListIcon />
                 </MenuHandler>
                 <div className='bg-gray-700'>
-                <MenuList className='bg-blue-gray-600'>
-                    <MenuItem 
-                    onClick={() =>handleModif()}
-                    ><EditIcon /> Editar</MenuItem>
-                    <MenuItem onClick={() => deleteDataSwal(
-                        (() => deleteDetailData(detailname, id)), "Se eliminaran todos los datos relacionados", "Error al eliminar los datos", "Datos eliminados correctamente"
-                    )}><DeleteIcon/> Eliminar</MenuItem> 
-                </MenuList></div>
+                    <MenuList className='bg-blue-gray-600'>
+                        <MenuItem
+                            onClick={() => {
+                                editing(true);
+                                props(propdetail);
+                            }}
+                        >
+                            <EditIcon /> Editar
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() =>
+                                deleteDataSwal(
+                                    () => deleteDetailData(detailname, id),
+                                    "Se eliminaran todos los datos relacionados",
+                                    "Error al eliminar los datos",
+                                    "Datos eliminados correctamente"
+                                )
+                            }
+                        >
+                            <DeleteIcon /> Eliminar
+                        </MenuItem>
+                    </MenuList>
+                </div>
             </Menu>
         );
     }
-    
 
     return (
         <>
@@ -68,8 +81,14 @@ const DetailTables = ({ detailname, detailnameprops,detailprops,editing }) => {
                     <tbody>
                         {data.map((item, index) => (
                             <tr key={index} className='border-b border-gray-800'>
-                                <td className='cursor-pointer'><Menubuttons id={item[propname1]} 
-                                props={item} detailname={detailname} detailnameprops={detailnameprops}/></td>
+                                <td className='cursor-pointer'>
+                                    <Menubuttons
+                                        id={item[propname1]}
+                                        propdetail={item}
+                                        detailname={detailname}
+                                        detailnameprops={detailnameprops}
+                                    />
+                                </td>
                                 <td>{item[propname1]}</td>
                                 <td>{item[propname2]}</td>
                                 <td>{item[propname3]}</td>
@@ -83,4 +102,5 @@ const DetailTables = ({ detailname, detailnameprops,detailprops,editing }) => {
         </>
     )
 }
-export default DetailTables
+
+export default DetailTables;
