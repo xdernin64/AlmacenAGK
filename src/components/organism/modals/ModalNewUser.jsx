@@ -1,25 +1,32 @@
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createUserData } from "../../../helpers/CRUD/CREATE/createuser";
 import { auth } from "../../../firebase";
 import Swal from "sweetalert2";
+import { getdata } from "../../../helpers/CRUD/READ/GetAreasData";
 
-const NewUserModal = ({ open, close , tipo} ) => {
+const NewUserModal = ({ open, close, tipo }) => {
     const [formData, setFormData] = useState({
         codigo: '',
         nombres: '',
         apellidos: '',
         dni: '',
-        fechaNacimiento: '',
-        fechaIngreso: '',
-        numeroCelular: '',
+        ubicacion: '',
     });
     //get submit data
+    //consulta de datos para la ubicacion codigo ubicacion y nombre ubicacion
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        const unsubscribe = getdata(`details/ubicacion/general`, null, (results) => {
+            setData(results);
+        });
+        return () => unsubscribe();
+    }, []);
+    console.log(data);
 
     const handleChange = (e) => {
         const value = e.target.type === 'text' ? e.target.value.toUpperCase() : e.target.value;
-        if(tipo=="add")
-        {
+        if (tipo == "add") {
             setFormData({
                 ...formData,
                 [e.target.name]: value,
@@ -29,11 +36,11 @@ const NewUserModal = ({ open, close , tipo} ) => {
         }
         else {
             setFormData({
-            ...formData,
-            [e.target.name]: value,
-            uid: auth.currentUser.uid,
-            tipo: "Con usuario"
-        })
+                ...formData,
+                [e.target.name]: value,
+                uid: auth.currentUser.uid,
+                tipo: "Con usuario"
+            })
         }
         ;
     };
@@ -44,9 +51,6 @@ const NewUserModal = ({ open, close , tipo} ) => {
             nombres: '',
             apellidos: '',
             dni: '',
-            fechaNacimiento: '',
-            fechaIngreso: '',
-            numeroCelular: '',
         });
     };
 
@@ -72,7 +76,7 @@ const NewUserModal = ({ open, close , tipo} ) => {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Algo salio mal! :(',
+                    text: err.message,
                 })
             });
 
@@ -149,44 +153,30 @@ const NewUserModal = ({ open, close , tipo} ) => {
                             />
                         </div>
                         <div className="mb-4">
-                            <label htmlFor="fechaNacimiento" className="block text-gray-700 font-bold mb-2">
-                                Fecha de Nacimiento:
+                            <label htmlFor="ubicacion" className="block text-gray-700 font-bold mb-2">
+                                Ubicación:
                             </label>
-                            <input
-                                type="date"
-                                id="fechaNacimiento"
-                                name="fechaNacimiento"
+                            <select
+                                id="ubicacion"
+                                name="ubicacion"
                                 className="border border-gray-400 p-2 w-full rounded-md"
                                 onChange={handleChange}
-                                value={formData.fechaNacimiento}
-                            />
+                                value={formData.ubicacion}
+                                required
+                            >
+                                <option value="">Seleccionar</option>
+                                {data !== undefined ? (
+                                    data.map((item, index) => (
+                                        <option key={index} value={item.codubi}>
+                                            {item.codubi}: {item.nameubi}
+                                        </option>
+                                    ))
+                                ) : (
+                                    <option value="">Seleccionar</option>
+                                )}
+                            </select>
                         </div>
-                        <div className="mb-4">
-                            <label htmlFor="fechaIngreso" className="block text-gray-700 font-bold mb-2">
-                                Fecha de Ingreso:
-                            </label>
-                            <input
-                                type="date"
-                                id="fechaIngreso"
-                                name="fechaIngreso"
-                                className="border border-gray-400 p-2 w-full rounded-md"
-                                onChange={handleChange}
-                                value={formData.fechaIngreso}
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label htmlFor="numeroCelular" className="block text-gray-700 font-bold mb-2">
-                                Número de Celular:
-                            </label>
-                            <input
-                                type="tel"
-                                id="numeroCelular"
-                                name="numeroCelular"
-                                className="border border-gray-400 p-2 w-full rounded-md"
-                                onChange={handleChange}
-                                value={formData.numeroCelular}
-                            />
-                        </div>
+
                         <button
                             type="submit"
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"

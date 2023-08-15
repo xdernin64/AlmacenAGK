@@ -6,6 +6,7 @@ import Routers from './router/Router'
 import './components/styles/stylesheet/resp-animations.css'
 import { auth } from './firebase'
 import { Authstate } from './firebase'
+import 'devextreme/dist/css/dx.light.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 export const Authmoment = () => {
