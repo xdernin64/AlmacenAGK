@@ -12,6 +12,7 @@ const NewUserModal = ({ open, close, tipo }) => {
         apellidos: '',
         dni: '',
         ubicacion: '',
+        estado: '',
     });
     //get submit data
     //consulta de datos para la ubicacion codigo ubicacion y nombre ubicacion
@@ -51,6 +52,7 @@ const NewUserModal = ({ open, close, tipo }) => {
             nombres: '',
             apellidos: '',
             dni: '',
+
         });
     };
 
@@ -164,6 +166,7 @@ const NewUserModal = ({ open, close, tipo }) => {
                                 value={formData.ubicacion}
                                 required
                             >
+
                                 <option value="">Seleccionar</option>
                                 {data !== undefined ? (
                                     data.map((item, index) => (
@@ -176,6 +179,28 @@ const NewUserModal = ({ open, close, tipo }) => {
                                 )}
                             </select>
                         </div>
+                        <div className="mb-4">
+                            <label htmlFor="estado" className="block text-gray-700 font-bold mb-2">
+                                Estado:
+                            </label>
+                            <div className='flex flex-col'>
+                                <label className='text-gray-600'>Estado:</label>
+                                <select
+                                    id='estado'
+                                    name='estado'
+                                    className='border border-gray-400 p-2 w-full rounded-md'
+                                    onChange={handleChange}
+                                    value={formData.estado}
+                                    required
+                                >
+                                    <option value=''>Seleccionar</option>
+                                    <option value='ACTIVO'>ACTIVO</option>
+                                    <option value='INACTIVO'>INACTIVO</option>
+                                </select>
+                            </div>
+
+                        </div>
+
 
                         <button
                             type="submit"

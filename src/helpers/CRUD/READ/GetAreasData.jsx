@@ -46,5 +46,18 @@ export const getdatarealtimedatabase = (rutabd, callback) => {
         callback(dataArray);
     });
 };
+export const getonedatarealtimedatabase = (rutabd, id, callback) => {
+    const starCountRef = ref(dbase, rutabd);
+    onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        const dataArray = Object.keys(data)
+            .filter((key) => key === id)
+            .map((key) => ({
+                id: key,
+                ...data[key],
+            }));
+        callback(dataArray);
+    });
+};
 
 

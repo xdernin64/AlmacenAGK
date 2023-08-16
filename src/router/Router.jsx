@@ -25,7 +25,7 @@ const Routers = ({ state }) => {
                 <Route path="/usuarios" element={state ? (<UserAreas />) : (<Navigate replace to="/login" />)} />
                 {/* Rutas para usuarios */}
                 <Route path="/usuario/:userId" element={state ? (<UserInfo />) : (<Navigate replace to="/login" />)} />
-                <Route path="/usuario/:userId/editar" element={state ? (<UserInfoEdit />) : (<Navigate replace to="/login" />)} />
+                <Route path="/usuario/:userId/edit" element={state ? (<UserInfoEdit />) : (<Navigate replace to="/login" />)} />
                 
 
                 <Route path="/" element={state ? (<Home />) : (<Navigate replace to="/login" />)} />

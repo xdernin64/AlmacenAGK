@@ -51,9 +51,9 @@ const UsersTable = () => {
 
     const handleEditClick = (data) => {
         setSelectedData(data);
-        navigate(`/usuario/${data.codigo}/editing`, { state: { data } });
-
-
+        //check if exist data.uid and if not exist data.uid navigate to /usuario/${data.codigo}/edit else navigate to /usuario/${data.uid}/edit
+        const namedata = data.uid ? data.uid : data.codigo;
+        navigate(`/usuario/${namedata}/edit`, { state: { data } });
     };
 
     const handleDeleteClick = (data) => {
