@@ -11,7 +11,7 @@ const Users = () => {
     }
 
     return (
-        <div>
+        <div className="pagina max-[770px]:mb-24">
             <NewUserModal open={open} close={() => setOpen(false) } tipo="add" />
             <div className="w-100 border-b-4  text-center">
                 <h1 className="text-2xl font-extrabold ">Gestion de usuarios</h1>
@@ -19,7 +19,10 @@ const Users = () => {
             <div>
             <Button  className="text-gray-800 m-2 bg-gray-200 flex justify-end p-2" onClick={openmodal}> <GroupAddIcon></GroupAddIcon></Button>
             </div>
-            <UsersTable></UsersTable>
+            <div className="w-full">
+                <UsersTable></UsersTable>
+            </div>
+            
 
         </div>
     )

@@ -1,5 +1,6 @@
 import { collection, doc, getDocs, onSnapshot, query } from "firebase/firestore";
-import { dbfirestore } from "../../../firebase";
+import { get , onValue, ref } from "firebase/database";
+import { dbase, dbfirestore } from "../../../firebase";
 export const getareasdata = async () => {
     const areas = [];
     const snapshot = await onSnapshot(doc(dbfirestore, "areas"));
@@ -34,4 +35,16 @@ export const getdata = (rutabd, consulta, callback) => {
     });
     return unsubscribe;
 };
+export const getdatarealtimedatabase = (rutabd, callback) => {
+    const starCountRef = ref(dbase, rutabd);
+    onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        const dataArray = Object.keys(data).map((key) => ({
+            id: key,
+            ...data[key],
+        }));
+        callback(dataArray);
+    });
+};
+
 

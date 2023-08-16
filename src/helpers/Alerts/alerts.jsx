@@ -13,7 +13,7 @@ export const deleteDataSwal = async (func, askingMessage, errorMessage, successM
     if (willDelete) {
         try {
             await func();
-            swal("Completo!", successMessage, "success");
+            swal("Completo!", successMessage, "Completado");
         } catch (error) {
             console.error(errorMessage, error);
             swal("Error!", errorMessage, "error");

@@ -37,3 +37,14 @@ export const deleteDetailData = async (detailname, detailcode) => {
         swal("Error!", "Error deleting data!", "error");
     }
 }
+export const deleteUserData = async (usercode) => {
+    try {
+        await deleteDoc(doc(dbfirestore, "users", usercode));
+        await remove(ref(dbase, "users/" + usercode));
+        successMessage("Data successfully deleted!");
+    } catch (error) {
+        console.error("Error deleting data: ", error);
+        swal("Error!", "Error deleting data!", "error");
+    }
+}
+
