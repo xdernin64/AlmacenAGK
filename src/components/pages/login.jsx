@@ -2,7 +2,7 @@ import { useState } from "react";
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { redirect, useNavigate } from "react-router-dom";
-import { signsupabase } from "../../supabaseClient";
+import { checkUserAuthentication, signsupabase } from "../../supabaseClient";
 
 const Login = () => {
     const [error, setError] = useState();
@@ -16,7 +16,7 @@ const Login = () => {
         signsupabase(email, strpassword);
         console.log(email, password);*/
         
-        
+        signsupabase(email, password);
         signInWithEmailAndPassword(auth, email, password).then(
             (userCredentaial) => {
                 console.log(userCredentaial);
@@ -32,7 +32,7 @@ const Login = () => {
 
             <div className="flex h-screen flex-col  xl:flex-row">
                 <div className="m-auto p-5">
-                    <h1 className="text-center text-3xl font-mono text-sky-600 font-bold">¡Bienvenido! <br></br> Inicia sesión para ingresar</h1>
+                    <h1 className="text-center text-3xl font-mono text-sky-600 font-bold" onClick={checkUserAuthentication}>¡Bienvenido! <br></br> Inicia sesión para ingresar</h1>
                     <div className="Imagen h-sc p-10 flex">
                         <img src="https://www.albaibs.es/wp-content/uploads/2020/08/dibujo-almacen-movilidad.png" alt="Alamcen Calidad de agua " />
                     </div>

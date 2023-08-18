@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Authstate, auth, logout } from "../../firebase";
-import { supabase } from "../../supabaseClient";
+import { logoutsupabase, supabase } from "../../supabaseClient";
 import { supabaseAnonKey, supabaseUrl } from "../../constants/env";
 import NewUserModal from "../organism/modals/ModalNewUser";
 import { getcurrentuser } from "../../helpers/CRUD/READ/GetCurrentUser";

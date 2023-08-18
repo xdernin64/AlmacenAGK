@@ -12,6 +12,7 @@ import UserInfo from "../components/templates/UserInfoDetail";
 import Usuarios from "../components/pages/Usuarios";
 import Detalles from "../components/pages/Detalles";
 import Areas from "../components/pages/Areas";
+import RegisterSb from "../components/pages/Registersb";
 
 const Routers = ({ state, isAdmin }) => {
     return (
@@ -44,6 +45,16 @@ const Routers = ({ state, isAdmin }) => {
                     element={
                         state ? (
                             <Usuarios />
+                        ) : (
+                            <Navigate replace to="/login" />
+                        )
+                    }
+                />
+                <Route
+                    path="/register"
+                    element={
+                        state ? (
+                            <RegisterSb />
                         ) : (
                             <Navigate replace to="/login" />
                         )

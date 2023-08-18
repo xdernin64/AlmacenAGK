@@ -48,7 +48,9 @@ const MainMenu = () => {
             </li></NavLink><ul>
                 <MenuDefault></MenuDefault>
             </ul>
-
+            <NavLink to="/register"><li className="option p-5">
+                <FaUserAlt className="icon" /> <span className="link">Registrar</span>
+            </li></NavLink>
             <NavLink to="/profile"><li className="option p-5">
                 <FaUserAlt className="icon" /> <span className="link">Perfil</span>
             </li></NavLink>
