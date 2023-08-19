@@ -3,6 +3,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { redirect, useNavigate } from "react-router-dom";
 import { checkUserAuthentication, signsupabase } from "../../supabaseClient";
+import { updateregister } from "../../helpers/CRUD/CREATE/CREATESB";
 
 const Login = () => {
     const [error, setError] = useState();
@@ -42,7 +43,7 @@ const Login = () => {
                             <input type="text" placeholder="Ingresar su codigo..." className="border-b-blue-400 border-b-4 unborded text-center loginp" name="email" id="email" />
                         </div>
                         <div className="p-3">
-                            <label htmlFor="password" className="text-slate-600 text-lg font-bold">Contraseña</label>
+                            <label htmlFor="password" onClick={updateregister} className="text-slate-600 text-lg font-bold">Contraseña</label>
                             <input type="password" placeholder="Ingresar su contraseña..." className="border-b-blue-400 border-b-4 unborded text-center loginp" name="password" id="password" />
                         </div>
 

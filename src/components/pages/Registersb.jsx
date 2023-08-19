@@ -15,7 +15,7 @@ const RegisterSb = () => {
         // Aquí puedes manejar la lógica para enviar los datos de registro al servidor
         const userData = {
             cod: codigo.toUpperCase(),
-            lasname: apellidos.toUpperCase(),
+            lastname: apellidos.toUpperCase(),
             name: nombres.toUpperCase(),
             cargo: cargo.toUpperCase(),
             rol: rol.toUpperCase(),
@@ -95,7 +95,7 @@ const RegisterSb = () => {
                             value={rol}
                             onChange={(e) => setRol(e.target.value)}
                         >
-                            <option value="administrador">Administrador</option>
+                            <option value="administrador">ADMINISTRAD</option>
                             <option value="encargado">Encargado</option>
                             <option value="usuario">Usuario</option>
                         </select>
