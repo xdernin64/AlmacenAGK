@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Authstate, auth, logout } from "../../firebase";
-import { logoutsupabase, supabase } from "../../supabaseClient";
+import { checkUserAuthentication, logoutsupabase, supabase } from "../../supabaseClient";
 import { supabaseAnonKey, supabaseUrl } from "../../constants/env";
 import NewUserModal from "../organism/modals/ModalNewUser";
 import { getcurrentuser } from "../../helpers/CRUD/READ/GetCurrentUser";
+import { GetAuthDataUser } from "../../helpers/CRUD/READ/GetDataSb";
 
 const Profile = () => {
-    const id = Authstate().uid;
+    
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
@@ -15,7 +16,7 @@ const Profile = () => {
     }
 
     useEffect(() => {
-        getcurrentuser(auth.currentUser.uid)
+        GetAuthDataUser(checkUserAuthentication().user)
             .then((userData) => {
                 setUser(userData);
                 setLoading(false);
@@ -24,7 +25,7 @@ const Profile = () => {
                 setLoading(false);
                 // handle error
             });
-    }, [id]);
+    }, []);
 
     const renderUserData = () => {
         if (loading) {
@@ -65,7 +66,7 @@ const Profile = () => {
                 </div>
             </div>
             <div className="flex justify-center">
-                <button onClick={logout} className="bg-red-500 m-10 text-xl max-[770px]:mb-24">
+                <button onClick={logoutsupabase} className="bg-red-500 m-10 text-xl max-[770px]:mb-24">
                     Cerrar sesión
                 </button>
             </div>

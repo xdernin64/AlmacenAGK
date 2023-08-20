@@ -14,7 +14,7 @@ import Detalles from "../components/pages/Detalles";
 import Areas from "../components/pages/Areas";
 import RegisterSb from "../components/pages/Registersb";
 
-const Routers = ({ state, isAdmin }) => {
+const Routers = ({ state, roleName }) => {
     return (
         <BrowserRouter>
             <App state={state} />
@@ -63,23 +63,23 @@ const Routers = ({ state, isAdmin }) => {
                 <Route
                     path="/details"
                     element={
-                        state && isAdmin ? (<Detalles />):(<Navigate replace to="/home" />)
+                        state && roleName=="ADMINISTRADOR" ? (<Detalles />):(<Navigate replace to="/home" />)
                     } />
                 <Route
                     path="/areas"
                     element={
-                        state && isAdmin ? (<Areas />):(<Navigate replace to="/home" />)
+                        state && roleName=="ADMINISTRADOR" ? (<Areas />):(<Navigate replace to="/home" />)
                     } />
                 
                 {/* Rutas para usuarios */}
                 <Route
                     path="/usuario/:userId"
-                    element={state && isAdmin ? <UserInfo /> : <Navigate replace to="/login" />}
+                    element={state && roleName=="ADMINISTRADOR" ? <UserInfo /> : <Navigate replace to="/login" />}
                 />
                 <Route
                     path="/usuario/:userId/edit"
                     element={
-                        state && isAdmin ? <UserInfoEdit /> : <Navigate replace to="/login" />
+                        state && roleName=="ADMINISTRADOR" ? <UserInfoEdit /> : <Navigate replace to="/login" />
                     }
                 />
 
