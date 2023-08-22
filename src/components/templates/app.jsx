@@ -15,18 +15,10 @@ const App = ({ state }) => {
                     <Container>
                         <MainMenu />
                     </Container>
-                
-                </MainHeader>
-                
-                <div className="contenido max-w-256 m-auto">
+                </MainHeader>                
                     <Container>
                         <Outlet />
                     </Container>
-                </div>
-                
-
-
-
             </>) : (<></>)}
 
         </>

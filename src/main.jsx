@@ -6,7 +6,6 @@ import Routers from './router/Router'
 import './components/styles/stylesheet/resp-animations.css'
 import { auth } from './firebase'
 import { Authstate } from './firebase'
-import 'devextreme/dist/css/dx.light.css';
 import { supabase } from './supabaseClient'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
