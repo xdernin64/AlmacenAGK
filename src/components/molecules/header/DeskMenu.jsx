@@ -278,7 +278,7 @@ function NavListMenu({ lista, titulo }) {
                 </MenuList>
             </Menu>
             <MenuItem className="flex items-center gap-2 text-blue-gray-900 lg:hidden">
-                <Square3Stack3DIcon className="h-[18px] w-[18px]" /> Pages{" "}
+                <Square3Stack3DIcon className="h-[18px] w-[18px]" /> {titulo}{" "}
             </MenuItem>
             <ul className="ml-6 flex w-full flex-col gap-1 lg:hidden">
                 {renderItems}
@@ -289,17 +289,21 @@ function NavListMenu({ lista, titulo }) {
 
 // nav list component
 const navListItems = [
-    {
-        label: "Account",
-        icon: UserCircleIcon,
-    },
+    
     {
         label: "Blocks",
         icon: CubeTransparentIcon,
+        link: "/blocks",
     },
     {
         label: "Docs",
         icon: CodeBracketSquareIcon,
+        link: "/docs",
+    },
+    {
+        label: "Registrar",
+        icon: UserCircleIcon,
+        link: "/register",
     },
 ];
 function NavList() {
@@ -308,15 +312,15 @@ function NavList() {
             <NavListMenu lista={navListMenuItems} titulo={"Secciones"} />
             <NavListMenu lista={navListMenuItemsProps} titulo={"Propiedades"} />
             <NavListMenu lista={navListMenuItemsdtprops} titulo={"Asignaciones"} />
-            {navListItems.map(({ label, icon }, key) => (
-                <a href="#" key={label}>
+            {navListItems.map(({ label, icon,link }, key) => (
+                <NavLink to={link} key={label}>
                     <MenuItem className="flex items-center gap-2 lg:rounded-full">
                         {React.createElement(icon, { className: "h-[18px] w-[18px] text-blue-gray-600" })}{" "}
                         <Typography as="span" variant="small" className="font-normal text-blue-gray-800">
                             {label}
                         </Typography>
                     </MenuItem>
-                </a>
+                </NavLink>
             ))}
         </ul>
     );

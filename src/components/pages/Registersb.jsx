@@ -12,6 +12,23 @@ const RegisterSb = () => {
     const [contrasena, setContrasena] = useState('');
     const handleSubmit = (e) => {
         e.preventDefault();
+        const [area, setArea] = useState('');
+        const [departamento, setDepartamento] = useState('');
+        const [subdepartamento, setSubdepartamento] = useState('');
+        useEffect(() => {
+            async function fetchData() {
+                const selectdata1 = await GetPrimaryData("detailareazone");
+                const selectdata2 = await GetPrimaryData("departamentdetail");//have to query by the zone
+                const selectdata3 = await GetPrimaryData("subdepartamentdetail");//have to query by the departament
+                setSelectsdb1(selectdata1);
+                setSelectsdb2(selectdata2);
+                setSelectsdb3(selectdata3);
+                
+            }
+            fetchData();
+        }, []);
+
+
         // Aquí puedes manejar la lógica para enviar los datos de registro al servidor
         const userData = {
             cod: codigo.toUpperCase(),
@@ -95,9 +112,11 @@ const RegisterSb = () => {
                             value={rol}
                             onChange={(e) => setRol(e.target.value)}
                         >
-                            <option value="administrador">ADMINISTRAD</option>
-                            <option value="encargado">Encargado</option>
-                            <option value="usuario">Usuario</option>
+                            <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+                            <option value="GERENTE">GERENTE</option>
+                            <option value="JEFE">JEFE</option>
+                            <option value="SUPERVISOR">SUPERVISOR</option>
+                            <option value="USUARIO">ENCARGADO</option>
                         </select>
                     </div>
                     <div className="mb-4">

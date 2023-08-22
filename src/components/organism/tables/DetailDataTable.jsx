@@ -8,9 +8,19 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { supabase } from '../../../supabaseClient';
 
 
-const DetailDataTable = ({tittle,dbtable,dbsl1,dbsl2,titlearray,fieldarray,selectname}) => {
+const DetailDataTable = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray, selectname }) => {
     const theme = createTheme({
-        // Your theme overrides...
+        //i want that width will alwais be 100% of the container
+        overrides: {
+            MuiTableCell: {
+                root: {
+                    padding: '0px 0px 0px 0px',
+                },
+            },
+            //i want to edit foother withd cant be more than 
+
+        },
+
     });
     const [selectsdb1, setSelectsdb1] = useState([]);
     const [selectsdb2, setSelectsdb2] = useState([]);
@@ -46,7 +56,7 @@ const DetailDataTable = ({tittle,dbtable,dbsl1,dbsl2,titlearray,fieldarray,selec
             editComponent: props => {
                 const initialValue = props.value || '';
                 const rowData = props.rowData;
-                const initialdbsl1 = selectsdb1.find(selectdb1 => selectdb1[fieldarray[1]]=== initialValue);
+                const initialdbsl1 = selectsdb1.find(selectdb1 => selectdb1[fieldarray[1]] === initialValue);
                 return (
                     <Autocomplete
                         value={initialdbsl1 || null}
@@ -102,87 +112,96 @@ const DetailDataTable = ({tittle,dbtable,dbsl1,dbsl2,titlearray,fieldarray,selec
 
     ];
     return (
+        <div className='p-0 m-0'>
+            <ThemeProvider theme={theme}>
+                <MaterialTable
+                    title={tittle}
+                    columns={columns}
+                    data={async query => {
+                        const { data, error } = await supabase
+                            .from(dbtable)
+                            .select('*')
+                            .filter( `${fieldarray[0]}`, 'ilike', `%${query.search}%`)
 
-        <ThemeProvider theme={theme}>
-            <MaterialTable
-                title={tittle}
-                columns={columns}
-                data={async query => {
-                    const { data, error } = await supabase
-                        .from(dbtable)
-                        .select('*');
-                    return {
-                        data: data,
-                        page: query.page,
-                        totalCount: data.length
-                    };
-                }}
-                localization={{
-                    pagination: {
-                        labelDisplayedRows: '{from}-{to} de {count}',
-                        labelRowsSelect: 'Filas',
-                        labelRowsPerPage: 'Filas por página:',
-                    },
-                    toolbar: {
-                        searchPlaceholder: 'Buscar',
-                    },
-                    //laction for change delete confirmation text 
-                    header: {
-                        actions: 'Acciones'
-                    },
-                    body: {
-                        emptyDataSourceMessage: 'No hay registros para mostrar',
-                        filterRow: {
-                            filterTooltip: 'Filtrar',
-                        },
-                        addTooltip: 'Agregar',
-                        deleteTooltip: 'Eliminar',
-                        editTooltip: 'Editar',
-                        editRow: {
-                            deleteText: '¿Estás seguro de querer eliminar esta fila?',
-                            cancelTooltip: 'Cancelar',
-                            saveTooltip: 'Guardar',
-                        },
-                    },
+                        return {
+                            data: data,
+                            page: query.page,
+                            totalCount: data.length
+                        };
+                    }}
+                    options={
+                        {
+                            exportButton: true,
+                            exportAllData: true,
+                            exportFileName: tittle,
+                            grouping: true
 
-                }}
-                editable={{
-                    onRowAdd: newData =>
-                        new Promise((resolve, reject) => {
-                            // Agrega el nuevo registro a Supabase
-                            supabase
-                                .from(dbtable)
-                                .insert(newData)
-                                .then(() => {
-                                    // Actualiza el estado de tus datos para reflejar los cambios en la tabla Material Table
-                                    // ...
-                                    resolve();
-                                });
-                        }),
-                    onRowUpdate: (newData, oldData) =>
-                        new Promise((resolve, reject) => {
-                            // Actualiza el registro en Supabase
-                            supabase
-                                .from(dbtable)
-                                .update(newData)
-                                .match({ [fieldarray[0]]: oldData[fieldarray[0]] })
-                                .then(() => {
-                                    resolve();
-                                });
-                        }),
+                        }
+                    }
+                    localization={{
+                        pagination: {
+                            labelDisplayedRows: '{from}-{to} de {count}',
+                            labelRowsSelect: 'Filas',
+                            labelRowsPerPage: '',
+                        },
+
+                        //laction for change delete confirmation text 
+                        header: {
+                            actions: 'Acciones'
+                        },
+                        body: {
+                            emptyDataSourceMessage: 'No hay registros para mostrar',
+                            filterRow: {
+                                filterTooltip: 'Filtrar',
+                            },
+                            addTooltip: 'Agregar',
+                            deleteTooltip: 'Eliminar',
+                            editTooltip: 'Editar',
+                            editRow: {
+                                deleteText: '¿Estás seguro de querer eliminar esta fila?',
+                                cancelTooltip: 'Cancelar',
+                                saveTooltip: 'Guardar',
+                            },
+                        },
+                    }}
+                    editable={{
+                        onRowAdd: newData =>
+                            new Promise((resolve, reject) => {
+                                // Agrega el nuevo registro a Supabase
+                                supabase
+                                    .from(dbtable)
+                                    .insert(newData)
+                                    .then(() => {
+                                        // Actualiza el estado de tus datos para reflejar los cambios en la tabla Material Table
+                                        // ...
+                                        resolve();
+                                    });
+                            }),
+
+                        onRowUpdate: (newData, oldData) =>
+                            new Promise((resolve, reject) => {
+                                // Actualiza el registro en Supabase
+                                supabase
+                                    .from(dbtable)
+                                    .update(newData)
+                                    .match({ [fieldarray[0]]: oldData[fieldarray[0]] })
+                                    .then(() => {
+                                        resolve();
+                                    });
+                            }),
                         onRowDelete: oldData =>
-                        new Promise((resolve, reject) => {
-                            // Elimina el registro en Supabase
-                            supabase
-                                .from(dbtable)
-                                .delete()
-                                .match({ [fieldarray[0]]: oldData[fieldarray[0]] })
-                                .then(() => {
-                                    resolve();
-                                });
-                        }),
-                }}
-            /></ThemeProvider>
+                            new Promise((resolve, reject) => {
+                                // Elimina el registro en Supabase
+                                supabase
+                                    .from(dbtable)
+                                    .delete()
+                                    .match({ [fieldarray[0]]: oldData[fieldarray[0]] })
+                                    .then(() => {
+                                        resolve();
+                                    });
+                            }),
+                    }}
+                /></ThemeProvider></div>
     )
 }
 export default DetailDataTable; 

@@ -39,8 +39,26 @@ export const docupation = {
     dbtable: "occupationdetail",
     dbsl1: "subdepartamentdetail",
     dbsl2: "occupation",
-    titlearray: ["Codigo de Asignacion","Codigo Departamento", "Codigo SubDepartamento",  "Descipcion asignacion"],
-    fieldarray: ["ocptdcod","dptdtcod", "subdepartamentcode", "sdptdtdesc"],
-    selectname: [ "dptdtdesc","subdepartamentname"]
+    titlearray: ["Codigo de Asignacion","Codigo SubDepartamento", "Codigo ocupacion",  "Descipcion asignacion"],
+    fieldarray: ["ocptdtcod","sdptdtcod", "occupationcod", "ocptdtdesc"],
+    selectname: [ "sdptdtdesc","occupationname"]
+};
+export const dwork = {
+    tittle: "Asignacion de labores por SubDepartamento",
+    dbtable: "workdetail",
+    dbsl1: "subdepartamentdetail",
+    dbsl2: "work",
+    titlearray: ["Codigo de Asignacion","Codigo SubDepartamento", "Codigo labor",  "Descipcion asignacion"],
+    fieldarray: ["wdtcod","sdptdtcod", "workcod", "wdtdesc"],
+    selectname: [ "sdptdtdesc","workname"]
+};
+export const dceco = {
+    tittle: "Asignacion de Cecos por SubDepartamento",
+    dbtable: "cecodetail",
+    dbsl1: "subdepartamentdetail",
+    dbsl2: "ceco",
+    titlearray: ["Codigo de Asignacion","Codigo SubDepartamento", "Codigo ceco",  "Descipcion asignacion"],
+    fieldarray: ["cecodtcod","sdptdtcod", "cecocod", "cecodtdesc"],
+    selectname: [ "sdptdtdesc","ceconame"]
 };
 

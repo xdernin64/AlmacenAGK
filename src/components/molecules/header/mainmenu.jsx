@@ -18,9 +18,7 @@ const MainMenu = () => {
     //get the local storage length and update the state
 
     return (
-        
         <NavSisra />
-        
     );
 }
 export default MainMenu;

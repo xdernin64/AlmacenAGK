@@ -1,25 +1,26 @@
 import { Outlet } from "react-router-dom"
 import MainMenu from "../molecules/header/mainmenu"
 import MainHeader from "../organism/MainHeader";
-import { Container } from "semantic-ui-react";
-import * as React from 'react';
+import Container from '@mui/material/Container';
+
 
 
 
 const App = ({ state }) => {
 
     return (
+
         <>
-            {state ? (<>
+            {state ? (
+            <Container fixed>
                 <MainHeader >
-                    <Container>
                         <MainMenu />
-                    </Container>
-                </MainHeader>                
-                    <Container>
+                </MainHeader>  
+                
                         <Outlet />
-                    </Container>
-            </>) : (<></>)}
+                </Container>        
+            
+            ) : (<></>)}
 
         </>
     )

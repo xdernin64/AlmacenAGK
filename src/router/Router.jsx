@@ -15,7 +15,7 @@ import Areas from "../components/pages/Areas";
 import RegisterSb from "../components/pages/Registersb";
 import PrimaryDataPage from "../components/templates/PrimaryDataPages";
 import DetailDataPages from "../components/templates/DetailDataPages";
-import { dareazone, ddepartamentarea, dlocationzone, dsubdepartamentarea } from "../components/organism/tables/tableconfig/DetailTablesProps";
+import { dareazone, dceco, ddepartamentarea, dlocationzone, docupation, dsubdepartamentarea, dwork } from "../components/organism/tables/tableconfig/DetailTablesProps";
 
 const Routers = ({ state, roleName }) => {
     return (
@@ -105,6 +105,18 @@ const Routers = ({ state, roleName }) => {
             <Route
                 path="/departament-subdepartament"
                 element={state ? <DetailDataPages config={dsubdepartamentarea} /> : <Navigate replace to="/login" />}
+            />
+            <Route
+                path="/subdepartament-occupation"
+                element={state ? <DetailDataPages config={docupation} /> : <Navigate replace to="/login" />}
+            />
+            <Route
+                path="/subdepartament-work"
+                element={state ? <DetailDataPages config={dwork} /> : <Navigate replace to="/login" />}
+            />
+            <Route
+                path="/subdepartament-ceco"
+                element={state ? <DetailDataPages config={dceco} /> : <Navigate replace to="/login" />}
             />
 
 

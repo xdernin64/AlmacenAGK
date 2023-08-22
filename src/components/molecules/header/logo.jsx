@@ -1,7 +1,8 @@
 const Logo = () => {
         return (
-            <div className="logocomp flex h-16 m-1">
-                <img  src="https://cdn-icons-png.flaticon.com/512/2620/2620267.png" alt="Logo de calidad" />
+            <div className=" text-pink-500 bg-white flex h-10 m-1">
+                <img className="text-pink-500" src="./../../../../logo_calidad.svg" alt="Icono" />
+
             </div>
         )
 }
