@@ -132,7 +132,7 @@ const navListMenuItems = [
         title: "Usuarios",
         description:
             "Revisa la lista de usuarios que tienen acceso al sistema",
-        link: "/Usuarios",
+        link: "/users",
     },
 ];
 // nav list menu

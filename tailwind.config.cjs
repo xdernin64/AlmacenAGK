@@ -9,6 +9,7 @@ module.exports = withMT({
         transparent: 'transparent',
         current: 'currentColor',
         gdark: '#4c4c4c83',
+        mtuserbg: '#01579b',
         }
     },
     

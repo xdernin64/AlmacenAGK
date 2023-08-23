@@ -171,12 +171,12 @@ const Routers = ({ state, roleName }) => {
                 {/* Rutas para usuarios */}
                 <Route
                     path="/usuario/:userId"
-                    element={state && roleName == "ADMINISTRADOR" ? <UserInfo /> : <Navigate replace to="/login" />}
+                    element={state ? <UserInfo /> : <Navigate replace to="/login" />}
                 />
                 <Route
-                    path="/usuario/:userId/edit"
+                    path="/users/:userId/edit"
                     element={
-                        state && roleName == "ADMINISTRADOR" ? <UserInfoEdit /> : <Navigate replace to="/login" />
+                        state ? <UserInfoEdit /> : <Navigate replace to="/login" />
                     }
                 />
 
