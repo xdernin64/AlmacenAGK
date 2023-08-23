@@ -29,6 +29,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { NavLink } from "react-router-dom";
 import { logoutsupabase } from "../../../supabaseClient";
+import Logo from "./logo";
 
 // profile menu component
 const profileMenuItems = [
@@ -78,7 +79,7 @@ function ProfileMenu() {
                     />
                 </Button>
             </MenuHandler>
-            <MenuList className="p-1">
+            <MenuList className="p-1 " >
                 {profileMenuItems.map(({ label, icon, link }, key) => {
                     const isLastItem = key === profileMenuItems.length - 1;
                     return (
@@ -88,8 +89,8 @@ function ProfileMenu() {
                             <MenuItem
 
                                 onClick={closeMenu}
-                                className={`flex items-center gap-2 rounded ${isLastItem
-                                    ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
+                                className={`flex items-center gap-2  rounded ${isLastItem
+                                    ? "hover:bg-red-500/10  focus:bg-red-500/10 active:bg-red-500/10"
                                     : ""
                                     }`}
                             >
@@ -208,13 +209,13 @@ const navListMenuItemsdtprops = [
     {
         title: "Asignacion de sub-departamentos",
         description:
-    "Asigna los sub-departamentos en los departamentos de la empresa.",
+            "Asigna los sub-departamentos en los departamentos de la empresa.",
         link: "/departament-subdepartament",
     },
     {
         title: "Asignacion de ocupaciones",
         description:
-        "Asigna las ocupaciones en los sub-departamentos de la empresa.",
+            "Asigna las ocupaciones en los sub-departamentos de la empresa.",
         link: "/subdepartament-occupation",
     },
     {
@@ -237,7 +238,7 @@ function NavListMenu({ lista, titulo }) {
     const renderItems = lista.map(({ title, description, link }) => (
         <NavLink to={link} key={title} >
             <MenuItem onClick={() => setIsMenuOpen(false)}>
-                <Typography variant="h6" color="blue-gray" className="mb-1">
+                <Typography variant="h6" color="blue-gray" className="mb-1 ">
                     {title}
                 </Typography>
                 <Typography variant="small" color="gray" className="font-normal">
@@ -254,6 +255,7 @@ function NavListMenu({ lista, titulo }) {
                 <MenuHandler>
                     <Typography as="a" href="#" variant="small" className="font-normal">
                         <MenuItem className="hidden items-center gap-2 text-blue-gray-900 lg:flex lg:rounded-full">
+                            {/*Aqui va el icoo de pages*/}
                             <Square3Stack3DIcon className="h-[18px] w-[18px]" /> {titulo}{" "}
                             <ChevronDownIcon
                                 strokeWidth={2}
@@ -263,7 +265,7 @@ function NavListMenu({ lista, titulo }) {
                         </MenuItem>
                     </Typography>
                 </MenuHandler>
-                <MenuList className="hidden w-[36rem] grid-cols-7 gap-3 overflow-visible lg:grid">
+                <MenuList className="hidden w-[36rem] grid-cols-7 gap-3 overflow-visible lg:grid sm:backdrop-saturate-0 sm:backdrop-blur-0">
                     <Card
                         color="blue"
                         shadow={false}
@@ -289,7 +291,7 @@ function NavListMenu({ lista, titulo }) {
 
 // nav list component
 const navListItems = [
-    
+
     {
         label: "Blocks",
         icon: CubeTransparentIcon,
@@ -312,7 +314,7 @@ function NavList() {
             <NavListMenu lista={navListMenuItems} titulo={"Secciones"} />
             <NavListMenu lista={navListMenuItemsProps} titulo={"Propiedades"} />
             <NavListMenu lista={navListMenuItemsdtprops} titulo={"Asignaciones"} />
-            {navListItems.map(({ label, icon,link }, key) => (
+            {navListItems.map(({ label, icon, link }, key) => (
                 <NavLink to={link} key={label}>
                     <MenuItem className="flex items-center gap-2 lg:rounded-full">
                         {React.createElement(icon, { className: "h-[18px] w-[18px] text-blue-gray-600" })}{" "}
@@ -341,13 +343,16 @@ export function NavSisra() {
     return (
         <Navbar className="mx-auto max-w-screen-xl p-2 lg:rounded-full lg:pl-6">
             <div className="relative mx-auto flex items-center text-blue-gray-900">
-                <Typography
+                <div
                     href="#"
                     className="mr-4 ml-2 cursor-pointer py-1.5 font-medium"
                 >
+
                     <NavLink to="/">
-                        SISRA Agrokasa</NavLink>
-                </Typography>
+                        <div className="flex items-center">
+                            <Logo />
+                            SISRA Agrokasa </div> </NavLink>
+                </div>
                 <div className="absolute top-2/4 left-2/4 hidden -translate-x-2/4 -translate-y-2/4 lg:block">
                     <NavList />
                 </div>

@@ -65,7 +65,7 @@ const DetailDataTable = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray
                             props.onChange(selectedDb1);
                         }}
                         options={selectsdb1}
-                        getOptionLabel={selectdb1 => selectdb1[fieldarray[1]] + " - " + selectdb1[selectname[0]]}
+                        getOptionLabel={selectdb1 => selectdb1[fieldarray[1]] + ": " + selectdb1[selectname[0]]}
                         renderInput={params => (
                             <TextField {...params} label={titlearray[1]} variant="outlined" />
                         )}
@@ -90,7 +90,7 @@ const DetailDataTable = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray
                             props.onChange(selectedDb2);
                         }}
                         options={selectsdb2}
-                        getOptionLabel={selectdb2 => selectdb2[fieldarray[2]] + " - " + selectdb2[selectname[1]]}
+                        getOptionLabel={selectdb2 => selectdb2[fieldarray[2]] + ": " + selectdb2[selectname[1]]}
                         renderInput={params => (
                             <TextField {...params} label={titlearray[2]} variant="outlined" />
                         )}

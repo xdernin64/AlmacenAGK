@@ -10,6 +10,8 @@ module.exports = withMT({
         current: 'currentColor',
         gdark: '#4c4c4c83',
         mtuserbg: '#01579b',
+        lightgreenakg: '##009946',
+        
         }
     },
     

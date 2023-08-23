@@ -12,7 +12,7 @@ const App = ({ state }) => {
 
         <>
             {state ? (
-            <Container fixed>
+            <Container className="pt-5">
                 <MainHeader >
                         <MainMenu />
                 </MainHeader>  
