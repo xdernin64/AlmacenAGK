@@ -16,6 +16,7 @@ import RegisterSb from "../components/pages/Registersb";
 import PrimaryDataPage from "../components/templates/PrimaryDataPages";
 import DetailDataPages from "../components/templates/DetailDataPages";
 import { dareazone, dceco, ddepartamentarea, dlocationzone, docupation, dsubdepartamentarea, dwork } from "../components/organism/tables/tableconfig/DetailTablesProps";
+import UserProfileEditForm from "../components/templates/EditUserSbTemplate";
 
 const Routers = ({ state, roleName }) => {
     return (
@@ -176,7 +177,7 @@ const Routers = ({ state, roleName }) => {
                 <Route
                     path="/users/:userId/edit"
                     element={
-                        state ? <UserInfoEdit /> : <Navigate replace to="/login" />
+                        state ? <UserProfileEditForm /> : <Navigate replace to="/login" />
                     }
                 />
 

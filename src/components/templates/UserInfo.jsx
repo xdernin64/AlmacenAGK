@@ -13,11 +13,11 @@ const UserInfoEdit = () => {
     const [isBasicInfoUpdateSuccessful, setIsBasicInfoUpdateSuccessful] = useState(false);
     const [isAdditionalInfoUpdateSuccessful, setIsAdditionalInfoUpdateSuccessful] = useState(false);
     const [gerenciadata, setGerenciadata] = useState([]);
-    const [departamentodata, setDepartamentodata] = useState([]);
-    const [laborpd, setLaborpd] = useState([]);
-    const [ocupacionpd, setOcupacionpd] = useState([]);
-    const [cecopd, setCecopd] = useState([]);
-    const [ubidata, setUbidata] = useState([]);
+    const [departamentodata, setDepartamentodata] = useState([]);//detaildepartament
+    const [laborpd, setLaborpd] = useState([]);//work
+    const [ocupacionpd, setOcupacionpd] = useState([]);//occupation
+    const [cecopd, setCecopd] = useState([]);//ceco
+    const [ubidata, setUbidata] = useState([]);//location
 
 
 
@@ -28,10 +28,10 @@ const UserInfoEdit = () => {
             if (data[0]) {
                 const user = data[0];
                 setBasicInfo({
-                    codigo: user.codigo || '',
-                    apellidos: user.apellidos || '',
-                    nombres: user.nombres || '',
-                    dni: user.dni || '',
+                    cod: user.codigo || '',
+                    lastname: user.apellidos || '',
+                    name: user.nombres || '',
+                    cod: user.dni || '',
                     ubicacion: user.ubicacion || '',
                     estado: user.estado || '',
                 });
