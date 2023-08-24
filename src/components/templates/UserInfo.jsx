@@ -19,7 +19,7 @@ const UserInfoEdit = () => {
     const [cecopd, setCecopd] = useState([]);//ceco
     const [ubidata, setUbidata] = useState([]);//location
 
-
+/*
 
     const { userId } = useParams();
 
@@ -236,7 +236,7 @@ const UserInfoEdit = () => {
                             </form>
                         </div>
 
-                        {/* Información Adicional */}
+                       
                         <div className='mt-6 border-t-2 pt-5 border-gray-300'>
                             <h2 className='text-lg font-semibold mb-5'>
                                 <div
@@ -451,7 +451,7 @@ const UserInfoEdit = () => {
                 )}
             </div>
         </div>
-    );
+    );*/
 };
 
 export default UserInfoEdit;

@@ -14,7 +14,7 @@ const Usuarios = () => {
                 <h1 className="tittlepage">Gestion de usuarios</h1>
             </div>
             <div>
-                <UserTableSb dbtable={"user"} dbsl1={"detaillocationzone"} dbsl2={"subdepartamentdetail"} titlearray={["Codigo","Apellidos","Nombres","dni","Sede","Subdepartamento","Estado"]} fieldarray={["cod","lastname","name","dni","lcdtcod","sdptdtcod","state"]} selectname={["lcdtdesc","sdptdtdesc"]}></UserTableSb>
+                <UserTableSb dbtable={"user"} dbsl1={"detaillocationzone"} dbsl2={"subdepartamentdetail"} titlearray={["Codigo","Apellidos","Nombres","dni","Genero","Sede","Subdepartamento","Estado"]} fieldarray={["cod","lastname","name","dni","gender","lcdtcod","sdptdtcod","state"]} selectname={["lcdtdesc","sdptdtdesc"]}></UserTableSb>
             </div>
             <div className="w-full">
                 

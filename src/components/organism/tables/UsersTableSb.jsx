@@ -84,50 +84,42 @@ const UserTableSb = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray, se
             validate: rowData => rowData[fieldarray[3]] ? true : 'Name cannot be empty'
             // Convert to uppercase
         },
-
         {
             title: titlearray[4],
             field: fieldarray[4],
-            validate: rowData => rowData[fieldarray[4]] ? true : 'Location cannot be empty',
+            editComponent: props => (
+                <select
+                    value={props.value || ''}
+                    onChange={e => props.onChange(e.target.value)}
+                >
+                    <option value="">Seleccionar</option>
+                    <option value="M">MASCULINO</option>
+                    <option value="F">FEMENINO</option>
+                    <option value="O">OTRO</option>
+                </select>
+            ),
+            validate: rowData => rowData[fieldarray[6]] ? true : 'El nombre no puede estar vacío'
+        },
+        
+
+        {
+            title: titlearray[5],
+            field: fieldarray[5],
+            validate: rowData => rowData[fieldarray[5]] ? true : 'Location cannot be empty',
             editComponent: props => {
                 const initialValue = props.value || '';
                 const rowData = props.rowData;
 
-                const initialdbsl1 = selectsdb1.find(selectdb1 => selectdb1[fieldarray[4]] === initialValue);
+                const initialdbsl1 = selectsdb1.find(selectdb1 => selectdb1[fieldarray[5]] === initialValue);
                 return (
                     <Autocomplete
                         value={initialdbsl1 || null}
                         onChange={(event, newValue) => {
-                            const selectedDb1 = newValue ? newValue[fieldarray[4]] : '';
+                            const selectedDb1 = newValue ? newValue[fieldarray[5]] : '';
                             props.onChange(selectedDb1);
                         }}
                         options={selectsdb1}
-                        getOptionLabel={selectdb1 => selectdb1[fieldarray[4]] + ": " + selectdb1[selectname[0]]}
-                        renderInput={params => (
-                            <TextField {...params} label={titlearray[4]} variant="outlined" />
-                        )}
-                    />
-                );
-            },
-        },
-        {
-            title: titlearray[5],
-            field: fieldarray[5],
-            validate: rowData => rowData[fieldarray[5]] ? true : 'Zone cannot be empty',
-            editComponent: props => {
-                const initialValue = props.value || '';
-                const rowData = props.rowData;
-                const initialdbsl2 = selectsdb2.find(selectdb2 => selectdb2[fieldarray[5]] === initialValue);
-
-                return (
-                    <Autocomplete
-                        value={initialdbsl2 || null}
-                        onChange={(event, newValue) => {
-                            const selectedDb2 = newValue ? newValue[fieldarray[5]] : '';
-                            props.onChange(selectedDb2);
-                        }}
-                        options={selectsdb2}
-                        getOptionLabel={selectdb2 => selectdb2[fieldarray[5]] + ": " + selectdb2[selectname[1]]}
+                        getOptionLabel={selectdb1 => selectdb1[fieldarray[5]] + ": " + selectdb1[selectname[0]]}
                         renderInput={params => (
                             <TextField {...params} label={titlearray[5]} variant="outlined" />
                         )}
@@ -138,6 +130,31 @@ const UserTableSb = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray, se
         {
             title: titlearray[6],
             field: fieldarray[6],
+            validate: rowData => rowData[fieldarray[6]] ? true : 'Zone cannot be empty',
+            editComponent: props => {
+                const initialValue = props.value || '';
+                const rowData = props.rowData;
+                const initialdbsl2 = selectsdb2.find(selectdb2 => selectdb2[fieldarray[6]] === initialValue);
+
+                return (
+                    <Autocomplete
+                        value={initialdbsl2 || null}
+                        onChange={(event, newValue) => {
+                            const selectedDb2 = newValue ? newValue[fieldarray[6]] : '';
+                            props.onChange(selectedDb2);
+                        }}
+                        options={selectsdb2}
+                        getOptionLabel={selectdb2 => selectdb2[fieldarray[6]] + ": " + selectdb2[selectname[1]]}
+                        renderInput={params => (
+                            <TextField {...params} label={titlearray[6]} variant="outlined" />
+                        )}
+                    />
+                );
+            },
+        },
+        {
+            title: titlearray[7],
+            field: fieldarray[7],
             editComponent: props => (
                 <select
                     value={props.value || ''}
@@ -148,7 +165,7 @@ const UserTableSb = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray, se
                     <option value="INACTIVO">INACTIVO</option>
                 </select>
             ),
-            validate: rowData => rowData[fieldarray[6]] ? true : 'El nombre no puede estar vacío'
+            validate: rowData => rowData[fieldarray[7]] ? true : 'El nombre no puede estar vacío'
         }
         
     ];

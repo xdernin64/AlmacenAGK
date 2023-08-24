@@ -16,3 +16,11 @@ export const GetPrimaryData = async (db) => {
     console.log(data, error);
     return data;
 };
+export const GetSpecificData = async (db, field, value) => {
+    const { data, error } = await supabase
+        .from(db)
+        .select('*')
+        .eq(field, value);
+    console.log(data, error);
+    return data;
+};
