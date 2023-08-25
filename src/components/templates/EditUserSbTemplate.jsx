@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Form, useParams } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
-import { getdata, getdatarealtimedatabase, getonedatarealtimedatabase } from '../../helpers/CRUD/READ/GetAreasData';
 import {
     Container,
     Paper,
@@ -15,10 +14,10 @@ import {
 } from '@mui/material';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-import { UpdateUserData } from '../../helpers/CRUD/UPDATE/UpdateFunctions';
 import { GetSpecificData } from '../../helpers/CRUD/READ/GetDataSb';
 import AutoCompleteRemoteSubmit from '../molecules/fields/RAutocompleteSubmit';
 import { UpdateDataSb } from '../../helpers/CRUD/UPDATE/UpdateDataSb';
+import MultilineTextField from '../molecules/fields/MultiLineText';
 
 const UserProfileEditForm = () => {
     const [basicInfo, setBasicInfo] = useState({});
@@ -26,12 +25,7 @@ const UserProfileEditForm = () => {
     const [isAdditionalInfoVisible, setIsAdditionalInfoVisible] = useState(false);
     const [isBasicInfoUpdateSuccessful, setIsBasicInfoUpdateSuccessful] = useState(false);
     const [isAdditionalInfoUpdateSuccessful, setIsAdditionalInfoUpdateSuccessful] = useState(false);
-    const [gerenciadata, setGerenciadata] = useState([]);
-    const [departamentodata, setDepartamentodata] = useState([]);//detaildepartament
-    const [laborpd, setLaborpd] = useState([]);//work
-    const [ocupacionpd, setOcupacionpd] = useState([]);//occupation
-    const [cecopd, setCecopd] = useState([]);//ceco
-    const [ubidata, setUbidata] = useState([]);//location
+
 
 
 
@@ -47,28 +41,27 @@ const UserProfileEditForm = () => {
                     lastname: user.lastname || '',
                     name: user.name || '',
                     dni: user.dni || '',
-                    gender:user.gender || '',
+                    gender: user.gender || '',
                     lcdtcod: user.lcdtcod || '',
                     sdptdtcod: user.sdptdtcod || '',
                     state: user.state || '',
                 });
                 setAdditionalInfo({
-                    fingreso: user.fingreso || '',
-                    fnacimiento: user.fnacimiento || '',
-                    numcelular: user.numcelular || '',
-                    tzapato: user.tzapato || '',
-                    tpolo: user.tpolo || '',
-                    tpantalon: user.tpantalon || '',
-                    numcamp: user.numcamp || '',
-                    aexp: user.aexp || '',
-                    nivestudios: user.nivestudios || '',
-                    skills: user.skills || '',
-                    gerenciapd: user.gerenciapd || '',
-                    departamentopd: user.departamentopd || '',
-                    wdtcod: user.wdtcod || '',
-                    ocupacionpd: user.ocupacionpd || '',
-                    cecopd: user.cecopd || '',
-                    tipohorario: user.tipohorario || '',
+                    startworkdate: user.startworkdate || '',//causa error si esta vacio es date
+                    birthdate: user.birthdate || '',//causa error si esta vacio es date
+                    phonenumber: user.phonenumber || '',//no causa error si esta vacio
+                    shoesize: user.shoesize || '',//no causa error si esta vacio
+                    shirtsize: user.shirtsize || '',//no causa error si esta vacio
+                    pantsize: user.pantsize || '',//no causa error si esta vacio
+                    campaingnumber: user.campaingnumber || '',//no causa error si esta vacio
+                    expyear: user.expyear || '',//no causa error si esta vacio
+                    edulevel: user.edulevel || '',//no causa error si esta vacio
+                    skills: user.skills || '',//no causa error si esta vacio
+                    wdtcod: user.wdtcod || '',//causa error si esta vacio es un select que carga una consulta de datos
+                    ocptdtcod: user.ocptdtcod || '',//causa error si esta vacio es un select que carga una consulta de datos
+                    cecodtcod: user.cecodtcod || '',//causa error si esta vacio es un select que carga una consulta de datos
+                    jobtime: user.jobtime || '',//no causa error si esta vacio
+                    address: user.address || '',//no causa error si esta vacio
                 });
             }
         };
@@ -85,31 +78,6 @@ const UserProfileEditForm = () => {
 
 
     }, [userId]);
-    useEffect(() => {
-        const unsubscribe = getdatarealtimedatabase('details/ubicacion', setUbidata);
-
-        return unsubscribe;
-    }, []);
-    useEffect(() => {
-        const unsubscribe = getdatarealtimedatabase('areas', setGerenciadata);
-        return unsubscribe;
-    }, []);
-    useEffect(() => {
-        const unsubscribe = getdatarealtimedatabase('subareas', setDepartamentodata);
-        return unsubscribe;
-    }, []);
-    useEffect(() => {
-        const unsubscribe = getdatarealtimedatabase('details/labor', setLaborpd);
-        return unsubscribe;
-    }, []);
-    useEffect(() => {
-        const unsubscribe = getdatarealtimedatabase('details/ocupacion', setOcupacionpd);
-        return unsubscribe;
-    }, []);
-    useEffect(() => {
-        const unsubscribe = getdatarealtimedatabase('details/centrocoste', setCecopd);
-        return unsubscribe;
-    }, []);
 
     const handleInputChange = (e, formType) => {
         const { name, value } = e.target;
@@ -141,17 +109,37 @@ const UserProfileEditForm = () => {
 
     const handleAdditionalInfoSubmit = (e) => {
         e.preventDefault();
-        // Perform additional info update logic here
-        // You can use the 'additionalInfo' state to send updated additional info to your API or database
-        console.log('Submitting Additional Info:', additionalInfo);
-        UpdateUserData(additionalInfo, userId);
+    
+        // Crear una copia actualizada de additionalInfo
+        const updatedAdditionalInfo = { ...additionalInfo };
+    
+        // Aplicar conversión a mayúsculas solo a campos de entrada de texto que no son select
+        Object.keys(updatedAdditionalInfo).forEach((key) => {
+            const value = updatedAdditionalInfo[key];
+            if (typeof value === 'string' && key !== 'wdtcod' && key !== 'ocptdtcod' && key !== 'cecodtcod') {
+                updatedAdditionalInfo[key] = value.toUpperCase();
+            }
+        });
+    
+        // Realizar la actualización
+        console.log('Submitting Additional Info:', updatedAdditionalInfo);
+        UpdateDataSb("user", "cod", userId, updatedAdditionalInfo);
         setIsAdditionalInfoUpdateSuccessful(true);
     };
+    
+    
 
-    const iconStyle = {
-        fontSize: '2rem',
-        color: 'gray',
-    };
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+    useEffect(() => {
+        if (isAdditionalInfoUpdateSuccessful) {
+            setShowSuccessMessage(true);
+            setTimeout(() => {
+                setShowSuccessMessage(false);
+            }, 3000); // hide the message after 3 seconds
+        }
+    }, [isAdditionalInfoUpdateSuccessful]);
+
     return (
         <Container component="div" maxWidth="md" style={{ backgroundColor: '#f1f1f1', minHeight: '100vh', paddingTop: '8px' }}>
             <Paper elevation={3} style={{ padding: '24px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)' }}>
@@ -282,18 +270,171 @@ const UserProfileEditForm = () => {
                             </Typography>
                             {isAdditionalInfoVisible && (
                                 <form onSubmit={handleAdditionalInfoSubmit} style={{ display: 'grid', gap: '16px' }}>
-                                        <FormControl fullWidth>
-                                            <AutoCompleteRemoteSubmit
-                                                db={"workdetail"}
-                                                title="Labor"
-                                                dataprops={['wdtcod', 'wdtdesc']} // Asegúrate de reemplazar con los nombres correctos
-                                                value={additionalInfo.wdtcod || ''}
-                                                onChange={(selectedValue) => handleInputChange({ target: { name: 'wdtcod', value: selectedValue } }, 'additional')}
-                                                required
-                                            />
+                                    <TextField
+                                        label="Numero de celular"
+                                        type='text'
+                                        name='phonenumber'
+                                        value={additionalInfo.phonenumber || ''}
+                                        onChange={(e) => handleInputChange(e, 'additional')}
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                    <TextField
+                                        label="Direccion"
+                                        type='text'
+                                        name='address'
+                                        value={additionalInfo.address || ''}
+                                        onChange={(e) => handleInputChange(e, 'additional')}
+                                        variant="outlined"
+                                        fullWidth
+                                    />
 
-                                        </FormControl>
+                                    <FormControl fullWidth>
+                                        <AutoCompleteRemoteSubmit
+                                            db={"workdetail"}
+                                            title="Labor"
+                                            dataprops={['wdtcod', 'wdtdesc']} // Asegúrate de reemplazar con los nombres correctos
+                                            value={additionalInfo.wdtcod || ''}
+                                            onChange={(selectedValue) => handleInputChange({ target: { name: 'wdtcod', value: selectedValue } }, 'additional')}
 
+                                        />
+                                    </FormControl>
+                                    <FormControl fullWidth>
+                                        <AutoCompleteRemoteSubmit
+                                            db={"occupationdetail"}
+                                            title="Ocupación"
+                                            dataprops={['ocptdtcod', 'ocptdtdesc']} // Asegúrate de reemplazar con los nombres correctos    
+                                            value={additionalInfo.ocdtcod || ''}
+                                            onChange={(selectedValue) => handleInputChange({ target: { name: 'ocdtcod', value: selectedValue } }, 'additional')}
+
+                                        /></FormControl>
+                                    <FormControl fullWidth>
+                                        <AutoCompleteRemoteSubmit
+                                            db={"cecodetail"}
+                                            title="Centro de Costo"
+                                            dataprops={['cecodtcod', 'cecodtdesc']} // Asegúrate de reemplazar con los nombres correctos
+                                            value={additionalInfo.cecocod || ''}
+                                            onChange={(selectedValue) => handleInputChange({ target: { name: 'cecocod', value: selectedValue } }, 'additional')}
+
+                                        /></FormControl>
+
+                                    <InputLabel id="startworkdate">Fecha de Ingreso</InputLabel>
+                                    <TextField
+
+                                        labelid="startworkdate"
+                                        type='date'
+                                        name='startworkdate'
+                                        value={additionalInfo.startworkdate || ''}
+                                        onChange={(e) => handleInputChange(e, 'additional')}
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                    <InputLabel id="birthdate">Fecha de Nacimiento</InputLabel>
+                                    <TextField
+                                        labelid="birthdate"
+                                        type='date'
+                                        name='birthdate'
+                                        value={additionalInfo.birthdate || ''}
+                                        onChange={(e) => handleInputChange(e, 'additional')}
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                    <TextField
+                                        label="Años de experiencia"
+                                        type='number'
+                                        name='expyear'
+                                        value={additionalInfo.expyear || ''}
+                                        onChange={(e) => handleInputChange(e, 'additional')}
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                    <TextField
+                                        label="Numero de campañas"
+                                        type='number'
+                                        name='campaingnumber'
+                                        value={additionalInfo.campaingnumber || ''}
+                                        onChange={(e) => handleInputChange(e, 'additional')}
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                    <FormControl fullWidth>
+                                        <InputLabel id="edulevel" >Nivel de estudios</InputLabel>
+                                        <Select
+                                            labelId='edulevel'
+                                            name='edulevel'
+                                            value={additionalInfo.edulevel || ''}
+                                            onChange={(e) => handleInputChange(e, 'additional')}
+                                            label="Nivel de estudios"
+                                            fullWidth
+                                        >
+                                            <MenuItem value={'PRIMARIA'}>Primaria</MenuItem>
+                                            <MenuItem value={'SECUNDARIA'}>Secundaria</MenuItem>
+                                            <MenuItem value={'TECNICO'}>Técnico</MenuItem>
+                                            <MenuItem value={'UNIVERSITARIO'}>Universitario</MenuItem>
+                                            <MenuItem value={'POSTGRADO'}>Postgrado</MenuItem>
+                                        </Select></FormControl>
+                                    <MultilineTextField
+                                        label="Habilidades"
+                                        name="skills"
+                                        value={additionalInfo.skills || ''}
+                                        onChange={(e) => handleInputChange(e, 'additional')}
+                                    />
+                                    <TextField
+                                        label="Talla de polo"
+                                        type='text'
+                                        name='shirtsize'
+                                        value={additionalInfo.shirtsize || ''}
+                                        onChange={(e) => handleInputChange(e, 'additional')}
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                    <TextField
+                                        label="Talla de pantalon"
+                                        type='text'
+                                        name='pantsize'
+                                        value={additionalInfo.pantsize || ''}
+                                        onChange={(e) => handleInputChange(e, 'additional')}
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                    <TextField
+                                        label="Talla de zapato"
+                                        type='text'
+                                        name='shoesize'
+                                        value={additionalInfo.shoesize || ''}
+                                        onChange={(e) => handleInputChange(e, 'additional')}
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                    <FormControl fullWidth>
+                                        <InputLabel id="jobtime">Tipo de horario</InputLabel>
+                                        <Select
+                                            labelId='jobtime'
+                                            name='jobtime'
+                                            value={additionalInfo.jobtime || ''}
+                                            onChange={(e) => handleInputChange(e, 'additional')}
+                                            label="Tipo de horario"
+                                            fullWidth
+                                        >
+                                            <MenuItem value={'OFICINA'}>Horario oficina</MenuItem>
+                                            <MenuItem value={'CAMPO'}>Horario campo</MenuItem>
+                                        </Select></FormControl>
+                                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                        <Button
+                                            type='submit'
+                                            variant="contained"
+                                            color="primary"
+                                        >
+                                            Actualizar Información Adicional
+                                        </Button>
+                                    </div>
+                                    {/*isAdditionalInfoUpdateSuccessful with settmeout and cancel button that set original data before update */}
+                                    {isAdditionalInfoUpdateSuccessful && (
+                                        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                                            <strong className="font-bold">¡Éxito!</strong>
+                                            <span className="block sm:inline">¡Actualización exitosa!</span>
+                                        </div>
+                                    )}
                                 </form>
                             )}
                         </div>
