@@ -9,13 +9,15 @@ export const GetAuthDataUser = async (id) => {
     console.log(data, error);
     return data;
 };
-export const GetPrimaryData = async (db) => {
+export const GetPrimaryData = async (db, select = '*', where = {}) => {
     const { data, error } = await supabase
         .from(db)
-        .select('*');
+        .select(select)
+        .match(where);
     console.log(data, error);
     return data;
 };
+
 export const GetSpecificData = async (db, field, value) => {
     const { data, error } = await supabase
         .from(db)
