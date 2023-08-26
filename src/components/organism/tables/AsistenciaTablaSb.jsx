@@ -1,6 +1,6 @@
 
 
-import { ThemeProvider, createTheme } from '@mui/material';
+import { Autocomplete, TextField, ThemeProvider, createTheme } from '@mui/material';
 import MaterialTable from 'material-table';
 import React, { useState, useEffect } from 'react';
 import { GetPrimaryData } from '../../../helpers/CRUD/READ/GetDataSb';
@@ -8,11 +8,24 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { dateToString } from '../../../helpers/dateconverter';
 import LockPersonIcon from '@mui/icons-material/LockPerson';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import AutoCompleteRemoteSubmit from '../../molecules/fields/RAutocompleteSubmit';
+import AutoCompleteRemote from '../../molecules/fields/AutoCompleteRemote';
 const TableAsistenciaSb = () => {
     const theme = createTheme();
     const [userslist, setUserslist] = useState([]);
     const [update, setUpdate] = useState(false);
     const [unlocked, setUnlocked] = useState(false);
+    const [asistencedata, setAsistencedata] = useState([]);
+    const [userdetail, setUserdetail] = useState({});
+    const [location, setLocation] = useState({});
+    const [subdepartament, setSubdepartament] = useState({});
+    const [occupation, setOccupation] = useState({});
+    const [work, setWork] = useState({});
+    const [ceco, setceco] = useState({});
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+
+
+
 
     const [currentdate, setCurrentdate] = useState(dateToString(new Date()));
     const handleDateChange = (event) => {
@@ -23,13 +36,68 @@ const TableAsistenciaSb = () => {
 
 
     const [columns, setColumns] = useState([
-        { title: 'Codigo', field: 'cod' },
-        { title: 'Apellido', field: 'lastname', initialEditValue: 'initial edit value' },
-        { title: 'Nommbre', field: 'name' },
-        { title: 'Ocupacion', field: 'ocptdtcod' },
-        { title: 'Labor', field: 'wdtcod'},
-        { title: 'Centro de Coste', field: 'cecodtcod' },
-        { tittle: 'Estado Asistencia', field:"Asiststate"}
+        { title: 'Codigo', field: 'cod', editable: 'never' },
+        { title: 'Apellido', field: 'lastname', editable: 'never' },
+        { title: 'Nombre', field: 'name', editable: 'never' },
+        {
+            title: 'Sede', field: 'lcdtcod',
+            editComponent: props => {
+                const initialValue = props.value || '';
+                return (
+                    <AutoCompleteRemote db="detaillocationzone"
+                        title="Sede" dataprops={["lcdtcod", "lcdtdesc"]}
+                        value={initialValue} onChange={props.onChange} />
+
+                );
+            },
+        },
+        {
+            title: 'Subdepartamento', field: 'sdptdtcod',
+            editComponent: props => {
+                const initialValue = props.value || '';
+                return (
+                    <AutoCompleteRemote db="subdepartamentdetail"
+                        title="SubDepartamento" dataprops={["sdptdtcod", "sdptdtdesc"]}
+                        value={initialValue} onChange={props.onChange} />
+
+                );
+            },
+
+        },
+        { title: 'Ocupacion', field: 'ocptdtcod',
+        editComponent: props => {
+            const initialValue = props.value || '';
+            return (
+                <AutoCompleteRemote db="occupationdetail"
+                    title="Ocupacion" dataprops={["ocptdtcod", "ocptdtdesc"]}
+                    value={initialValue} onChange={props.onChange} />
+
+            );
+        }, },
+        { title: 'Labor', field: 'wdtcod',
+        editComponent: props => {
+            const initialValue = props.value || '';
+            return (
+                <AutoCompleteRemote db="workdetail"
+                    title="Labor" dataprops={["wdtcod", "wdtdesc"]}
+                    value={initialValue} onChange={props.onChange} />
+
+            );
+        }
+    },
+        { title: 'Centro de Coste', field: 'cecodtcod',
+        editComponent: props => {
+            const initialValue = props.value || '';
+            return (
+                <AutoCompleteRemote db="cecodetail"
+                    title="Centro de Coste" dataprops={["cecodtcod", "cecodtdesc"]}
+                    value={initialValue} onChange={props.onChange} />
+
+            );
+        }
+    
+    },
+        { title: 'Estado Asistencia', field: 'asiststate' },
 
     ]);
 
@@ -51,13 +119,12 @@ const TableAsistenciaSb = () => {
         <ThemeProvider theme={theme}>
             <div className="text-center flex items-center cursor-pointer">
                 <input value={currentdate} onChange={handleDateChange} className="w-full text-center text-2xl mx-auto bg-gray-100 border-gray-300 rounded-md py-2 px-3 md:w-1/5" type="date" />
-                {unlocked ? (<LockOpenIcon onClick={()=>setUnlocked(false)} />):(<LockPersonIcon onClick={()=>setUnlocked(true)} className="text-5xl" />)}
+                {unlocked ? (<LockOpenIcon onClick={() => setUnlocked(false)} />) : (<LockPersonIcon onClick={() => setUnlocked(true)} className="text-5xl" />)}
             </div>
 
 
             <MaterialTable
                 title="Editable Preview"
-
                 columns={columns}
                 data={data}
                 editable={{

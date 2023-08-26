@@ -318,8 +318,8 @@ const UserProfileEditForm = () => {
                                 db={"occupationdetail"}
                                 title="Ocupación"
                                 dataprops={['ocptdtcod', 'ocptdtdesc']} // Asegúrate de reemplazar con los nombres correctos    
-                                value={additionalInfo.ocdtcod || ''}
-                                onChange={(selectedValue) => handleInputChange({ target: { name: 'ocdtcod', value: selectedValue } }, 'additional')}
+                                value={additionalInfo.ocptdtcod || ''}
+                                onChange={(selectedValue) => handleInputChange({ target: { name: 'ocptdtcod', value: selectedValue } }, 'additional')}
 
                             /></FormControl>
                             <div className='h-5'></div>
@@ -328,8 +328,8 @@ const UserProfileEditForm = () => {
                                 db={"cecodetail"}
                                 title="Centro de Costo"
                                 dataprops={['cecodtcod', 'cecodtdesc']} // Asegúrate de reemplazar con los nombres correctos
-                                value={additionalInfo.cecocod || ''}
-                                onChange={(selectedValue) => handleInputChange({ target: { name: 'cecocod', value: selectedValue } }, 'additional')}
+                                value={additionalInfo.cecodtcod || ''}
+                                onChange={(selectedValue) => handleInputChange({ target: { name: 'cecodtcod', value: selectedValue } }, 'additional')}
 
                             /></FormControl>
                             <div className='h-5'></div>
