@@ -49,6 +49,7 @@ export const createuser = async (props, id) => {
     }
 };
 export const CreatePrimaryDataSb = async (dtname, newData) => {
+    
     try {
         const { data, error } = await supabase.from(dtname).insert([newData]);
         if (error) {
@@ -61,5 +62,16 @@ export const CreatePrimaryDataSb = async (dtname, newData) => {
         return { error: true, message: 'Error al agregar el registro' };
     }
 };
+export const CreateFromObject = async (dtname, newData) => {
+    const { error } = await supabase
+        .from(dtname)
+        .insert(newData)
+    if (error) {
+        errorMessage('Error al agregar el registro');
+        return { error: true, message: 'Error al agregar el registro' };
+    }
+    return { error: false, message: 'Registro agregado correctamente' };
+
+}
 
 

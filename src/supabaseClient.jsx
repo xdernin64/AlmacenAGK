@@ -4,10 +4,10 @@ import { Authstate } from './firebase';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 export const checkUserAuthentication = async () => {
-    
-const { data: { user } } = await supabase.auth.getUser()
-console.log(user)
-return user
+
+    const { data: { user } } = await supabase.auth.getUser()
+    console.log(user)
+    return user
 }
 /*
 

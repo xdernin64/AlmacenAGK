@@ -3,7 +3,7 @@
 import { Autocomplete, Select, TextField, ThemeProvider, createTheme } from '@mui/material';
 import MaterialTable from 'material-table';
 import React, { useState, useEffect } from 'react';
-import { GetPrimaryData } from '../../../helpers/CRUD/READ/GetDataSb';
+import { GetPrimaryData, GetSpecificData } from '../../../helpers/CRUD/READ/GetDataSb';
 import { DatePicker } from '@mui/x-date-pickers';
 import { dateToString } from '../../../helpers/dateconverter';
 import LockPersonIcon from '@mui/icons-material/LockPerson';
@@ -11,13 +11,20 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import AutoCompleteRemoteSubmit from '../../molecules/fields/RAutocompleteSubmit';
 import AutoCompleteRemote from '../../molecules/fields/AutoCompleteRemote';
 import { Col } from 'react-bootstrap';
+import { mergeDatauseras } from '../../../helpers/combineddata';
+import { UpdateDataSb } from '../../../helpers/CRUD/UPDATE/UpdateDataSb';
+import { CreateFromObject, CreatePrimaryDataSb } from '../../../helpers/CRUD/CREATE/CREATEDATASB';
+import { DeleteDataSb } from '../../../helpers/CRUD/DELETE/DeleteDataSb';
+import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
+import { FaSearch } from 'react-icons/fa';
+
 const ColumnTotal = (location, subdepartament, occupation, work, ceco) => {
     return [
         { title: 'Codigo', field: 'cod', editable: 'never' },
         { title: 'Apellido', field: 'lastname', editable: 'never' },
         { title: 'Nombre', field: 'name', editable: 'never' },
         {
-            title: 'Estado Asistencia', field: 'asiststate',
+            title: 'Estado Asistencia', field: 'stateas',
             //render cell color by value
             cellStyle: (e, rowData) => {
                 if (rowData.asiststate === "ASISTENCIA") {
@@ -47,8 +54,6 @@ const ColumnTotal = (location, subdepartament, occupation, work, ceco) => {
             },
             editComponent: props => {
                 const initialValue = props.value || '';
-                console.log
-
                 return (
                     <Select
                         native
@@ -87,7 +92,7 @@ const ColumnTotal = (location, subdepartament, occupation, work, ceco) => {
             }
         },
         {
-            title: 'Observaciones', field: 'obs'
+            title: 'Observaciones', field: 'asdesc'
         },
         {
             title: 'Sede', field: 'lcdtcod',
@@ -154,16 +159,14 @@ const ColumnTotal = (location, subdepartament, occupation, work, ceco) => {
 }
 const TableAsistenciaSb = () => {
     const theme = createTheme();
-    const [userslist, setUserslist] = useState([]);
     const [update, setUpdate] = useState(false);
     const [unlocked, setUnlocked] = useState(false);
     const [asistencedata, setAsistencedata] = useState([]);
-    const [userdetail, setUserdetail] = useState({});
     const [location, setLocation] = useState([]);
-    const [subdepartament, setSubdepartament] = useState({});
-    const [occupation, setOccupation] = useState({});
-    const [work, setWork] = useState({});
-    const [ceco, setceco] = useState({});
+    const [subdepartament, setSubdepartament] = useState([]);
+    const [occupation, setOccupation] = useState([]);
+    const [work, setWork] = useState([]);
+    const [ceco, setceco] = useState([]);
     const [combinedData, setCombinedData] = useState([]);
 
     useEffect(() => {
@@ -178,7 +181,6 @@ const TableAsistenciaSb = () => {
             setWork(selectdata4);
             const selectdata5 = await GetPrimaryData("cecodetail");
             setceco(selectdata5);
-            console.log(selectdata1);
         }
         fetchData();
     }, []);
@@ -189,41 +191,48 @@ const TableAsistenciaSb = () => {
         setCurrentdate(newDate);
         console.log(`Formatted Date: ${newDate}`);
     };
-    const [data, setData] = useState([
-        { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 },
-        
-    ]);
+    async function checkassistance (codas,newData2)  {
+        const data = await GetSpecificData("assistence", "codas", codas);
+        if (data.length == 0) {
+            await CreateFromObject("assistence", newData2).then(() => {
+                setUpdate(true);
+
+                
+            });
+            
+            
+        } else {
+            console.log("si existe")
+            await UpdateDataSb("assistence", "codas", codas, newData2).then(() => {
+            setUpdate(true);
+            });
+            
+        }
+    }
+    const [data, setData] = useState([]);
     useEffect(() => {
-        GetPrimaryData("user").then((res) => {
+        GetPrimaryData("user", "cod,name,lastname,lcdtcod,ocptdtcod,wdtcod,cecodtcod,sdptdtcod").then((res) => {
             setData(res);
 
         });
         setUpdate(false);
-    }, [update]);
-    useEffect(() => {
-        GetPrimaryData("assistence").then((res) => {
-            setAsistencedata(res);
-        });
     }, []);
     useEffect(() => {
-        const combinedData = data.map((user) => {
-            const assistence = asistencedata.find(
-                (assistence) => assistence.commonColumn === user.commonColumn
-            );
-            return {
-                ...user,
-                ...assistence,
-            };
+        GetPrimaryData("assistence", "cod,user(name,lastname),stateas,lcdtcod,ocptdtcod,wdtcod,cecodtcod,intime,sdptdtcod,asdesc", { dateas: currentdate }).then((res) => {
+            setAsistencedata(res);
         });
-        setCombinedData(combinedData);
-    }, [data, asistencedata]);
+        setUpdate(false);
+    }, [update]);
+
 
     //getting the userslist with respective data
     return (
+
         <ThemeProvider theme={theme}>
-            <div className="text-center flex items-center cursor-pointer">
-                <input value={currentdate} onChange={handleDateChange} className="w-full text-center text-2xl mx-auto bg-gray-100 border-gray-300 rounded-md py-2 px-3 md:w-1/5" type="date" />
-                {unlocked ? (<LockOpenIcon onClick={() => setUnlocked(() => { console.log(location) })} />) : (<LockPersonIcon onClick={() => setUnlocked(true)} className="text-5xl" />)}
+            <div className="text-center flex items-center w-2/4 cursor-pointer">
+                
+                <input value={currentdate} onChange={handleDateChange} className="text-center text-2xl mx-auto bg-gray-100 border-gray-300 rounded-md py-2 px-3" type="date" />
+                <button onClick={() => setUpdate(true)} className="text-center text-2xl mx-auto bg-gray-100 text-gray-800 border-gray-300 rounded-md py-2 px-3" type="button">Buscar</button>
             </div>
 
 
@@ -231,27 +240,37 @@ const TableAsistenciaSb = () => {
             <MaterialTable
                 title="Editable Preview"
                 columns={ColumnTotal(location, subdepartament, occupation, work, ceco)}
-                data={combinedData}
+                data={mergeDatauseras(data, asistencedata)}
                 editable={{
 
                     onRowUpdate: (newData, oldData) =>
                         new Promise((resolve, reject) => {
                             setTimeout(() => {
-                                const dataUpdate = [...data];
-                                const index = oldData.tableData.id;
-                                dataUpdate[index] = newData;
-                                setData([...dataUpdate]);
+                                const newData2 = {
+                                    codas: newData.cod + currentdate,
+                                    cod: newData.cod,
+                                    dateas: currentdate,
+                                    stateas: newData.stateas,
+                                    intime: newData.intime,
+                                    asdesc: newData.asdesc,
+                                    lcdtcod: newData.lcdtcod,
+                                    sdptdtcod: newData.sdptdtcod,
+                                    ocptdtcod: newData.ocptdtcod,
+                                    wdtcod: newData.wdtcod,
+                                    cecodtcod: newData.cecodtcod
 
-                                resolve();
-                            }, 1000)
+                                }
+                                checkassistance(newData2.codas,newData2)
+                                /*  
+                                */resolve();
+
+                            }, 1500)
                         }),
                     onRowDelete: oldData =>
                         new Promise((resolve, reject) => {
                             setTimeout(() => {
-                                const dataDelete = [...data];
-                                const index = oldData.tableData.id;
-                                dataDelete.splice(index, 1);
-                                setData([...dataDelete]);
+                                DeleteDataSb("assistence", "codas", oldData.cod + currentdate);
+                                setUpdate(true);     
 
                                 resolve()
                             }, 1000)
