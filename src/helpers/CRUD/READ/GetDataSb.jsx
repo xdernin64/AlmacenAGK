@@ -9,14 +9,32 @@ export const GetAuthDataUser = async (id) => {
     console.log(data, error);
     return data;
 };
-export const GetPrimaryData = async (db, select = '*', where = {}) => {
+export const GetPrimaryData = async (tableName, select = '*', where = {}) => {
+    const { data, error } = await supabase
+        .from(tableName)
+        .select(select)
+        .match(where);
+
+    if (error) {
+        console.error(error);
+        return null;
+    }
+
+    return data;
+};
+export const GetFilterData = async (db, select = '*', where = {}) => {
     const { data, error } = await supabase
         .from(db)
         .select(select)
-        .match(where);
+        .in('stateas', ['ASISTENCIA', 'ASISTENCIA FERIADO'])
+        .match(where)
+
+
     console.log(data, error);
     return data;
 };
+
+
 
 export const GetSpecificData = async (db, field, value) => {
     const { data, error } = await supabase

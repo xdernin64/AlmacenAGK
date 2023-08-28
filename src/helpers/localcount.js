@@ -35,3 +35,72 @@ export function useLocalStorageCount(name) {
 
     return count;
 }
+export function convertirHorasAMinutos(horainput) {
+    const [hora, minutos] = horainput.split(':').map(Number);
+    const horaNumerica = hora + minutos / 60;
+    return Number(horaNumerica.toFixed(2)); // Redondear a 2 decimales
+}
+
+export function calcularJornada(horaInicio, horaFin, jobtime) {
+if (jobtime === "OFICINA" && convertirHorasAMinutos(horaFin)>=15.30) {
+        return 8;
+    } else if (jobtime === "CAMPO" && (convertirHorasAMinutos(horaFin) - convertirHorasAMinutos(horaInicio) >= 8)) {
+        return 8;
+    } else {
+        return Number((convertirHorasAMinutos(horaFin) - convertirHorasAMinutos(horaInicio)).toFixed(2)); // Redondear a 2 decimales
+    }
+}
+
+export function horasextras25(salida, jobtime) {
+    const horas = convertirHorasAMinutos(salida);
+    if (jobtime === "OFICINA") {
+        if (horas > 15.30) {
+            if (horas - 15.30 >= 2) {
+                return 2;
+            } else {
+                return Number((horas - 15.30).toFixed(2)); // Redondear a 2 decimales
+            }
+        } else {
+            return 0;
+        }
+    } else if (jobtime === "CAMPO") {
+        if (horas > 14.75) {
+            if (horas - 14.75 >= 2) {
+                return 2;
+            } else {
+                return Number((horas - 14.75).toFixed(2)); // Redondear a 2 decimales
+            }
+        } else {
+            return 0;
+        }
+    }
+}
+
+export function horasextras35(salida, jobtime) {
+    const horas = convertirHorasAMinutos(salida);
+    if (jobtime === "OFICINA") {
+        if (horas > 15.30) {
+            if (horas - 15.30 > 2) {
+                return Number((horas - 15.30 - 2).toFixed(2)); // Redondear a 2 decimales
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    } else if (jobtime === "CAMPO") {
+        if (horas > 14.75) {
+            if (horas - 14.75 > 2) {
+                return Number((horas - 14.75 - 2).toFixed(2)); // Redondear a 2 decimales
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+}
+
+
+
+// 

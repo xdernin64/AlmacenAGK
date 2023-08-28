@@ -11,7 +11,7 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import AutoCompleteRemoteSubmit from '../../molecules/fields/RAutocompleteSubmit';
 import AutoCompleteRemote from '../../molecules/fields/AutoCompleteRemote';
 import { Col } from 'react-bootstrap';
-import { mergeDatauseras } from '../../../helpers/combineddata';
+import { getStatusBackgroundColor, getStatusColor, mergeDatauseras } from '../../../helpers/combineddata';
 import { UpdateDataSb } from '../../../helpers/CRUD/UPDATE/UpdateDataSb';
 import { CreateFromObject, CreatePrimaryDataSb } from '../../../helpers/CRUD/CREATE/CREATEDATASB';
 import { DeleteDataSb } from '../../../helpers/CRUD/DELETE/DeleteDataSb';
@@ -26,32 +26,11 @@ const ColumnTotal = (location, subdepartament, occupation, work, ceco) => {
         {
             title: 'Estado Asistencia', field: 'stateas',
             //render cell color by value
-            cellStyle: (e, rowData) => {
-                if (rowData.asiststate === "ASISTENCIA") {
-                    return { backgroundColor: '#00ff00', color: '#000000', fontWeight: 'bold', textAlign: 'center' }
-                }
-                if (rowData.asiststate === "DSO") {
-                    return { backgroundColor: '#FFA500', color: '#000000', fontWeight: 'bold', textAlign: 'center' }
-                }
-                if (rowData.asiststate === "DXHA") {
-                    return { backgroundColor: '#FFD700', color: '#000000', fontWeight: 'bold', textAlign: 'center' }
-                }
-                if (rowData.asiststate === "FALTO JUSTIFICADO") {
-                    return { backgroundColor: '#FFC0CB', color: '#000000', fontWeight: 'bold', textAlign: 'center' }
-                }
-                if (rowData.asiststate === "FALTO INJUSTIFICADO") {
-                    return { backgroundColor: '#FF0000', color: '#ffffff', fontWeight: 'bold', textAlign: 'center' }
-                }
-                if (rowData.asiststate === "LICENCIA") {
-                    return { backgroundColor: '#ADD8E6', color: '#000000', fontWeight: 'bold', textAlign: 'center' }
-                }
-                if (rowData.asiststate === "DSO FERIADO") {
-                    return { backgroundColor: '#800080', color: '#ffff', fontWeight: 'bold', textAlign: 'center' }
-                }
-                if (rowData.asiststate === "ASISTENCIA FERIADO") {
-                    return { backgroundColor: '#008000', color: '#ffff', fontWeight: 'bold', textAlign: 'center' }
-                }
-            },
+            render: rowData => (
+                <div style={{ backgroundColor: getStatusBackgroundColor(rowData.stateas), padding: '8px',color: getStatusColor(rowData.stateas) }}>
+                    {rowData.stateas}
+                </div>
+            ),
             editComponent: props => {
                 const initialValue = props.value || '';
                 return (
@@ -68,8 +47,8 @@ const ColumnTotal = (location, subdepartament, occupation, work, ceco) => {
                         <option value="ASISTENCIA">ASISTENCIA</option>
                         <option value="DSO">DSO</option>
                         <option value="DXHA">DXHA</option>
-                        <option value="FALTO JUSTIFICADO">FALTO JUSTIFICADO</option>
-                        <option value="FALTO INJUSTIFICADO">FALTO INJUSTIFICADO</option>
+                        <option value="FALTA JUSTIFICADA">FALTA JUSTIFICADA</option>
+                        <option value="FALTA INJUSTIFICADA">FALTA INJUSTIFICADA</option>
                         <option value="LICENCIA">LICENCIA</option>
                         <option value="DSO FERIADO">DSO FERIADO</option>
                         <option value="ASISTENCIA FERIADO">ASISTENCIA FERIADO</option>

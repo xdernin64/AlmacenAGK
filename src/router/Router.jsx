@@ -18,6 +18,7 @@ import DetailDataPages from "../components/templates/DetailDataPages";
 import { dareazone, dceco, ddepartamentarea, dlocationzone, docupation, dsubdepartamentarea, dwork } from "../components/organism/tables/tableconfig/DetailTablesProps";
 import UserProfileEditForm from "../components/templates/EditUserSbTemplate";
 import AsistenciaSb from "../components/pages/Asistencias";
+import ExtraTime from "../components/pages/Horas_extras";
 
 const Routers = ({ state, roleName }) => {
     return (
@@ -125,6 +126,10 @@ const Routers = ({ state, roleName }) => {
                 <Route
                     path="/asistencia"
                     element={state ? <AsistenciaSb /> : <Navigate replace to="/login" />}
+                />
+                <Route
+                    path="/horas-extras"
+                    element={state ? <ExtraTime /> : <Navigate replace to="/login" />}
                 />
                 <Route
                     path="/profile"
