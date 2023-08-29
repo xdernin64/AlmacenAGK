@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { createusersb } from '../../helpers/CRUD/CREATE/CREATESB';
+import { GetPrimaryData } from '../../helpers/CRUD/READ/GetDataSb';
 
 
 const RegisterSb = () => {
@@ -10,25 +11,20 @@ const RegisterSb = () => {
     const [rol, setRol] = useState('usuario');
     const [correo, setCorreo] = useState('');
     const [contrasena, setContrasena] = useState('');
+    const [location, setLocation] = useState([]);
+    const [subdepartament, setSubdepartament] = useState([]);
+    useEffect(() => {
+        async function fetchData() {
+            const selectdata1 = await GetPrimaryData("detaillocationzone");
+            setLocation(selectdata1);
+            const selectdata2 = await GetPrimaryData("subdepartamentdetail");
+            setSubdepartament(selectdata2);
+        }
+        fetchData();
+    }, []);
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        const [area, setArea] = useState('');
-        const [departamento, setDepartamento] = useState('');
-        const [subdepartamento, setSubdepartamento] = useState('');
-        useEffect(() => {
-            async function fetchData() {
-                const selectdata1 = await GetPrimaryData("detailareazone");
-                const selectdata2 = await GetPrimaryData("departamentdetail");//have to query by the zone
-                const selectdata3 = await GetPrimaryData("subdepartamentdetail");//have to query by the departament
-                setSelectsdb1(selectdata1);
-                setSelectsdb2(selectdata2);
-                setSelectsdb3(selectdata3);
-                
-            }
-            fetchData();
-        }, []);
-
-
         // Aquí puedes manejar la lógica para enviar los datos de registro al servidor
         const userData = {
             cod: codigo.toUpperCase(),
@@ -40,7 +36,7 @@ const RegisterSb = () => {
             password: contrasena
         };
         console.log(userData); // Solo para propósitos de demostración, reemplazar con el envío al servidor
-        createusersb(userData);
+        //createusersb(userData);
     };
 
     return (
@@ -117,6 +113,34 @@ const RegisterSb = () => {
                             <option value="JEFE">JEFE</option>
                             <option value="SUPERVISOR">SUPERVISOR</option>
                             <option value="USUARIO">ENCARGADO</option>
+                        </select>
+                    </div>
+                    <div className="mb-4">
+                        <label htmlFor="location" className="block text-sm font-medium text-gray-700">
+                            Sede
+                        </label>
+                        <select
+                            id="location"
+                            name="location"
+                            className="mt-1 p-2 w-full border rounded-md"
+                        >
+                            {location.map((item) => (
+                                <option key={item.lcdtcod} value={item.lcdtcod}>{item.lcdtcod}:  {item.lcdtdesc}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="mb-4">
+                        <label htmlFor="subdepartament" className="block text-sm font-medium text-gray-700">
+                            Subdepartamento
+                        </label>
+                        <select
+                            id="subdepartament"
+                            name="subdepartament"
+                            className="mt-1 p-2 w-full border rounded-md"
+                        >
+                            {subdepartament.map((item) => (
+                                <option key={item.sdptdtcod} value={item.sdptdtcod}>{item.sdptdtcod}:  {item.sdptdt}</option>
+                            ))}
                         </select>
                     </div>
                     <div className="mb-4">

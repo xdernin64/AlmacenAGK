@@ -8,7 +8,8 @@ import { GetFilterData, GetPrimaryData, GetSpecificData } from '../../../helpers
 import { dateToString } from '../../../helpers/dateconverter';
 import { DeleteDataSb } from '../../../helpers/CRUD/DELETE/DeleteDataSb';
 import { getStatusBackgroundColor, getStatusColor } from '../../../helpers/combineddata';
-import { calcularJornada, convertirHorasAMinutos, horasextras25, horasextras35 } from '../../../helpers/localcount';
+import { Horasdobles, calcularJornada, convertirHorasAMinutos, horasextras25, horasextras35 } from '../../../helpers/localcount';
+import { UpdateDataSb } from '../../../helpers/CRUD/UPDATE/UpdateDataSb';
 
 
 
@@ -21,7 +22,7 @@ const ColumnTotal = () => {
         {
             title: 'Estado Asistencia', field: 'stateas', editable: 'never',
             render: rowData => (
-                <div style={{ backgroundColor: getStatusBackgroundColor(rowData.stateas), color: getStatusColor(rowData.stateas), padding: '8px' }}>
+                <div className='border rounded-md' style={{ backgroundColor: getStatusBackgroundColor(rowData.stateas), color: getStatusColor(rowData.stateas), padding: '8px' }}>
                     {rowData.stateas}
                 </div>
             ),
@@ -51,6 +52,10 @@ const ColumnTotal = () => {
         },
         {
             title: 'Horas Extras al 35%', field: 'extratime35'
+        },
+        {
+            title: 'Horas Dobles', field: 'doubletime'
+
         },
         { title: 'Observaciones', field: 'asdesc' },
         { title: 'Sede', field: 'lcdtcod', editable: 'never' },
@@ -100,16 +105,18 @@ const TableSalidasSb = () => {
                         new Promise((resolve, reject) => {
                             setTimeout(() => {
                                 const newData2 = {
-                                    codas: newData.cod + currentdate,
+                                    
                                     intime: newData.intime,
                                     outtime: newData.outtime,
-                                    workinghours: (newData.workinghours !== null && newData.workinghours !== "") ? newData.workinghours : calcularJornada(newData.intime, newData.outtime, newData.user.jobtime),
-                                    extratime25: (newData.extratime25 !== null && newData.extratime25 !== "") ? newData.extratime25 : horasextras25(newData.outtime, newData.user.jobtime),
-                                    extratime35: (newData.extratime35 !== null && newData.extratime35 !== "") ? newData.extratime35 : horasextras35(newData.outtime, newData.user.jobtime),
-                                    doubletime: (newData.user.stateas==="ASISTENCIA FERIADO" ),
-                                    asdesc: newData.asdesc,
+                                    workinghours: (newData.workinghours !== null && newData.workinghours !== "") ? newData.workinghours : calcularJornada(newData.intime, newData.outtime, newData.user.jobtime,newData.stateas),
+                                    extratime25: (newData.extratime25 !== null && newData.extratime25 !== "") ? newData.extratime25 : horasextras25(newData.outtime, newData.user.jobtime,newData.stateas),
+                                    extratime35: (newData.extratime35 !== null && newData.extratime35 !== "") ? newData.extratime35 : horasextras35(newData.outtime, newData.user.jobtime,newData.stateas),
+                                    doubletime: (newData.doubletime !== null && newData.doubletime !== "") ? newData.doubletime : Horasdobles(newData.outtime,newData.stateas),
+                                    asdesc: newData.asdesc
                         
                                 }
+                                UpdateDataSb("assistence","codas",newData.cod + currentdate, newData2);
+                                setUpdate(true);
                                 console.log(newData2);
                                 console.log(newData)
                                 /*  

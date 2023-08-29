@@ -24,7 +24,7 @@ export const createusersb = async (props) => {
     else {
         console.log("user created")
         //i want to insert now insise the table usersb the id of the user created
-        const {error } = await supabase
+        const { error } = await supabase
             .from('auth_users')
             .insert([
                 { id: data.user.id, cod: props.cod, name: props.name, lastname: props.lastname, rol: props.rol, cargo: props.cargo, email: props.email }
@@ -38,9 +38,9 @@ export const createusersb = async (props) => {
     }
 }
 export const updateregister = async () => {
-    const { data, error } = await supabase.auth.updateUser("92dc0634-1f11-4ab1-9af4-717dd6e067dd",{
+    const { data, error } = await supabase.auth.updateUser("92dc0634-1f11-4ab1-9af4-717dd6e067dd", {
         data: {
-            
+
             age: 24,
         },
     })
