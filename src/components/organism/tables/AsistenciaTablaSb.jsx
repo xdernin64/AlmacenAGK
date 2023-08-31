@@ -27,7 +27,7 @@ const ColumnTotal = (location, subdepartament, occupation, work, ceco) => {
             title: 'Estado Asistencia', field: 'stateas',
             //render cell color by value
             render: rowData => (
-                <div style={{ backgroundColor: getStatusBackgroundColor(rowData.stateas), padding: '8px',color: getStatusColor(rowData.stateas) }}>
+                <div style={{ backgroundColor: getStatusBackgroundColor(rowData.stateas), padding: '8px', color: getStatusColor(rowData.stateas) }}>
                     {rowData.stateas}
                 </div>
             ),
@@ -170,22 +170,22 @@ const TableAsistenciaSb = () => {
         setCurrentdate(newDate);
         console.log(`Formatted Date: ${newDate}`);
     };
-    async function checkassistance (codas,newData2)  {
+    async function checkassistance(codas, newData2) {
         const data = await GetSpecificData("assistence", "codas", codas);
         if (data.length == 0) {
             await CreateFromObject("assistence", newData2).then(() => {
                 setUpdate(true);
 
-                
+
             });
-            
-            
+
+
         } else {
             console.log("si existe")
             await UpdateDataSb("assistence", "codas", codas, newData2).then(() => {
-            setUpdate(true);
+                setUpdate(true);
             });
-            
+
         }
     }
     const [data, setData] = useState([]);
@@ -209,7 +209,7 @@ const TableAsistenciaSb = () => {
 
         <ThemeProvider theme={theme}>
             <div className="text-center flex items-center w-2/4 cursor-pointer">
-                
+
                 <input value={currentdate} onChange={handleDateChange} className="text-center text-2xl mx-auto bg-gray-100 border-gray-300 rounded-md py-2 px-3" type="date" />
                 <button onClick={() => setUpdate(true)} className="text-center text-2xl mx-auto bg-gray-100 text-gray-800 border-gray-300 rounded-md py-2 px-3" type="button">Buscar</button>
             </div>
@@ -230,7 +230,7 @@ const TableAsistenciaSb = () => {
                                     cod: newData.cod,
                                     dateas: currentdate,
                                     stateas: newData.stateas,
-                                    intime: newData.intime,
+                                    intime: (((newData.intime == null || newData.intime == "") && (newData.stateas == "ASISTENCIA" || newData.stateas == "ASISTENCIA FERIADO")) ? "06:00" : newData.intime),
                                     asdesc: newData.asdesc,
                                     lcdtcod: newData.lcdtcod,
                                     sdptdtcod: newData.sdptdtcod,
@@ -239,23 +239,30 @@ const TableAsistenciaSb = () => {
                                     cecodtcod: newData.cecodtcod
 
                                 }
-                                checkassistance(newData2.codas,newData2)
+                                checkassistance(newData2.codas, newData2)
                                 /*  
                                 */resolve();
 
-                            }, 1500)
+                            }, 150)
                         }),
                     onRowDelete: oldData =>
                         new Promise((resolve, reject) => {
                             setTimeout(() => {
                                 DeleteDataSb("assistence", "codas", oldData.cod + currentdate);
-                                setUpdate(true);     
+                                setUpdate(true);
 
                                 resolve()
-                            }, 1000)
+                            }, 10)
                         }),
                 }
                 }
+                options={{
+                    fixedColumns: {
+                        left: 2,
+                        right: 0
+                        
+                    }
+                }}
             />
         </ThemeProvider>);
 
