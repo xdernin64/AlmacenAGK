@@ -1,6 +1,7 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createusersb } from '../../helpers/CRUD/CREATE/CREATESB';
 import { GetPrimaryData } from '../../helpers/CRUD/READ/GetDataSb';
+import AutoCompleteRemoForteForm from '../molecules/fields/AutocompleteForFroms';
 
 
 const RegisterSb = () => {
@@ -13,15 +14,10 @@ const RegisterSb = () => {
     const [contrasena, setContrasena] = useState('');
     const [location, setLocation] = useState([]);
     const [subdepartament, setSubdepartament] = useState([]);
-    useEffect(() => {
-        async function fetchData() {
-            const selectdata1 = await GetPrimaryData("detaillocationzone");
-            setLocation(selectdata1);
-            const selectdata2 = await GetPrimaryData("subdepartamentdetail");
-            setSubdepartament(selectdata2);
-        }
-        fetchData();
-    }, []);
+    const [departament, setDepartament] = useState([]);
+    const [area, setArea] = useState([]);
+
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -38,6 +34,25 @@ const RegisterSb = () => {
         console.log(userData); // Solo para propósitos de demostración, reemplazar con el envío al servidor
         //createusersb(userData);
     };
+    const handleSubdepartamentChange = (newSubdepartament) => {
+        setSubdepartament(newSubdepartament);
+        console.log(newSubdepartament);
+    };
+
+    const handleDepartamentChange = (newDepartament) => {
+        setDepartament(newDepartament);
+        console.log(newDepartament);
+    };
+    const handleAreaChange = (newArea) => {
+        setArea(newArea);
+        console.log(newArea);
+    };
+    const handleLocationChange = (newLocation) => {
+        setLocation(newLocation);
+        console.log(newLocation);
+    };
+
+
 
     return (
         <div className="pagina">
@@ -119,29 +134,26 @@ const RegisterSb = () => {
                         <label htmlFor="location" className="block text-sm font-medium text-gray-700">
                             Sede
                         </label>
-                        <select
-                            id="location"
-                            name="location"
-                            className="mt-1 p-2 w-full border rounded-md"
-                        >
-                            {location.map((item) => (
-                                <option key={item.lcdtcod} value={item.lcdtcod}>{item.lcdtcod}:  {item.lcdtdesc}</option>
-                            ))}
-                        </select>
+                        <AutoCompleteRemoForteForm db="detaillocationzone" dataprops={["lcdtcod", "lcdtdesc"]} value={location} onChange={handleLocationChange} />
                     </div>
                     <div className="mb-4">
                         <label htmlFor="subdepartament" className="block text-sm font-medium text-gray-700">
                             Subdepartamento
                         </label>
-                        <select
-                            id="subdepartament"
-                            name="subdepartament"
-                            className="mt-1 p-2 w-full border rounded-md"
-                        >
-                            {subdepartament.map((item) => (
-                                <option key={item.sdptdtcod} value={item.sdptdtcod}>{item.sdptdtcod}:  {item.sdptdt}</option>
-                            ))}
-                        </select>
+                        <AutoCompleteRemoForteForm db="subdepartamentdetail" dataprops={["sdptdtcod", "sdptdtdesc"]} value={subdepartament} onChange={handleSubdepartamentChange} />
+                    </div>
+                    <div className="mb-4">
+                        <label htmlFor="departament" className="block text-sm font-medium text-gray-700">
+                            Departamento
+                        </label>
+                        <AutoCompleteRemoForteForm db="departamentdetail" dataprops={["dptdtcod", "dptdtdesc"]} value={departament} onChange={handleDepartamentChange} />
+                    </div>
+                    <div className="mb-4">
+                        <label htmlFor="area" className="block text-sm font-medium text-gray-700">
+                            Área
+                        </label>
+                        <AutoCompleteRemoForteForm db="detailareazone" dataprops={["azcod", "azdesc"]} value={area} onChange={handleAreaChange} />
+
                     </div>
                     <div className="mb-4">
                         <label htmlFor="correo" className="block text-sm font-medium text-gray-700">
