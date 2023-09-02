@@ -1,75 +1,68 @@
-import { useEffect, useState } from "react";
-import { Authstate, auth, logout } from "../../firebase";
-import { checkUserAuthentication, logoutsupabase, supabase } from "../../supabaseClient";
-import { supabaseAnonKey, supabaseUrl } from "../../constants/env";
-import NewUserModal from "../organism/modals/ModalNewUser";
-import { getcurrentuser } from "../../helpers/CRUD/READ/GetCurrentUser";
-import { GetAuthDataUser } from "../../helpers/CRUD/READ/GetDataSb";
+import React from 'react';
+import { Avatar, Box, Typography, Card, CardContent } from '@mui/material';
+import { Email, Work } from '@mui/icons-material';
 
 const Profile = () => {
-    
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [open, setOpen] = useState(false);
-    const openmodal = () => {
-        setOpen(true);
-    }
-
-    useEffect(() => {
-        GetAuthDataUser(checkUserAuthentication().user)
-            .then((userData) => {
-                setUser(userData);
-                setLoading(false);
-            })
-            .catch((error) => {
-                setLoading(false);
-                // handle error
-            });
-    }, []);
-
-    const renderUserData = () => {
-        if (loading) {
-            return <div className="text-center text-lg font-bold">Loading...</div>;
-        }
-        if (!user) {
-            return <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={openmodal}>Agregar Datos de perfil</button>;
-        }
-        return (
-            <div>
-                <div className="font-bold text-lg pt-2">Codigo:</div>
-                <div className="border-b-4 border-blue-500 text-2xl m-3 text-blue-500 font-mono">{user.codigo}</div>
-                <div className="font-bold text-lg pt-2">Nombres:</div>
-                <div className="border-b-4 border-blue-500 text-2xl m-3 text-blue-500 font-mono">{user.apellidos + " " + user.nombres }</div>
-                <div className="font-bold text-lg pt-2">Celular:</div>
-                <div className="border-b-4 border-blue-500 text-2xl m-3 text-blue-500 font-mono">{user.numeroCelular}</div>
-                <div className="font-bold text-lg pt-2">Labor:</div>
-                <div className="border-b-4 border-blue-500 text-2xl m-3 text-blue-500 font-mono">{user.labor}</div>
-                <div className="font-bold text-lg pt-2">Area:</div>
-                <div className="border-b-4 border-blue-500 text-2xl m-3 text-blue-500 font-mono">{user.area}</div>
-            </div>
-        );
-    };
-
     return (
-        <div className="pagina">
-            <NewUserModal open={open} close={() => setOpen(false)} />
-            <h1 className="tittlepage">Perfil de usuario</h1>
-            <div className="flex flex-row  max-[770px]:flex-col-reverse ">
-                <div className="basis-1/2">
-                    <div className="border bg-gray-100 max-[770px]:p-3 min-[770px]:p-14 border-blue-500 h-auto rounded-xl">
-                        <h2 className="font-bold text-xl ocuro">Datos generales</h2>
-                        <div className="datosp pt-4">{renderUserData()}</div>
-                    </div>
-                </div>
-                <div className="basis-1/2">
-                    <img className="border min-[770px]:ml-10" src="https://cdn-icons-png.flaticon.com/512/3126/3126177.png" alt="Icono del usuario" />
-                </div>
-            </div>
-            <div className="flex justify-center">
-                <button onClick={logoutsupabase} className="bg-red-500 m-10 text-xl max-[770px]:mb-24">
-                    Cerrar sesión
-                </button>
-            </div>
+        <div className='pagina border rounded-xl' style={{ backgroundColor: '#4CAF50',  padding: '20px' }}>
+            <Box className="p-5 md:p-10">
+                <Card elevation={3}>
+                    <CardContent>
+                        <Box display="flex" flexDirection="column" alignItems="center" md={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                            <Box display="flex" flexDirection="column" alignItems="center" md={{ alignItems: 'flex-start' }}>
+                                <Avatar
+                                    sx={{
+                                        width: 120,
+                                        height: 120,
+                                        fontSize: 48,
+                                        backgroundColor: '#ffffff',
+                                        color: '#4CAF50',
+                                    }}
+                                    src="URL_DE_TU_AVATAR"
+                                    alt="Avatar"
+                                />
+                                <Typography variant="h4" mt={2} fontWeight="bold" style={{ color: '#4CAF50' }}>
+                                    Nombre Apellido
+                                </Typography>
+                                <Typography
+                                    variant="subtitle1"
+                                    mt={2}
+                                    sx={{
+                                        backgroundColor: 'gray.200',
+                                        borderRadius: '999px',
+                                        px: 4,
+                                        py: 2,
+                                        color: '#4CAF50',
+                                    }}
+                                >
+                                    Rol
+                                </Typography>
+                            </Box>
+                            <Box display="flex" flexDirection="column" alignItems="center" mt={5} md={{ mt: 0, ml: 10 }}>
+                                <Typography variant="h6" fontWeight="bold" style={{ color: '#4CAF50' }}>
+                                    Información
+                                </Typography>
+                                <Box display="flex" alignItems="center" mt={2}>
+                                    <Email sx={{ marginRight: 1, color: '#4CAF50' }} />
+                                    <Typography variant="body1">correo@ejemplo.com</Typography>
+                                </Box>
+                                <Box display="flex" alignItems="center" mt={2}>
+                                    <Work sx={{ marginRight: 1, color: '#4CAF50' }} />
+                                    <Typography variant="body1">Nombre de Cargo</Typography>
+                                </Box>
+                                <Typography variant="body2" mt={5} color="text.secondary">
+                                    Código: 12345
+                                </Typography>
+                            </Box>
+                        </Box>
+                    </CardContent>
+                </Card>
+                <Box mt={4} textAlign="center">
+                    <Typography variant="body2" color="text.secondary">
+                        Creado por: Nombre del Creador
+                    </Typography>
+                </Box>
+            </Box>
         </div>
     );
 };

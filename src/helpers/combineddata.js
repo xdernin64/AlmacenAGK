@@ -96,7 +96,7 @@ export function mergeDatauserextra(data, asistencia) {
                 sdptdtcod: item.sdptdtcod,
                 ocptdtcod: item.ocptdtcod,
                 wdtcod: item.wdtcod,
-                cecodtcod: item.cecodtcod
+                cecodtcod: item.cecodtcod,
             };
             result.push(resultItem);
         }

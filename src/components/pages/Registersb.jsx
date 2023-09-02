@@ -9,13 +9,15 @@ const RegisterSb = () => {
     const [apellidos, setApellidos] = useState('');
     const [nombres, setNombres] = useState('');
     const [cargo, setCargo] = useState('');
-    const [rol, setRol] = useState('usuario');
+    const [rol, setRol] = useState('ADMINISTRADOR');
     const [correo, setCorreo] = useState('');
     const [contrasena, setContrasena] = useState('');
     const [location, setLocation] = useState([]);
     const [subdepartament, setSubdepartament] = useState([]);
     const [departament, setDepartament] = useState([]);
     const [area, setArea] = useState([]);
+    const [showPassword, setShowPassword] = useState(false);
+
 
 
 
@@ -29,10 +31,16 @@ const RegisterSb = () => {
             cargo: cargo.toUpperCase(),
             rol: rol.toUpperCase(),
             email: correo.toUpperCase(),
-            password: contrasena
+            password: contrasena,
+            location: location.length == 0 ? null : location,
+            subdepartament: subdepartament.length == 0 ? null : subdepartament,
+            departament: departament.length == 0 ? null : departament,
+            area: area.length == 0 ? null : area,
+            suuser: rol === 'ADMINISTRADOR' ? true : false,
+
         };
         console.log(userData); // Solo para propósitos de demostración, reemplazar con el envío al servidor
-        //createusersb(userData);
+        createusersb(userData);
     };
     const handleSubdepartamentChange = (newSubdepartament) => {
         setSubdepartament(newSubdepartament);
@@ -51,7 +59,17 @@ const RegisterSb = () => {
         setLocation(newLocation);
         console.log(newLocation);
     };
-
+    const handleRoleChange = (newRole) => {
+        setRol(newRole);
+        // Reiniciar los campos de autocompletado
+        setLocation([]);
+        setSubdepartament([]);
+        setDepartament([]);
+        setArea([]);
+    };
+    const handleShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
 
 
     return (
@@ -71,6 +89,7 @@ const RegisterSb = () => {
                             className="mt-1 p-2 w-full border rounded-md"
                             value={codigo}
                             onChange={(e) => setCodigo(e.target.value.toUpperCase())}
+                            required
                         />
                     </div>
                     <div className="mb-4">
@@ -84,6 +103,7 @@ const RegisterSb = () => {
                             className="mt-1 p-2 w-full border rounded-md"
                             value={apellidos}
                             onChange={(e) => setApellidos(e.target.value.toUpperCase())}
+                            required
                         />
                     </div>
                     <div className="mb-4">
@@ -97,6 +117,7 @@ const RegisterSb = () => {
                             className="mt-1 p-2 w-full border rounded-md"
                             value={nombres}
                             onChange={(e) => setNombres(e.target.value.toUpperCase())}
+                            required
                         />
                     </div>
                     <div className="mb-4">
@@ -110,6 +131,7 @@ const RegisterSb = () => {
                             className="mt-1 p-2 w-full border rounded-md"
                             value={cargo}
                             onChange={(e) => setCargo(e.target.value.toUpperCase())}
+                            required
                         />
                     </div>
                     <div className="mb-4">
@@ -121,40 +143,56 @@ const RegisterSb = () => {
                             name="role"
                             className="mt-1 p-2 w-full border rounded-md"
                             value={rol}
-                            onChange={(e) => setRol(e.target.value)}
+                            required
+                            onChange={(e) => handleRoleChange(e.target.value)}
                         >
                             <option value="ADMINISTRADOR">ADMINISTRADOR</option>
                             <option value="GERENTE">GERENTE</option>
                             <option value="JEFE">JEFE</option>
                             <option value="SUPERVISOR">SUPERVISOR</option>
-                            <option value="USUARIO">ENCARGADO</option>
+
                         </select>
                     </div>
-                    <div className="mb-4">
-                        <label htmlFor="location" className="block text-sm font-medium text-gray-700">
-                            Sede
-                        </label>
-                        <AutoCompleteRemoForteForm db="detaillocationzone" dataprops={["lcdtcod", "lcdtdesc"]} value={location} onChange={handleLocationChange} />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="subdepartament" className="block text-sm font-medium text-gray-700">
-                            Subdepartamento
-                        </label>
-                        <AutoCompleteRemoForteForm db="subdepartamentdetail" dataprops={["sdptdtcod", "sdptdtdesc"]} value={subdepartament} onChange={handleSubdepartamentChange} />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="departament" className="block text-sm font-medium text-gray-700">
-                            Departamento
-                        </label>
-                        <AutoCompleteRemoForteForm db="departamentdetail" dataprops={["dptdtcod", "dptdtdesc"]} value={departament} onChange={handleDepartamentChange} />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="area" className="block text-sm font-medium text-gray-700">
-                            Área
-                        </label>
-                        <AutoCompleteRemoForteForm db="detailareazone" dataprops={["azcod", "azdesc"]} value={area} onChange={handleAreaChange} />
 
-                    </div>
+                    {/* Autocompletado para Sede */}
+                    {rol === 'GERENTE' || rol === 'SUPERVISOR' || rol === 'JEFE' || rol === 'ENCARGADO' ? (
+                        <div className="mb-4">
+                            <label htmlFor="location" className="block text-sm font-medium text-gray-700">
+                                Sede
+                            </label>
+                            <AutoCompleteRemoForteForm required db="detaillocationzone" dataprops={["lcdtcod", "lcdtdesc"]} value={location} onChange={handleLocationChange} />
+                        </div>
+                    ) : null}
+
+                    {/* Autocompletado para Subdepartamento */}
+                    {rol === 'SUPERVISOR' ? (
+                        <div className="mb-4">
+                            <label htmlFor="subdepartament" className="block text-sm font-medium text-gray-700">
+                                Subdepartamento
+                            </label>
+                            <AutoCompleteRemoForteForm required db="subdepartamentdetail" dataprops={["sdptdtcod", "sdptdtdesc"]} value={subdepartament} onChange={handleSubdepartamentChange} />
+                        </div>
+                    ) : null}
+
+                    {/* Autocompletado para Departamento */}
+                    {rol === 'JEFE' ? (
+                        <div className="mb-4">
+                            <label htmlFor="departament" className="block text-sm font-medium text-gray-700">
+                                Departamento
+                            </label>
+                            <AutoCompleteRemoForteForm required db="departamentdetail" dataprops={["dptdtcod", "dptdtdesc"]} value={departament} onChange={handleDepartamentChange} />
+                        </div>
+                    ) : null}
+
+                    {/* Autocompletado para Área */}
+                    {rol === 'GERENTE' ? (
+                        <div className="mb-4">
+                            <label htmlFor="area" className="block text-sm font-medium text-gray-700">
+                                Área
+                            </label>
+                            <AutoCompleteRemoForteForm required db="detailareazone" dataprops={["azcod", "azdesc"]} value={area} onChange={handleAreaChange} />
+                        </div>
+                    ) : null}
                     <div className="mb-4">
                         <label htmlFor="correo" className="block text-sm font-medium text-gray-700">
                             Correo
@@ -166,6 +204,7 @@ const RegisterSb = () => {
                             className="mt-1 p-2 w-full border rounded-md"
                             value={correo}
                             onChange={(e) => setCorreo(e.target.value.toUpperCase())}
+                            required
                         />
                     </div>
                     <div className="mb-4">
@@ -173,13 +212,20 @@ const RegisterSb = () => {
                             Contraseña
                         </label>
                         <input
-                            type="password"
+                            type={showPassword ? 'text' : 'password'}
                             id="contrasena"
                             name="contrasena"
                             className="mt-1 p-2 w-full border rounded-md"
                             value={contrasena}
                             onChange={(e) => setContrasena(e.target.value)}
                         />
+                        <button
+                            type="button"
+                            className=" top-2 right-2 p-1 rounded-md text-gray-600 hover:text-gray-800"
+                            onClick={handleShowPassword}
+                        >
+                            {showPassword ? 'Ocultar' : 'Mostrar'}
+                        </button>
                     </div>
                     <button
                         type="submit"

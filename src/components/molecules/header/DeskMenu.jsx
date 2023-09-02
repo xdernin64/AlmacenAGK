@@ -343,10 +343,8 @@ export function NavSisra() {
     return (
         <Navbar className="mx-auto max-w-screen-xl p-2 lg:rounded-full lg:pl-6">
             <div className="relative mx-auto flex items-center text-blue-gray-900">
-                <div
-                    href="#"
-                    className="mr-4 ml-2 cursor-pointer py-1.5 font-medium"
-                >
+                <div href="#"
+                    className="mr-4 ml-2 cursor-pointer py-1.5 font-medium">
 
                     <NavLink to="/">
                         <div className="flex items-center">

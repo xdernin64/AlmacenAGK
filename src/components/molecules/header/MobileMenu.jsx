@@ -1,34 +1,287 @@
-
-import { Link, NavLink } from "react-router-dom";
-import { FaHome, FaBoxes, FaShippingFast, FaUserAlt } from 'react-icons/fa';
-import { AiOutlineDropbox } from 'react-icons/ai';
-import { Badge } from "@mui/material";
+import React from "react";
+import {
+    Navbar,
+    Collapse,
+    Typography,
+    Button,
+    IconButton,
+    List,
+    ListItem,
+    Menu,
+    MenuHandler,
+    MenuList,
+    MenuItem,
+    Chip,
+} from "@material-tailwind/react";
+import {
+    ChevronDownIcon,
+    UserCircleIcon,
+    CubeTransparentIcon,
+    Bars3Icon,
+    XMarkIcon,
+    FlagIcon,
+    ChatBubbleOvalLeftIcon,
+    UsersIcon,
+    FolderIcon,
+    Square3Stack3DIcon,
+    RocketLaunchIcon,
+    FaceSmileIcon,
+    PuzzlePieceIcon,
+    GiftIcon,
+    UserGroupIcon,
+    ClockIcon,MapIcon,BuildingLibraryIcon  ,BuildingOffice2Icon,BuildingOfficeIcon,BuildingStorefrontIcon,DocumentMinusIcon
+} from "@heroicons/react/24/outline";
+import Logo from "./logo";
 import { NavLink } from "react-router-dom";
 
-const mb = () => {
-    //get the local storage length and update the state
+const colors = {
+    blue: "bg-blue-50 text-blue-500",
+    orange: "bg-orange-50 text-orange-500",
+    green: "bg-green-50 text-green-500",
+    "blue-gray": "bg-blue-gray-50 text-blue-gray-500",
+    purple: "bg-purple-50 text-purple-500",
+    teal: "bg-teal-50 text-teal-500",
+    cyan: "bg-cyan-50 text-cyan-500",
+    pink: "bg-pink-50 text-pink-500",
+};
+
+const navListMenuItems = [
+    {
+        color: "blue",
+        icon: UserGroupIcon,
+        title: "Asistencias",
+        description: "Aqui podras ver y agregar las asistencias,faltos,descansos,etc.",
+        link: "/asistencia"
+    },
+    {
+        color: "orange",
+        icon: ClockIcon,
+        title: "Horas extras",
+        description: "Registra las horas extras generadas por personal que asistió",
+        link: "/horas-extras"
+    },
+    {
+        color: "green",
+        icon: UsersIcon,
+        title: (
+            <div className="flex items-center gap-1">
+                Usuarios{" "}
+                <Chip
+                    size="sm"
+                    color="green"
+                    variant="ghost"
+                    value="Creciendo"
+                    className="capitalize"
+                />
+            </div>
+        ),
+        description: "Lista de usarios asignados dentro del sistema",
+        link: "/users"
+    }
+];
+const navListCreate = [
+    {
+        color: "green",
+        icon: MapIcon,
+        title: "Zonas",
+        description: "Aqui podras ver y agregar las zonas",
+        link: "/zones"
+        
+    },
+    {
+        color: "green",
+        icon: BuildingLibraryIcon,
+        title: "Areas",
+        description: "Aqui podras ver y agregar las areas",
+        link: "/areas"
+        
+    },
+    {
+        color: "green",
+        icon:BuildingOffice2Icon,
+        title: "Sedes",
+        description: "Aqui podras ver y agregar las sedes",
+        link: "/locations"
+    },
+    {
+        color: "green",
+        icon:BuildingOfficeIcon,
+        title: "Departamentos",
+        description: "Aqui podras ver y agregar los departamentos",
+        link: "/departaments"
+    },
+    {
+        color: "green",
+        icon:BuildingStorefrontIcon,
+        title: "Sub-departamentos",
+        description: "Aqui podras ver y agregar los puestos",
+        link: "/subdepartaments"
+    },
+    {
+        color: "green",
+        icon:DocumentMinusIcon,
+        title: "Ocupaciones",
+        description: "Aqui podras ver y agregar las ocupaciones",
+        link: "/ocupations"
+    }
+
+]
+
+function NavListMenu({lista,titulo}) {
+    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
+    const renderItems = lista.map(
+        ({ icon, title, description, color ,link}, key) => (
+            <NavLink to={link} key={title}>
+                <MenuItem className="flex items-center gap-3 rounded-lg">
+                    <div className={`rounded-lg p-5 ${colors[color]}`}>
+                        {React.createElement(icon, {
+                            strokeWidth: 2,
+                            className: "h-6 w-6",
+                        })}
+                    </div>
+                    <div>
+                        <Typography
+                            variant="h6"
+                            color="blue-gray"
+                            className="flex items-center text-sm"
+                        >
+                            {title}
+                        </Typography>
+                        <Typography variant="small" color="gray" className="font-normal">
+                            {description}
+                        </Typography>
+                    </div>
+                </MenuItem>
+            </NavLink>
+        )
+    );
+
     return (
-        <ul className="lista grid grid-flow-col text-white max-[770px]:grid-cols-5 justify-end w-full m-auto text-center text-lg font-bold   ">
-            <NavLink to="/"><li className="option p-5 text-center m-auto">
-                <FaHome className="icon" /> <span className="link">Inicio</span>
-            </li>
-            </NavLink>
-            <NavLink to="/asistencia"><li className="option p-5">
-                <FaBoxes className="icon" /> <span className="link">Asistencias</span>
-            </li></NavLink>
-            <NavLink to="/horas-extras"><li className="option p-5">
-                <FaShippingFast className="icon" /> <span className="link">Horas extras</span>
-            </li></NavLink>
-            <NavLink to="/Usuarios"><li className="option p-5">
-                <Badge variant="dot" color="warning">
-                    <AiOutlineDropbox className="icon" /> <span className="link">Usuarios</span>
-                </Badge>
-            </li>
-            </NavLink>
-            <NavLink to="/profile"><li className="option p-5">
-                <FaUserAlt className="icon" /> <span className="link">Perfil</span>
-            </li></NavLink>
-        </ul>
+        <React.Fragment>
+            <Menu
+                open={isMenuOpen}
+                handler={setIsMenuOpen}
+                offset={{ mainAxis: 20 }}
+                placement="bottom"
+                allowHover={true}
+            >
+                <MenuHandler>
+                    <Typography as="div" variant="small" className="font-normal">
+                        <ListItem
+                            className="flex items-center gap-2 py-2 pr-4"
+                            selected={isMenuOpen || isMobileMenuOpen}
+                            onClick={() => setIsMobileMenuOpen((cur) => !cur)}
+                        >
+                            <UserCircleIcon className="h-[18px] w-[18px]" />
+                            {titulo}
+                            <ChevronDownIcon
+                                strokeWidth={2.5}
+                                className={`hidden h-3 w-3 transition-transform lg:block ${isMenuOpen ? "rotate-180" : ""
+                                    }`}
+                            />
+                            <ChevronDownIcon
+                                strokeWidth={2.5}
+                                className={`block h-3 w-3 transition-transform lg:hidden ${isMobileMenuOpen ? "rotate-180" : ""
+                                    }`}
+                            />
+                        </ListItem>
+                    </Typography>
+                </MenuHandler>
+                <MenuList className="hidden max-w-screen-xl rounded-xl lg:block">
+                    <ul className="grid grid-cols-4 gap-y-2">{renderItems}</ul>
+                </MenuList>
+            </Menu>
+            <div className="block lg:hidden">
+                <Collapse open={isMobileMenuOpen}>{renderItems}</Collapse>
+            </div>
+        </React.Fragment>
     );
 }
-export default mb;
+
+function NavList() {
+    return (
+        <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1">
+
+            <NavLink
+                to={"/register"}
+            >
+                <ListItem className="flex items-center gap-2 py-2 pr-4">
+                    <CubeTransparentIcon className="h-[18px] w-[18px]" />
+                    Blocks
+                </ListItem>
+            </NavLink>
+            <NavListMenu lista={navListMenuItems} titulo={"Gestión"}/>
+            <NavListMenu lista={navListCreate} titulo={"Creación"}/>
+            <Typography
+                as="a"
+                href="#"
+                variant="small"
+                color="blue-gray"
+                className="font-normal"
+            >
+                <ListItem className="flex items-center gap-2 py-2 pr-4">
+                    <UserCircleIcon className="h-[18px] w-[18px]" />
+                    Account
+                </ListItem>
+            </Typography>
+        </List>
+    );
+}
+
+export function NavbarWithMegaMenu() {
+    const [openNav, setOpenNav] = React.useState(false);
+
+    React.useEffect(() => {
+        window.addEventListener(
+            "resize",
+            () => window.innerWidth >= 960 && setOpenNav(false)
+        );
+    }, []);
+
+    return (
+        <Navbar className="mx-auto max-w-screen-xl px-4 py-2">
+            <div className="flex items-center justify-between text-blue-gray-900">
+            <NavLink to="/">
+                        <div className="flex items-center">
+                            <Logo />
+                            SISRA Agrokasa </div> </NavLink>
+                <div className="hidden lg:block">
+                    <NavList />
+                </div>
+                <div className="hidden gap-2 lg:flex">
+                    <Button variant="text" size="sm" color="blue-gray">
+                        Sign In
+                    </Button>
+                    <Button variant="gradient" size="sm">
+                        Sign Up
+                    </Button>
+                </div>
+                <IconButton
+                    variant="text"
+                    color="blue-gray"
+                    className="lg:hidden"
+                    onClick={() => setOpenNav(!openNav)}
+                >
+                    {openNav ? (
+                        <XMarkIcon className="h-6 w-6" strokeWidth={2} />
+                    ) : (
+                        <Bars3Icon className="h-6 w-6" strokeWidth={2} />
+                    )}
+                </IconButton>
+            </div>
+            <Collapse open={openNav}>
+                <NavList />
+                <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
+                    <Button variant="outlined" size="sm" color="blue-gray" fullWidth>
+                        Sign In
+                    </Button>
+                    <Button variant="gradient" size="sm" fullWidth>
+                        Sign Up
+                    </Button>
+                </div>
+            </Collapse>
+        </Navbar>
+    );
+}

@@ -13,12 +13,13 @@ import {
     Button,
 } from "@material-tailwind/react";
 import { NavSisra } from "./DeskMenu";
+import { NavbarWithMegaMenu } from "./MobileMenu";
 
 const MainMenu = () => {
     //get the local storage length and update the state
 
     return (
-        <NavSisra />
+        <NavbarWithMegaMenu />
     );
 }
 export default MainMenu;
