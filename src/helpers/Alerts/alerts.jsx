@@ -32,7 +32,7 @@ export const successMessage = (tittle) => {
     });
 }
 export const errorMessage = (tittle) => {
-    swal.fire({
+    Swal.fire({
         position: 'center',
         icon: 'error',
         title: tittle,

@@ -6,15 +6,15 @@ import Container from '@mui/material/Container';
 
 
 
-const App = ({ state }) => {
+const App = ({ state , rol }) => {
 
-    return (
+    return  (
 
         <>
             {state ? (
             <Container className="pt-5">
                 <MainHeader >
-                        <MainMenu />
+                        <MainMenu rol={rol}/>
                 </MainHeader>  
                 
                         <Outlet />

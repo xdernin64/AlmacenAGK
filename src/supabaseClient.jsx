@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { supabaseAnonKey, supabaseUrl } from './constants/env'
 import { Authstate } from './firebase';
+import { errorMessage, successMessage } from './helpers/Alerts/alerts';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 export const checkUserAuthentication = async () => {
@@ -20,6 +21,13 @@ export const signsupabase = async (email1, password1) => {
         password: password1,
     })
     console.log(data, error, email1, password1)
+
+    if (error) {
+        errorMessage("Usuario y contraseña incorrectos")
+    }
+    else {
+        successMessage("Bienvenido")
+    }
 }
 //logut supabase
 export const logoutsupabase = async () => {

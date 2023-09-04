@@ -18,10 +18,12 @@ import { DeleteDataSb } from '../../../helpers/CRUD/DELETE/DeleteDataSb';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import { FaSearch } from 'react-icons/fa';
 
-const ColumnTotal = (location, subdepartament, occupation, work, ceco) => {
+const ColumnTotal = (location, subdepartament, occupation, work, ceco,callbacknombre , callbackapellido) => {
     return [
         { title: 'Codigo', field: 'cod', editable: 'never' },
-        { title: 'Apellido', field: 'lastname', editable: 'never' },
+        { title: 'Apellido', field: 'lastname', editable: 'never' 
+            //i want to have callback that allow setapellido here
+        },
         { title: 'Nombre', field: 'name', editable: 'never' },
         {
             title: 'Estado Asistencia', field: 'stateas',
@@ -136,7 +138,7 @@ const ColumnTotal = (location, subdepartament, occupation, work, ceco) => {
         }
     ]
 }
-const TableAsistenciaSb = () => {
+const TableAsistenciaSb = ({wheresb}) => {
     const theme = createTheme();
     const [update, setUpdate] = useState(false);
     const [unlocked, setUnlocked] = useState(false);
@@ -147,18 +149,21 @@ const TableAsistenciaSb = () => {
     const [work, setWork] = useState([]);
     const [ceco, setceco] = useState([]);
     const [combinedData, setCombinedData] = useState([]);
+    const [selectedRow, setSelectedRow] = useState(null);
+    const [apellido, setApellido] = useState('');
+    const [nombre, setNombre] = useState('');
 
     useEffect(() => {
         async function fetchData() {
-            const selectdata1 = await GetPrimaryData("detaillocationzone");
+            const selectdata1 = await GetPrimaryData("detaillocationzone","*");
             setLocation(selectdata1);
-            const selectdata2 = await GetPrimaryData("subdepartamentdetail");
+            const selectdata2 = await GetPrimaryData("subdepartamentdetail","*",wheresb);
             setSubdepartament(selectdata2);
-            const selectdata3 = await GetPrimaryData("occupationdetail");
+            const selectdata3 = await GetPrimaryData("occupationdetail","*",wheresb);
             setOccupation(selectdata3);
-            const selectdata4 = await GetPrimaryData("workdetail");
+            const selectdata4 = await GetPrimaryData("workdetail","*",wheresb);
             setWork(selectdata4);
-            const selectdata5 = await GetPrimaryData("cecodetail");
+            const selectdata5 = await GetPrimaryData("cecodetail","*",wheresb);
             setceco(selectdata5);
         }
         fetchData();
@@ -190,15 +195,18 @@ const TableAsistenciaSb = () => {
     }
     const [data, setData] = useState([]);
     useEffect(() => {
-        GetPrimaryData("user", "cod,name,lastname,lcdtcod,ocptdtcod,wdtcod,cecodtcod,sdptdtcod").then((res) => {
+        
+        GetPrimaryData("user", "cod,name,lastname,lcdtcod,ocptdtcod,wdtcod,cecodtcod,sdptdtcod",wheresb).then((res) => {
             setData(res);
 
         });
         setUpdate(false);
     }, []);
     useEffect(() => {
-        GetPrimaryData("assistence", "cod,user(name,lastname),stateas,lcdtcod,ocptdtcod,wdtcod,cecodtcod,intime,sdptdtcod,asdesc", { dateas: currentdate }).then((res) => {
+        const combinedobject = {dateas: currentdate,...wheresb}
+        GetPrimaryData("assistence", "cod,user(name,lastname),stateas,lcdtcod,ocptdtcod,wdtcod,cecodtcod,intime,sdptdtcod,asdesc", combinedobject).then((res) => {
             setAsistencedata(res);
+            console.log(wheresb.sdptdtcod)
         });
         setUpdate(false);
     }, [update]);
@@ -214,14 +222,16 @@ const TableAsistenciaSb = () => {
                 <button onClick={() => setUpdate(true)} className="text-center text-2xl mx-auto bg-gray-100 text-gray-800 border-gray-300 rounded-md py-2 px-3" type="button">Buscar</button>
             </div>
 
-
-
             <MaterialTable
-                title="Editable Preview"
+                title={`${apellido} ${nombre}`}
                 columns={ColumnTotal(location, subdepartament, occupation, work, ceco)}
                 data={mergeDatauseras(data, asistencedata)}
+                onRowClick={(event, rowData) => {
+                    // Perform your custom action here
+                    setApellido(rowData.lastname);
+                    setNombre(rowData.name);
+                }}
                 editable={{
-
                     onRowUpdate: (newData, oldData) =>
                         new Promise((resolve, reject) => {
                             setTimeout(() => {
@@ -237,12 +247,9 @@ const TableAsistenciaSb = () => {
                                     ocptdtcod: newData.ocptdtcod,
                                     wdtcod: newData.wdtcod,
                                     cecodtcod: newData.cecodtcod
-
                                 }
                                 checkassistance(newData2.codas, newData2)
-                                /*  
-                                */resolve();
-
+                                resolve();
                             }, 150)
                         }),
                     onRowDelete: oldData =>
@@ -250,20 +257,16 @@ const TableAsistenciaSb = () => {
                             setTimeout(() => {
                                 DeleteDataSb("assistence", "codas", oldData.cod + currentdate);
                                 setUpdate(true);
-
                                 resolve()
                             }, 10)
                         }),
-                }
-                }
-                options={{
-                    fixedColumns: {
-                        left: 2,
-                        right: 0
-                        
-                    }
                 }}
             />
+
+
+
+
+
         </ThemeProvider>);
 
 }

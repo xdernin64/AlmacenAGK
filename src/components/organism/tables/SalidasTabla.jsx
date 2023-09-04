@@ -54,8 +54,13 @@ const ColumnTotal = () => {
             title: 'Horas Extras al 35%', field: 'extratime35'
         },
         {
+            title: 'Horas totales',
+            field: 'totalHours',
+            editable: 'never',
+            render: rowData => rowData.extratime25 + rowData.extratime35
+        },
+        {
             title: 'Horas Dobles', field: 'doubletime'
-
         },
         { title: 'Observaciones', field: 'asdesc' },
         { title: 'Sede', field: 'lcdtcod', editable: 'never' },
@@ -74,18 +79,21 @@ const ColumnTotal = () => {
     ];
 };
 
-const TableSalidasSb = () => {
+const TableSalidasSb = ({wheresb}) => {
     const theme = createTheme();
     const [update, setUpdate] = useState(false);
     const [asistencedata, setAsistencedata] = useState([]);
     const [currentdate, setCurrentdate] = useState(dateToString(new Date()));
+    const [apellido, setApellido] = useState('');
+    const [nombre, setNombre] = useState('');
     const handleDateChange = (event) => {
         const newDate = event.target.value;
         setCurrentdate(newDate);
         console.log(`Formatted Date: ${newDate}`);
     };
     useEffect(() => {
-        GetFilterData("assistence", "cod,user(name,lastname,jobtime),stateas,lcdtcod,ocptdtcod,wdtcod,cecodtcod,intime,outtime,sdptdtcod,asdesc,extratime25,extratime35,doubletime,workinghours", { dateas: currentdate }).then((res) => {
+        const combinedobject = {dateas: currentdate,...wheresb}
+        GetFilterData("assistence", "cod,user(name,lastname,jobtime),stateas,lcdtcod,ocptdtcod,wdtcod,cecodtcod,intime,outtime,sdptdtcod,asdesc,extratime25,extratime35,doubletime,workinghours",  combinedobject ).then((res) => {
             setAsistencedata(res);
         });
         setUpdate(false);
@@ -97,9 +105,14 @@ const TableSalidasSb = () => {
                 <button onClick={() => setUpdate(true)} className="text-center text-2xl mx-auto bg-gray-100 text-gray-800 border-gray-300 rounded-md py-2 px-3" type="button">Buscar</button>
             </div>
             <MaterialTable
-                title="Tabla de Horas extras"
+                title={`${apellido} ${nombre}`}
                 columns={ColumnTotal()}
                 data={asistencedata}
+                onRowClick={(event, rowData) => {
+                    // Perform your custom action here
+                    setApellido(rowData.user.lastname);
+                    setNombre(rowData.user.name);
+                }}
                 editable={{
                     onRowUpdate: (newData, oldData) =>
                         new Promise((resolve, reject) => {

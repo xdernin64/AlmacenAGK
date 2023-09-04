@@ -30,10 +30,12 @@ import {
     GiftIcon,
     UserGroupIcon,
     ClockIcon, MapIcon, BuildingLibraryIcon, BuildingOffice2Icon, BuildingOfficeIcon, BuildingStorefrontIcon, DocumentMinusIcon
-    , BriefcaseIcon, CurrencyDollarIcon, CogIcon
+    , BriefcaseIcon, CurrencyDollarIcon, CogIcon, UserMinusIcon, DocumentPlusIcon, UserPlusIcon, ComputerDesktopIcon,ArrowsPointingOutIcon
 } from "@heroicons/react/24/outline";
+import {TbLogout} from 'react-icons/tb'
 import Logo from "./logo";
 import { NavLink } from "react-router-dom";
+import { logoutsupabase } from "../../../supabaseClient";
 
 const colors = {
     blue: "bg-blue-50 text-blue-500",
@@ -78,6 +80,13 @@ const navListMenuItems = [
         ),
         description: "Lista de usarios asignados dentro del sistema",
         link: "/users"
+    },
+    {
+        color: "purple",
+        icon: FolderIcon,
+        title: "Consolidado",
+        description: "Aqui podras ver y agregar las asistencias,faltos,descansos,etc.",
+        link: "/consolidado"
     }
 ];
 const navListCreate = [
@@ -277,21 +286,23 @@ function NavListMenu({ lista, titulo, icono }) {
     );
 }
 
-function NavList() {
+function NavList({rol}) {
+    console.log(rol)
     return (
         <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1">
-
-            <NavLink
-                to={"/register"}
-            >
-                <ListItem className="flex items-center gap-2 py-2 pr-4">
-                    <CubeTransparentIcon className="h-[18px] w-[18px]" />
-                    Blocks
-                </ListItem>
-            </NavLink>
-            <NavListMenu lista={navListMenuItems} titulo={"Gestión"} icono={CogIcon} />
-            <NavListMenu lista={navListCreate} titulo={"Creación"} icono={CogIcon} />
-            <NavListMenu lista={navListAssign} titulo={"Asignación"} icono={CogIcon} />
+            <NavListMenu lista={navListMenuItems} titulo={"Gestión"} icono={ComputerDesktopIcon} />
+            {rol === "ADMINISTRADOR" && (
+                <>
+                    <NavListMenu lista={navListCreate} titulo={"Creación"} icono={DocumentPlusIcon} />
+                    <NavListMenu lista={navListAssign} titulo={"Asignación"} icono={CogIcon} />
+                    <NavLink to={"/register"}>
+                        <ListItem className="flex items-center gap-2 py-2 pr-4">
+                            <UserPlusIcon className="h-[18px] w-[18px]" />
+                            Registrar
+                        </ListItem>
+                    </NavLink>
+                </>
+            )}
             <Typography
                 as="a"
                 href="#"
@@ -299,7 +310,7 @@ function NavList() {
                 color="blue-gray"
                 className="font-normal"
             >
-                <ListItem className="flex items-center gap-2 py-2 pr-4">
+                <ListItem className="flex items-center gap-2 py-2 pr-4 hidden">
                     <UserCircleIcon className="h-[18px] w-[18px]" />
                     Account
                 </ListItem>
@@ -308,7 +319,8 @@ function NavList() {
     );
 }
 
-export function NavbarWithMegaMenu() {
+
+export function NavbarWithMegaMenu({rol}) {
     const [openNav, setOpenNav] = React.useState(false);
 
     React.useEffect(() => {
@@ -325,15 +337,14 @@ export function NavbarWithMegaMenu() {
                     <div className="flex items-center">
                         <Logo />
                         SISRA Agrokasa </div> </NavLink>
-                <div className="hidden lg:block">
-                    <NavList />
-                </div>
+                {rol && (
+                    <div className="hidden lg:block">
+                        <NavList rol={rol} />
+                    </div>
+                )}
                 <div className="hidden gap-2 lg:flex">
-                    <Button variant="text" size="sm" color="blue-gray">
-                        Sign In
-                    </Button>
-                    <Button variant="gradient" size="sm">
-                        Sign Up
+                    <Button variant="gradient" color="red" size="sm" onClick={logoutsupabase}>
+                        <TbLogout className="text-sm font-bold" />
                     </Button>
                 </div>
                 <IconButton
@@ -350,13 +361,12 @@ export function NavbarWithMegaMenu() {
                 </IconButton>
             </div>
             <Collapse open={openNav}>
-                <NavList />
+                {rol && (
+                    <NavList rol={rol} />
+                )}
                 <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
-                    <Button variant="outlined" size="sm" color="blue-gray" fullWidth>
-                        Sign In
-                    </Button>
                     <Button variant="gradient" size="sm" fullWidth>
-                        Sign Up
+                        Cerrar Sesion
                     </Button>
                 </div>
             </Collapse>

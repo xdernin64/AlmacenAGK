@@ -15,11 +15,11 @@ import {
 import { NavSisra } from "./DeskMenu";
 import { NavbarWithMegaMenu } from "./MobileMenu";
 
-const MainMenu = () => {
+const MainMenu = ({rol}) => {
     //get the local storage length and update the state
 
     return (
-        <NavbarWithMegaMenu />
+        <NavbarWithMegaMenu rol={rol}/>
     );
 }
 export default MainMenu;

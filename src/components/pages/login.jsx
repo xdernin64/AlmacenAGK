@@ -4,6 +4,7 @@ import { auth } from '../../firebase';
 import { redirect, useNavigate } from "react-router-dom";
 import { checkUserAuthentication, signsupabase } from "../../supabaseClient";
 import { updateregister } from "../../helpers/CRUD/CREATE/CREATESB";
+import { errorMessage, successMessage } from "../../helpers/Alerts/alerts";
 
 const Login = () => {
     const [error, setError] = useState();
@@ -12,21 +13,11 @@ const Login = () => {
         e.preventDefault();
         const email = e.target.email.value;
         const password =  e.target.password.value;
-        //password simpletype to string
-        /*const strpassword = password.toString();
-        signsupabase(email, strpassword);
-        console.log(email, password);*/
+
         
         signsupabase(email, password);
-        signInWithEmailAndPassword(auth, email, password).then(
-            (userCredentaial) => {
-                console.log(userCredentaial);
-                nav("/");
 
-            }).catch((err) => {
-                console.log(err);
-                setError(err.message);
-            })
+        
     }
     return (
         <div className="max-h-full max-w-full">

@@ -19,9 +19,15 @@ const Authmoment = () => {
   return supabase.auth.onAuthStateChange((event, session) => {
     if (session) {
       // Obtener el rol del usuario desde el user_metadata
-      const isAdmin = session.user.user_metadata.rol === "ADMINISTRADOR";
+      const rol = session.user.user_metadata.rol;
+      const departament = session.user.user_metadata.departament;
+      const subdepartament = session.user.user_metadata.subdepartament;
+      const area = session.user.user_metadata.area;
+
+  
+
       // Renderizar las rutas con el estado y el rol del usuario
-      root.render(<Routers state={true} isAdmin={isAdmin} />);
+      root.render(<Routers state={true} rol={rol} departament={departament} subdepartament={subdepartament} area={area}  />);
     } else {
       console.log("no user");
       root.render(<Routers state={false} />);
