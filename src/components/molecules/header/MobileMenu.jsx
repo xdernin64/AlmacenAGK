@@ -29,7 +29,8 @@ import {
     PuzzlePieceIcon,
     GiftIcon,
     UserGroupIcon,
-    ClockIcon,MapIcon,BuildingLibraryIcon  ,BuildingOffice2Icon,BuildingOfficeIcon,BuildingStorefrontIcon,DocumentMinusIcon
+    ClockIcon, MapIcon, BuildingLibraryIcon, BuildingOffice2Icon, BuildingOfficeIcon, BuildingStorefrontIcon, DocumentMinusIcon
+    , BriefcaseIcon, CurrencyDollarIcon, CogIcon
 } from "@heroicons/react/24/outline";
 import Logo from "./logo";
 import { NavLink } from "react-router-dom";
@@ -86,7 +87,7 @@ const navListCreate = [
         title: "Zonas",
         description: "Aqui podras ver y agregar las zonas",
         link: "/zones"
-        
+
     },
     {
         color: "green",
@@ -94,45 +95,118 @@ const navListCreate = [
         title: "Areas",
         description: "Aqui podras ver y agregar las areas",
         link: "/areas"
-        
+
     },
     {
         color: "green",
-        icon:BuildingOffice2Icon,
+        icon: BuildingOffice2Icon,
         title: "Sedes",
         description: "Aqui podras ver y agregar las sedes",
         link: "/locations"
     },
     {
         color: "green",
-        icon:BuildingOfficeIcon,
+        icon: BuildingOfficeIcon,
         title: "Departamentos",
         description: "Aqui podras ver y agregar los departamentos",
         link: "/departaments"
     },
     {
         color: "green",
-        icon:BuildingStorefrontIcon,
+        icon: BuildingStorefrontIcon,
         title: "Sub-departamentos",
         description: "Aqui podras ver y agregar los puestos",
         link: "/subdepartaments"
     },
     {
         color: "green",
-        icon:DocumentMinusIcon,
+        icon: DocumentMinusIcon,
         title: "Ocupaciones",
         description: "Aqui podras ver y agregar las ocupaciones",
-        link: "/ocupations"
+        link: "/occupations"
+    },
+    {
+        color: "green",
+        icon: BriefcaseIcon,
+        title: "Labores",
+        description: "Aqui podras ver y agregar las labores",
+        link: "/works"
+    },
+    {
+        color: "green",
+        icon: CurrencyDollarIcon,
+        title: "Centro de cost",
+        description: "Aqui podras ver y agregar los centros de costos",
+        link: "/cecos"
+    }
+
+]
+const navListAssign = [
+    {
+        color: "orange",
+        icon: BuildingLibraryIcon,
+        title: "Asignacion de areas",
+        description: "Asigna las areas en las Zonas de la empresa.",
+        link: "/zone-area",
+
+    },
+    {
+        color: "orange",
+        icon: BuildingOffice2Icon,
+        title: "Asignacion de sedes",
+        description:
+            "Asigna las sedes en las zonas de la empresa.",
+        link: "/zone-location"
+    },
+    {
+        color: "orange",
+        icon: BuildingOfficeIcon,
+        title: "Asignacion de departamentos",
+        description:
+            "Asigna los departamentos en las areas de la empresa.",
+        link: "/area-departament",
+    },
+    {
+        color: "orange",
+        icon: BuildingStorefrontIcon,
+        title: "Asignacion de sub-departamentos",
+        description:
+            "Asigna los sub-departamentos en los departamentos de la empresa.",
+        link: "/departament-subdepartament",
+    },
+    {
+        color: "orange",
+        icon: DocumentMinusIcon,
+        title: "Asignacion de ocupaciones",
+        description:
+            "Asigna las ocupaciones en los sub-departamentos de la empresa.",
+        link: "/subdepartament-occupation",
+    },
+    {
+        color: "orange",
+        icon: BriefcaseIcon,
+        title: "Asignacion de labores",
+        description:
+            "Asigna las labores en los sub-departamentos de la empresa.",
+        link: "/subdepartament-work",
+    },
+    {
+        color: "orange",
+        icon: CurrencyDollarIcon,
+        title: "asignacion de centros de costo",
+        description:
+            "Asigna los centros de costo en los sub-departamentos de la empresa.",
+        link: "/subdepartament-ceco",
     }
 
 ]
 
-function NavListMenu({lista,titulo}) {
+function NavListMenu({ lista, titulo, icono }) {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
     const renderItems = lista.map(
-        ({ icon, title, description, color ,link}, key) => (
+        ({ icon, title, description, color, link }, key) => (
             <NavLink to={link} key={title}>
                 <MenuItem className="flex items-center gap-3 rounded-lg">
                     <div className={`rounded-lg p-5 ${colors[color]}`}>
@@ -174,7 +248,10 @@ function NavListMenu({lista,titulo}) {
                             selected={isMenuOpen || isMobileMenuOpen}
                             onClick={() => setIsMobileMenuOpen((cur) => !cur)}
                         >
-                            <UserCircleIcon className="h-[18px] w-[18px]" />
+                            {React.createElement(icono, {
+                                strokeWidth: 2,
+                                className: "h-[18px] w-[18px]",
+                            })}
                             {titulo}
                             <ChevronDownIcon
                                 strokeWidth={2.5}
@@ -212,8 +289,9 @@ function NavList() {
                     Blocks
                 </ListItem>
             </NavLink>
-            <NavListMenu lista={navListMenuItems} titulo={"Gestión"}/>
-            <NavListMenu lista={navListCreate} titulo={"Creación"}/>
+            <NavListMenu lista={navListMenuItems} titulo={"Gestión"} icono={CogIcon} />
+            <NavListMenu lista={navListCreate} titulo={"Creación"} icono={CogIcon} />
+            <NavListMenu lista={navListAssign} titulo={"Asignación"} icono={CogIcon} />
             <Typography
                 as="a"
                 href="#"
@@ -243,10 +321,10 @@ export function NavbarWithMegaMenu() {
     return (
         <Navbar className="mx-auto max-w-screen-xl px-4 py-2">
             <div className="flex items-center justify-between text-blue-gray-900">
-            <NavLink to="/">
-                        <div className="flex items-center">
-                            <Logo />
-                            SISRA Agrokasa </div> </NavLink>
+                <NavLink to="/">
+                    <div className="flex items-center">
+                        <Logo />
+                        SISRA Agrokasa </div> </NavLink>
                 <div className="hidden lg:block">
                     <NavList />
                 </div>
