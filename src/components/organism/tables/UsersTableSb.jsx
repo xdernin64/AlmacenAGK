@@ -5,7 +5,7 @@ import { supabase } from '../../../supabaseClient';
 import { GetPrimaryData } from '../../../helpers/CRUD/READ/GetDataSb';
 import { Navigate, useNavigate } from 'react-router-dom';
 
-const UserTableSb = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray, selectname }) => {
+const UserTableSb = ({rol, tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray, selectname, wheresb }) => {
     const { useState } = React;
     const UserTheme = createTheme({});
     const [selectsdb1, setSelectsdb1] = useState([]);
@@ -15,6 +15,7 @@ const UserTableSb = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray, se
 
     useEffect(() => {
         async function fetchData() {
+
             const selectdata1 = await GetPrimaryData(dbsl1);
             const selectdata2 = await GetPrimaryData(dbsl2);
             setSelectsdb1(selectdata1);
@@ -33,7 +34,7 @@ const UserTableSb = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray, se
                 <input
                     type="text"
                     value={props.value || ''}
-                    placeholder={titlearray[0]}	
+                    placeholder={titlearray[0]}
                     onChange={e => props.onChange(e.target.value.toUpperCase())} // Convert to uppercase
                 />
             ),
@@ -115,7 +116,7 @@ const UserTableSb = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray, se
             ),
             validate: rowData => rowData[fieldarray[6]] ? true : 'El nombre no puede estar vacío'
         },
-        
+
 
         {
             title: titlearray[6],
@@ -182,91 +183,138 @@ const UserTableSb = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray, se
             ),
             validate: rowData => rowData[fieldarray[8]] ? true : 'El nombre no puede estar vacío'
         }
-        
+
     ];
 
     const [data, setData] = useState([]);
     useEffect(() => {
-        GetPrimaryData(dbtable).then((res) => {
+        GetPrimaryData(dbtable, '*', wheresb).then((res) => {
             setData(res);
 
         });
         setUpdate(false);
     }, [update]);
 
+    const [avaibleroles, setAvaibleroles] = useState(false);
+    const [editableoptions, setEditableoptions] = useState([]);
+    useEffect(() => {
+        if (rol === "ADMINISTRADOR") {
+            setAvaibleroles(true);
+        }
+        else {
+            setAvaibleroles(false);
+        }
+    }, [rol]);
 
-    return (
-        <ThemeProvider theme={UserTheme}>
-            <MaterialTable
-                title="Tabla de usuarios"
-                columns={columns}
-                data={data}
-                editable={{
-                    onRowAdd: newData =>
-                        new Promise((resolve, reject) => {
-                            // Agrega el nuevo registro a Supabase
-                            supabase
-                                .from(dbtable)
-                                .insert(newData)
-                                .then(() => {
-                                    // Actualiza el estado de tus datos para reflejar los cambios en la tabla Material Table
-                                    setUpdate(true);
-                                    // ...
-                                    resolve();
-                                });
-                        }),
 
-                    onRowUpdate: (newData, oldData) =>
-                        new Promise((resolve, reject) => {
-                            // Actualiza el registro en Supabase
-                            supabase
-                                .from(dbtable)
-                                .update(newData)
-                                .match({ [fieldarray[0]]: oldData[fieldarray[0]] })
-                                .then(() => {
-                                    // Actualiza el estado de tus datos para reflejar los cambios en la tabla Material Table
-                                    //want to activate the useEffect
-                                    setUpdate(true);
-                                    resolve();
-                                });
-                        }),
-                    onRowDelete: oldData =>
-                        new Promise((resolve, reject) => {
-                            // Elimina el registro en Supabase
-                            supabase
-                                .from(dbtable)
-                                .delete()
-                                .match({ [fieldarray[0]]: oldData[fieldarray[0]] })
-                                .then(() => {
-                                    setUpdate(true);
-                                    resolve();
-                                });
-                        }),
-                }}
-                actions={[
-                    {
-                        icon: 'edit_note',
-                        tooltip: 'Editar detalles',
-                        onClick: (event, rowData) => {
-                          // código para manejar el clic en el botón Editar detalles
-                          //get the cod from the row
-                            console.log(rowData.cod);
-                            navigate(`${rowData.cod}/edit`);   
-                        }}
-                ]}
-                //i want to color my header with a custom color
-                options={{
-                    headerStyle: {
-                        backgroundColor: '#01579b',
-                        color: '#FFF'
+
+
+return (
+    <ThemeProvider theme={UserTheme}>
+        <MaterialTable
+            title="Tabla de usuarios"
+            columns={columns}
+
+            data={data}
+            localization={{
+                pagination: {
+                    labelDisplayedRows: '{from}-{to} de {count}',
+                    labelRowsSelect: 'Filas',
+                    labelRowsPerPage: 'Filas por página:',
+                },
+                toolbar: {
+                    searchPlaceholder: 'Buscar',
+                },
+                //laction for change delete confirmation text 
+                header: {
+                    actions: 'Acciones'
+                },
+                body: {
+                    emptyDataSourceMessage: 'No hay registros para mostrar',
+                    filterRow: {
+                        filterTooltip: 'Filtrar',
                     },
-                    actionsColumnIndex: -1,
-                    exportButton: true,
-                    exportAllData: true,
-                    exportFileName: 'Reporte de usuarios',
-                    grouping: true
-                }}
-            /></ThemeProvider>
-    )
+                    addTooltip: 'Agregar',
+                    deleteTooltip: 'Eliminar',
+                    editTooltip: 'Editar',
+                    editRow: {
+                        deleteText: '¿Estás seguro de querer eliminar esta fila?',
+                        cancelTooltip: 'Cancelar',
+                        saveTooltip: 'Guardar',
+                    },
+                },
+
+            }}
+            editable={avaibleroles ? {
+                onRowAdd: newData =>
+                    new Promise((resolve, reject) => {
+                        // Agrega el nuevo registro a Supabase
+                        supabase
+                            .from(dbtable)
+                            .insert(newData)
+                            .then(() => {
+                                // Actualiza el estado de tus datos para reflejar los cambios en la tabla Material Table
+                                setUpdate(true);
+                                // ...
+                                resolve();
+                            });
+                    }),
+
+                onRowUpdate: (newData, oldData) =>
+                    new Promise((resolve, reject) => {
+                        // Actualiza el registro en Supabase
+                        supabase
+                            .from(dbtable)
+                            .update(newData)
+                            .match({ [fieldarray[0]]: oldData[fieldarray[0]] })
+                            .then(() => {
+                                // Actualiza el estado de tus datos para reflejar los cambios en la tabla Material Table
+                                //want to activate the useEffect
+                                setUpdate(true);
+                                resolve();
+                            });
+                    }),
+                onRowDelete: oldData =>
+                    new Promise((resolve, reject) => {
+                        // Elimina el registro en Supabase
+                        supabase
+                            .from(dbtable)
+                            .delete()
+                            .match({ [fieldarray[0]]: oldData[fieldarray[0]] })
+                            .then(() => {
+                                setUpdate(true);
+                                resolve();
+                            });
+                    }),
+            }:{}}
+            actions={[
+                {
+                    icon: 'edit_note',
+                    tooltip: 'Editar detalles',
+                    onClick: (event, rowData) => {
+                        // código para manejar el clic en el botón Editar detalles
+                        //get the cod from the row
+                        console.log(rowData.cod);
+                        navigate(`${rowData.cod}/edit`);
+                    }
+                }
+            ]}
+
+
+            //i want to color my header with a custom color
+
+            options={{
+                headerStyle: {
+                    backgroundColor: '#01579b',
+                    color: '#FFF'
+                },
+                actionsColumnIndex: -1,
+                exportButton: true,
+                exportAllData: true,
+                exportFileName: 'Reporte de usuarios',
+                grouping: true
+            }}
+        /></ThemeProvider>
+)
 }
 export default UserTableSb;

@@ -1,9 +1,6 @@
 {
-  
   "projects": {
-    "default": "raca-app",
-    "dev": "raca-app"
-
+    "default": "ohye-system"
   },
   "targets": {},
   "etags": {}

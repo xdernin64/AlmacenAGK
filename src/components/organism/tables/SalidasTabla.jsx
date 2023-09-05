@@ -108,6 +108,35 @@ const TableSalidasSb = ({wheresb}) => {
                 title={`${apellido} ${nombre}`}
                 columns={ColumnTotal()}
                 data={asistencedata}
+                localization={{
+                    pagination: {
+                        labelDisplayedRows: '{from}-{to} de {count}',
+                        labelRowsSelect: 'Filas',
+                        labelRowsPerPage: 'Filas por página:',
+                    },
+                    toolbar: {
+                        searchPlaceholder: 'Buscar',
+                    },
+                    //laction for change delete confirmation text 
+                    header: {
+                        actions: 'Acciones'
+                    },
+                    body: {
+                        emptyDataSourceMessage: 'No hay registros para mostrar',
+                        filterRow: {
+                            filterTooltip: 'Filtrar',
+                        },
+                        addTooltip: 'Agregar',
+                        deleteTooltip: 'Eliminar',
+                        editTooltip: 'Editar',
+                        editRow: {
+                            deleteText: '¿Estás seguro de querer eliminar esta fila?',
+                            cancelTooltip: 'Cancelar',
+                            saveTooltip: 'Guardar',
+                        },
+                    },
+
+                }}
                 onRowClick={(event, rowData) => {
                     // Perform your custom action here
                     setApellido(rowData.user.lastname);

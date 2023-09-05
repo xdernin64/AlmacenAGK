@@ -365,7 +365,7 @@ export function NavbarWithMegaMenu({rol}) {
                     <NavList rol={rol} />
                 )}
                 <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
-                    <Button variant="gradient" size="sm" fullWidth>
+                    <Button variant="gradient" onClick={logoutsupabase} size="sm" fullWidth>
                         Cerrar Sesion
                     </Button>
                 </div>

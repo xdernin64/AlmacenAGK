@@ -21,7 +21,7 @@ import AsistenciaSb from "../components/pages/Asistencias";
 import ExtraTime from "../components/pages/Horas_extras";
 import React, { useState, useEffect, createContext, useContext, } from "react";
 
-const Routers = ({ state, rol, area, departament, subdepartament, location }) => {
+const Routers = ({ state, rol, area, departament, subdepartament }) => {
     const [isRolAvailable, setIsRolAvailable] = useState(false);
     useEffect(() => {
         // Verificar si rol está definido
@@ -145,10 +145,7 @@ const Routers = ({ state, rol, area, departament, subdepartament, location }) =>
                     path="/profile"
                     element={state && rol == "ADMINISTRADOR" ? <Profile /> : <Navigate replace to="/login" />}
                 />
-                <Route
-                    path="/horas-extras"
-                    element={state ? <Orders /> : <Navigate replace to="/login" />}
-                />
+                
                 <Route
                     path="/login"
                     element={state ? <Navigate replace to="/" /> : <Login />}
@@ -158,7 +155,7 @@ const Routers = ({ state, rol, area, departament, subdepartament, location }) =>
                     path="/users"
                     element={
                         state ? (
-                            <Usuarios />
+                            <Usuarios  area={area} departament={departament} subdepartament={subdepartament} rol={rol}/>
                         ) : (
                             <Navigate replace to="/login" />
                         )

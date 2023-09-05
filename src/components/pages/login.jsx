@@ -39,7 +39,7 @@ const Login = () => {
                         </div>
 
                         <div className="w-100 text-center">
-                            <button className="bg-sky-700 m-5 text-xl text-bold text-center" type="submit">Iniciar sesión</button>
+                            <button className="bg-sky-700 m-5 text-xl text-bold text-center bg-cyan-800" type="submit">Iniciar sesión</button>
                         </div>
                         {error && <div className="w-100 text-center bg-red-200 text-red-700">Usuario y contraseña incorrectos</div>}
                     </form>
