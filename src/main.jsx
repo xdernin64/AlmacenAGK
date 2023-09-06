@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import 'semantic-ui-css/semantic.min.css';
 import './components/styles/stylesheet/styles.css';
 import Routers from './router/Router';
@@ -71,4 +71,4 @@ const App = () => {
   );
 };
 
-root.render(<App />, document.getElementById('root'));
+root.render(<App />);

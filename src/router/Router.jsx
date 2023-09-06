@@ -20,6 +20,7 @@ import UserProfileEditForm from "../components/templates/EditUserSbTemplate";
 import AsistenciaSb from "../components/pages/Asistencias";
 import ExtraTime from "../components/pages/Horas_extras";
 import React, { useState, useEffect, createContext, useContext, } from "react";
+import Consolidado from "../components/pages/Consolidado";
 
 const Routers = ({ state, rol, area, departament, subdepartament }) => {
     const [isRolAvailable, setIsRolAvailable] = useState(false);
@@ -191,6 +192,12 @@ const Routers = ({ state, rol, area, departament, subdepartament }) => {
                     path="/users/:userId/edit"
                     element={
                         state && rol == "ADMINISTRADOR" ? <UserProfileEditForm /> : <Navigate replace to="/login" />
+                    }
+                />
+                <Route 
+                    path="/consolidado"
+                    element={
+                        state && rol == "ADMINISTRADOR" ? <Consolidado /> : <Navigate replace to="/login" />
                     }
                 />
 

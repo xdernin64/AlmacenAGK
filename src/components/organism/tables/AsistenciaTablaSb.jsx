@@ -275,7 +275,12 @@ const TableAsistenciaSb = ({wheresb}) => {
                                     sdptdtcod: newData.sdptdtcod,
                                     ocptdtcod: newData.ocptdtcod,
                                     wdtcod: newData.wdtcod,
-                                    cecodtcod: newData.cecodtcod
+                                    cecodtcod: newData.cecodtcod,
+                                    outtime:(((newData.stateas == "ASISTENCIA" || newData.stateas == "ASISTENCIA FERIADO")) ? "14:00" : null),
+                                    workinghours:((newData.stateas == "ASISTENCIA") ? 8 : 0),
+                                    doubletime:((newData.stateas == "ASISTENCIA FERIADO") ? 8 : 0)
+
+
                                 }
                                 checkassistance(newData2.codas, newData2)
                                 resolve();
