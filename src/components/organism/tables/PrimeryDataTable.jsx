@@ -6,8 +6,6 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { GetPrimaryData } from '../../../helpers/CRUD/READ/GetDataSb';
 import { CreatePrimaryDataSb } from '../../../helpers/CRUD/CREATE/CREATEDATASB';
-import SnackbarError from '../../molecules/snacks/SnackError';
-import { errorMessage } from '../../../helpers/Alerts/alerts';
 import { DeleteDataSb } from '../../../helpers/CRUD/DELETE/DeleteDataSb';
 import { UpdateDataSb } from '../../../helpers/CRUD/UPDATE/UpdateDataSb';
 

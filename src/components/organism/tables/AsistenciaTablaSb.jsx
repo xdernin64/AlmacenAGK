@@ -295,7 +295,12 @@ const TableAsistenciaSb = ({wheresb}) => {
                             }, 10)
                         }),
                 }}
+                options={{
+                    //grouping 
+                    grouping: true
+                }}
             />
+
 
 
 

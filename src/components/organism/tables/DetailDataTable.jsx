@@ -1,7 +1,6 @@
 import { ThemeProvider, createTheme } from '@mui/material';
 import MaterialTable from 'material-table';
 import React, { useState, useEffect } from 'react';
-import { Select, MenuItem } from '@mui/material';
 import { GetPrimaryData } from '../../../helpers/CRUD/READ/GetDataSb';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -9,6 +8,17 @@ import { supabase } from '../../../supabaseClient';
 
 
 const DetailDataTable = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray, selectname }) => {
+    const [dbdata, setDbdata] = useState([]); //table data
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await GetPrimaryData(dbtable);
+            if (response) {
+                setDbdata(response);
+            }
+        };
+        fetchData();
+    }, []);
+
     const theme = createTheme({
         //i want that width will alwais be 100% of the container
         overrides: {
@@ -117,18 +127,7 @@ const DetailDataTable = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray
                 <MaterialTable
                     title={tittle}
                     columns={columns}
-                    data={async query => {
-                        const { data, error } = await supabase
-                            .from(dbtable)
-                            .select('*')
-                            .filter( `${fieldarray[0]}`, 'ilike', `%${query.search}%`)
-
-                        return {
-                            data: data,
-                            page: query.page,
-                            totalCount: data.length
-                        };
-                    }}
+                    data={dbdata}
                     options={
                         {
                             exportButton: true,
