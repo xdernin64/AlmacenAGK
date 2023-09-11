@@ -22,6 +22,21 @@ export const GetPrimaryData = async (tableName, select = '*', where = {}) => {
 
     return data;
 };
+//get primary data between dates startdate and endate
+export const GetPrimaryDataBetweenDates = async (tableName, select = '*', where = {}, startdate, enddate) => {
+    const { data, error } = await supabase
+        .from(tableName)
+        .select(select)
+        .match(where)
+        .gte('dateas', startdate)
+        .lte('dateas', enddate);
+        console.log(error)
+        
+        
+        return data;
+    }
+    
+    
 export const GetFilterData = async (db, select = '*', where = {}) => {
     const { data, error } = await supabase
         .from(db)

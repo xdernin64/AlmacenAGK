@@ -2,8 +2,9 @@ import { ThemeProvider, createTheme } from "@mui/material"
 import { getDay, getSpanishDate } from "../../../helpers/date";
 import { useState } from "react";
 import { useEffect } from "react";
-import { GetPrimaryData } from "../../../helpers/CRUD/READ/GetDataSb";
+import { GetPrimaryData, GetPrimaryDataBetweenDates } from "../../../helpers/CRUD/READ/GetDataSb";
 import MaterialTable from "material-table";
+import { dateToString } from "../../../helpers/dateconverter";
 
 
 
@@ -11,10 +12,24 @@ const ConsolidadoTable = () => {
     const [data, setData] = useState([]); //table data
     const [customfields, setCustomfields] = useState([]); //table data
     const [loading, setLoading] = useState(true);
+    const [startdate, setStartdate] = useState(dateToString(new Date()));
+    const [enddate, setEnddate] = useState(dateToString(new Date()));
+    const [search, setSearch] = useState(false); //table title
+    const handleStartdate = (e) => {
+        setStartdate(e.target.value);
+    }
+    const handleEnddate = (e) => {
+        setEnddate(e.target.value);
+    }
+    const handleSearch = (e) => {
+        setSearch(true);
+    }
+    
     useEffect(() => {
-        GetPrimaryData(
+        GetPrimaryDataBetweenDates(
             'assistence',
-            'cod, dateas, user(name, lastname), cecodetail(ceco(cecocod, ceconame)), occupationdetail(occupation(occupationcod, occupationname)), workdetail(work(workcod, workname))'
+            'cod, dateas, user(name, lastname), cecodetail(ceco(cecocod, ceconame)), occupationdetail(occupation(occupationcod, occupationname)), workdetail(work(workcod, workname))',{},startdate, enddate
+            
         ).then((r) => {
             // Add 'day' property to each item in the data
             const updatedData = r.map((item) => ({
@@ -28,7 +43,8 @@ const ConsolidadoTable = () => {
             setData(updatedData);
             setLoading(false);
         });
-    }, []);
+        setSearch(false);
+    }, [search]);
 
     const theme = createTheme();
     const columns = [
@@ -82,12 +98,62 @@ const ConsolidadoTable = () => {
 
 
     return (
-        <div className="pagina">
+        <div className="">
             <ThemeProvider theme={theme}>
+                <div>
+                    {/* i want to have two input dates with start and end date with nice styles in tailwindcss */}
+                    <div className="flex flex-row justify-center">
+                        <div className="flex flex-col mr-4">
+                            <label htmlFor="startdate">Fecha de inicio</label>
+                            <input type="date" name="startdate" id="startdate" onChange={handleStartdate} value={startdate} />
+                        </div>
+                        <div className="flex flex-col">
+                            <label htmlFor="enddate">Fecha de fin</label>
+                            <input type="date" name="enddate" id="enddate" onChange={handleEnddate} value={enddate} />
+                        </div>
+                        <div className="flex flex-col justify-end">
+                            <button className=" m-0 bg-gray-500" type="submit" onClick={handleSearch}>Buscar</button>
+                        </div>
+                    </div>
+                </div>
                 <MaterialTable
                     title="Consolidado"
                     columns={columns}
                     data={data}
+                    localization={{
+                        pagination: {
+                            labelDisplayedRows: '{from}-{to} de {count}',
+                            labelRowsSelect: 'Filas',
+                            labelRowsPerPage: 'Filas por página:',
+                        },
+                        toolbar: {
+                            searchPlaceholder: 'Buscar',
+                        },
+                        //laction for change delete confirmation text 
+                        header: {
+                            actions: 'Acciones'
+                        },
+                        body: {
+                            emptyDataSourceMessage: 'No hay registros para mostrar',
+                            filterRow: {
+                                filterTooltip: 'Filtrar',
+                            },
+                            addTooltip: 'Agregar',
+                            deleteTooltip: 'Eliminar',
+                            editTooltip: 'Editar',
+                            editRow: {
+                                deleteText: '¿Estás seguro de querer eliminar esta fila?',
+                                cancelTooltip: 'Cancelar',
+                                saveTooltip: 'Guardar',
+                            },
+                        },
+                        //group text for grouping
+                        grouping: {
+                            placeholder: "Arrastre las columnas aquí para agruparlas",
+                            groupedBy: 'Agrupado por:',
+                        },
+    
+                    }}
                     options={{
                         exportButton: true,
                         headerStyle: {
@@ -116,7 +182,6 @@ const ConsolidadoTable = () => {
                         search: true,
                         showSelectAllCheckbox: true,
                         showTextRowsSelected: true,
-                        selection: true,
                         showTitle: true,
                         toolbarButtonAlignment: 'right',
                         headerSelectionProps: {
