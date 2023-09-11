@@ -287,7 +287,7 @@ function NavListMenu({ lista, titulo, icono }) {
 }
 
 function NavList({rol}) {
-    console.log(rol)
+    
     return (
         <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1">
             <NavListMenu lista={navListMenuItems} titulo={"Gestión"} icono={ComputerDesktopIcon} />

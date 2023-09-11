@@ -133,9 +133,15 @@ const DetailDataTable = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray
                             exportButton: true,
                             exportAllData: true,
                             exportFileName: tittle,
-                            grouping: true
+                            grouping: true,
+                            headerStyle: {
+                                backgroundColor: '#ff9303',
+                                color: '#FFF'
+                            }
 
                         }
+                        
+                        
                     }
                     localization={{
                         pagination: {

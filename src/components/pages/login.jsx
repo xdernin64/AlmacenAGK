@@ -12,21 +12,26 @@ const Login = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const email = e.target.email.value;
-        const password =  e.target.password.value;
+        const password = e.target.password.value;
 
-        
+
         signsupabase(email, password);
 
-        
+
     }
     return (
-        <div className="max-h-full max-w-full">
-
-            <div className="flex h-screen flex-col  xl:flex-row">
+        <div className=" h-screen flex justify-center items-center">
+            <div className="flex flex-col xl:flex-row">
                 <div className="m-auto p-5">
-                    <h1 className="text-center text-3xl font-mono text-sky-600 font-bold" onClick={checkUserAuthentication}>¡Bienvenido! <br></br> Inicia sesión para ingresar</h1>
+                    <h1 className="text-center text-3xl font-mono text-sky-600 font-bold" onClick={checkUserAuthentication}>
+                        ¡Bienvenido! <br></br> Inicia sesión para ingresar
+                    </h1>
                     <div className="Imagen h-sc p-10 flex">
-                        <img src="https://www.albaibs.es/wp-content/uploads/2020/08/dibujo-almacen-movilidad.png" alt="Alamcen Calidad de agua " />
+                        <img
+                            src="https://www.buk.cl/hubfs/CL%20-%20Pillar%20Xtra%20-%20Control%20de%20Asistencia/Control%20de%20asistencia%20conceptos%20relevantes%20y%20beneficios.png"
+                            alt="Asistencias Ohye "
+                            className="max-h-60 md:max-h-96 lg:max-h-96"
+                        />
                     </div>
                     <form onSubmit={handleSubmit}>
                         <div className="p-3">
@@ -46,6 +51,8 @@ const Login = () => {
                 </div>
             </div>
         </div>
-    )
+    );
+
+
 }
 export default Login;

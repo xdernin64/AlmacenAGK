@@ -5,10 +5,12 @@ import { useEffect } from "react";
 import { GetPrimaryData, GetPrimaryDataBetweenDates } from "../../../helpers/CRUD/READ/GetDataSb";
 import MaterialTable from "material-table";
 import { dateToString } from "../../../helpers/dateconverter";
+import * as xlsx from "xlsx";
 
 
 
-const ConsolidadoTable = () => {
+
+const ConsolidadoTable = ({ wheresb }) => {
     const [data, setData] = useState([]); //table data
     const [customfields, setCustomfields] = useState([]); //table data
     const [loading, setLoading] = useState(true);
@@ -24,12 +26,12 @@ const ConsolidadoTable = () => {
     const handleSearch = (e) => {
         setSearch(true);
     }
-    
+
     useEffect(() => {
         GetPrimaryDataBetweenDates(
             'assistence',
-            'cod, dateas, user(name, lastname), cecodetail(ceco(cecocod, ceconame)), occupationdetail(occupation(occupationcod, occupationname)), workdetail(work(workcod, workname))',{},startdate, enddate
-            
+            'cod, dateas, user(name, lastname), cecodetail(ceco(cecocod, ceconame)), occupationdetail(occupation(occupationcod, occupationname)), workdetail(work(workcod, workname))', wheresb, startdate, enddate
+
         ).then((r) => {
             // Add 'day' property to each item in the data
             const updatedData = r.map((item) => ({
@@ -48,13 +50,14 @@ const ConsolidadoTable = () => {
 
     const theme = createTheme();
     const columns = [
-        { title: 'Codigo', field: 'cod', editable: 'never',
-        cellStyle: {
-            textAlign: 'center',
-            color:"#0000CC",
-            fontFamily: 'calibri'
-        }
-    },
+        {
+            title: 'Codigo', field: 'cod', editable: 'never',
+            cellStyle: {
+                textAlign: 'center',
+                color: "#0000CC",
+                fontFamily: 'calibri'
+            }
+        },
         {
             //i wanto to have more weight to this column
             title: 'NOMBRES Y APELLIDOS', field: 'namelastname', editable: 'never',
@@ -62,21 +65,42 @@ const ConsolidadoTable = () => {
             width: '40%',
             cellStyle: {
                 textAlign: 'center',
-                color:"#0000CC",
+                color: "#0000CC",
                 fontFamily: 'calibri'
             }
         },
         {
             title: 'DIA', field: 'day', editable: 'never',
+
+            cellStyle: {
+                textAlign: 'center',
+                fontFamily: 'calibri'
+            }
         },
         {
             title: 'FECHA', field: 'date', editable: 'never',
+            cellStyle: {
+                textAlign: 'center',
+                fontFamily: 'calibri'
+            }
         },
         {
-            title: "Cod Ocup.", field: "occupationdetail.occupation.occupationcod", editable: 'never'
+            title: "Cod Ocup.", field: "occupationdetail.occupation.occupationcod", editable: 'never',
+            cellStyle: {
+                textAlign: 'center',
+                fontFamily: 'calibri'
+            }
         },
         {
-            title: "Ocupacion", field: "occupationdetail.occupation.occupationname", editable: 'never'
+            title: "Ocupacion", field: "occupationdetail.occupation.occupationname", editable: 'never',
+            cellStyle: (rowData, dataIndex) => {
+                return {
+                    textAlign: 'center',
+                    fontFamily: 'calibri',
+                    backgroundColor: rowData === 'DSO' ? '#ffeb9c' : 'transparent',
+                    color: rowData === 'DSO' ? '#9c6524' : 'black'
+                };
+            }
         },
         {
             title: "Cod Labor", field: "workdetail.work.workcod", editable: 'never',
@@ -86,20 +110,52 @@ const ConsolidadoTable = () => {
             }
         },
         {
-            title: "Labor", field: "workdetail.work.workname", editable: 'never'
+            title: "Labor", field: "workdetail.work.workname", editable: 'never',
+            cellStyle: {
+                textAlign: 'center',
+                fontFamily: 'calibri'
+            }
         },
         {
-            title: "Cod ceco", field: "cecodetail.ceco.cecocod", editable: 'never'
+            title: "Cod ceco", field: "cecodetail.ceco.cecocod", editable: 'never',
+            cellStyle: {
+                textAlign: 'center',
+                fontFamily: 'calibri'
+            }
         },
         {
-            title: "Centro de Coste", field: "cecodetail.ceco.ceconame", editable: 'never'
+            title: "Centro de Coste", field: "cecodetail.ceco.ceconame", editable: 'never',
+            cellStyle: {
+                textAlign: 'center',
+                fontFamily: 'calibri'
+            }
         }
     ]
+    const exportToExcel = () => {
+        const dataToExport = data.map((item) => ({
+            Codigo: item.cod,
+            "Nombres y Apellidos": item.namelastname,
+            Dia: item.day,
+            Fecha: item.date,
+            "Cod Ocup.": item.occupationdetail.occupation.occupationcod,
+            Ocupacion: item.occupationdetail.occupation.occupationname,
+            "Cod Labor": item.workdetail.work.workcod,
+            Labor: item.workdetail.work.workname,
+            "Cod ceco": item.cecodetail.ceco.cecocod,
+            "Centro de Coste": item.cecodetail.ceco.ceconame,
+        }));
 
+        const ws = xlsx.utils.json_to_sheet(dataToExport);
+        const wb = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(wb, ws, "Consolidado");
+        xlsx.writeFile(wb, "Consolidado.xlsx");
+
+    };
 
     return (
         <div className="">
             <ThemeProvider theme={theme}>
+
                 <div>
                     {/* i want to have two input dates with start and end date with nice styles in tailwindcss */}
                     <div className="flex flex-row justify-center">
@@ -115,6 +171,9 @@ const ConsolidadoTable = () => {
                             <button className=" m-0 bg-gray-500" type="submit" onClick={handleSearch}>Buscar</button>
                         </div>
                     </div>
+                    <button className=" m-0 bg-gray-500" onClick={exportToExcel}>
+                        Exportar a Excel
+                    </button>
                 </div>
                 <MaterialTable
                     title="Consolidado"
@@ -152,17 +211,22 @@ const ConsolidadoTable = () => {
                             placeholder: "Arrastre las columnas aquí para agruparlas",
                             groupedBy: 'Agrupado por:',
                         },
-    
+
                     }}
                     options={{
                         exportButton: true,
                         headerStyle: {
-                            backgroundColor: '#95B3D7 ',
+                            backgroundColor: '#95B3D7',
                             color: '#000',
                             fontSize: '14px',
                             fontWeight: 'bold',
                             fontFamily: 'calibri',
                             textAlign: 'center',
+                        },
+                        cellStyle: {
+                            textAlign: 'center',
+                            fontFamily: 'calibri',
+                            border: '1px solid #000', // Establece el borde en las celdas
                         },
                         rowStyle: {
                             backgroundColor: '#EEE',
@@ -177,7 +241,6 @@ const ConsolidadoTable = () => {
                         actionsColumnIndex: -1,
                         exportAllData: true,
                         exportFileName: 'Consolidado',
-
                         grouping: true,
                         search: true,
                         showSelectAllCheckbox: true,
@@ -185,15 +248,16 @@ const ConsolidadoTable = () => {
                         showTitle: true,
                         toolbarButtonAlignment: 'right',
                         headerSelectionProps: {
-                            color: 'primary'
+                            color: 'primary',
                         },
-                        selectionProps: rowData => ({
-                            disabled: rowData.disabled
-                        })
+                        selectionProps: (rowData) => ({
+                            disabled: rowData.disabled,
+                        }),
                     }}
 
+
                 />
-                
+
             </ThemeProvider>
 
         </div>

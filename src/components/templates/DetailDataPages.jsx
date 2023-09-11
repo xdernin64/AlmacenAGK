@@ -13,7 +13,7 @@ const DetailDataPages = ({config}) => {
     }, [location.pathname]);
     return (
         <div className="pagina">
-            <h1>DetailDataPages</h1>
+            <h1 className="tittlepage">{config.tittle}</h1>
             <DetailDataTable 
             {...config} key={key}
             />

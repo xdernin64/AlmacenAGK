@@ -2,7 +2,6 @@ import query from "devextreme/data/query"
 import TableAsistenciaSb from "../organism/tables/AsistenciaTablaSb"
 
 const AsistenciaSb = ({ area, departament, subdepartament, rol }) => {
-    console.log("area", area, "departament", departament, "subdepartament", subdepartament, "rol", rol)
     let querysb = {};
 
     if (rol === "ADMINISTRADOR") {

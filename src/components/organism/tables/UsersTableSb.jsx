@@ -243,6 +243,11 @@ return (
                         saveTooltip: 'Guardar',
                     },
                 },
+                //group text for grouping
+                grouping: {
+                    placeholder: "Arrastre las columnas aquí para agruparlas",
+                    groupedBy: 'Agrupado por:',
+                },
 
             }}
             editable={avaibleroles ? {

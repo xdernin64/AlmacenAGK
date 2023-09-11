@@ -28,7 +28,7 @@ const Routers = ({ state, rol, area, departament, subdepartament }) => {
         // Verificar si rol está definido
         if (rol !== undefined) {
             setIsRolAvailable(true);
-            console.log("rol", rol);
+            
         }
     }, [rol]);
 
@@ -197,7 +197,7 @@ const Routers = ({ state, rol, area, departament, subdepartament }) => {
                 <Route 
                     path="/consolidado"
                     element={
-                        state && rol == "ADMINISTRADOR" ? <Consolidado /> : <Navigate replace to="/login" />
+                        state ? <Consolidado area={area} departament={departament} subdepartament={subdepartament} rol={rol} /> : <Navigate replace to="/login" />
                     }
                 />
 

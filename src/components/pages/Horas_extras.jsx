@@ -1,7 +1,6 @@
 import TableSalidasSb from "../organism/tables/SalidasTabla";
 
 const ExtraTime = ({ area, departament, subdepartament, rol }) => {
-    console.log("area", area, "departament", departament, "subdepartament", subdepartament, "rol", rol)
     let querysb = {};
 
     if (rol === "ADMINISTRADOR") {
@@ -22,7 +21,7 @@ const ExtraTime = ({ area, departament, subdepartament, rol }) => {
 
     return (
         <div className="pagina">
-            <h1>ExtraTime</h1>
+            <h1 className="tittlepage">Horas extras</h1>
 
             <TableSalidasSb wheresb={querysb}></TableSalidasSb>
         </div>)

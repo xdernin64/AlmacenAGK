@@ -165,8 +165,8 @@ const UserProfileEditForm = () => {
 
             {basicInfo !== undefined && (
 
-                <div className='md:grid md:grid-cols-2 md:gap-2 '>
-                    <div className='p-5'>
+                <div className='md:grid md:grid-cols-1 md:gap-2 hidden'>
+                    <div className='p-5 hidden'>
                         <div>
                     <Typography variant="h6" component="h2" style={{ marginBottom: '16px' }}>
                         Información Básica
@@ -179,6 +179,7 @@ const UserProfileEditForm = () => {
                             onChange={(e) => handleInputChange(e, 'basic')}
                             variant="outlined"
                             fullWidth
+                            
                             required
                         /> <div className='h-5'></div>
                         <TextField
@@ -260,11 +261,12 @@ const UserProfileEditForm = () => {
                                 <MenuItem value={'ACTIVO'}>Activo</MenuItem>
                                 <MenuItem value={'INACTIVO'}>Inactivo</MenuItem>
                             </Select></FormControl><div className='h-5'></div>
-                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <div style={{ display: 'none', justifyContent: 'flex-end' }}>
                             <Button
                                 type='submit'
                                 variant="contained"
                                 color="primary"
+                                
                             >
                                 Actualizar Información Básica
                             </Button>

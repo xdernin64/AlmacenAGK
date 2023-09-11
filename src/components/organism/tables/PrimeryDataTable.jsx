@@ -123,7 +123,7 @@ const PrimaryDataTable = ({ dtname, colsnames }) => {
     return (
         <ThemeProvider theme={defaultMaterialTheme}>
             <MaterialTable
-                title="Tabla de Datos"
+                title=""
                 columns={columns}
                 data={data}
                 localization={{
@@ -153,8 +153,24 @@ const PrimaryDataTable = ({ dtname, colsnames }) => {
                             saveTooltip: 'Guardar',
                         },
                     },
+                    //group text for grouping
+                    grouping: {
+                        placeholder: "Arrastre las columnas aquí para agruparlas",
+                        groupedBy: 'Agrupado por:',
+                    },
 
                 }}
+                //i want a green header for my table
+                options={{
+                    headerStyle: {
+                        backgroundColor: '#007148',
+                        color: '#FFF'
+                    },
+                    rowStyle: {
+                        backgroundColor: '#EEE',
+                    },
+                }
+                }
                 editable={{
                     onRowAdd: handleRowAdd,
                     onRowUpdate: handleRowUpdate,

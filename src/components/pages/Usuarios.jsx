@@ -6,7 +6,7 @@ import NewUserModal from "../organism/modals/ModalNewUser";
 import UserTableSb from "../organism/tables/UsersTableSb";
 
 const Usuarios = ({ area, departament, subdepartament, rol }) => {
-    console.log("area", area, "departament", departament, "subdepartament", subdepartament, "rol", rol)
+    
     let querysb = {};
 
     if (rol === "ADMINISTRADOR") {
