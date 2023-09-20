@@ -322,7 +322,7 @@ function NavList({rol}) {
 
 export function NavbarWithMegaMenu({rol}) {
     const [openNav, setOpenNav] = React.useState(false);
-
+console.log(rol)
     React.useEffect(() => {
         window.addEventListener(
             "resize",

@@ -19,7 +19,7 @@ const AsistenciaSb = ({ area, departament, subdepartament, rol }) => {
             sdptdtcod: subdepartament
         };
     }
-
+    console.log("asistencia")
 
     return (
         <div className="pagina">
