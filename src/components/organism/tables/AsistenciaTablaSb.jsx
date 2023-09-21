@@ -18,10 +18,11 @@ import { DeleteDataSb } from '../../../helpers/CRUD/DELETE/DeleteDataSb';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import { FaSearch } from 'react-icons/fa';
 
-const ColumnTotal = (location, subdepartament, occupation, work, ceco,callbacknombre , callbackapellido) => {
+const ColumnTotal = (location, subdepartament, occupation, work, ceco, callbacknombre, callbackapellido) => {
     return [
         { title: 'Codigo', field: 'cod', editable: 'never' },
-        { title: 'Apellido', field: 'lastname', editable: 'never' 
+        {
+            title: 'Apellido', field: 'lastname', editable: 'never'
             //i want to have callback that allow setapellido here
         },
         { title: 'Nombre', field: 'name', editable: 'never' },
@@ -137,7 +138,7 @@ const ColumnTotal = (location, subdepartament, occupation, work, ceco,callbackno
         }
     ]
 }
-const TableAsistenciaSb = ({wheresb}) => {
+const TableAsistenciaSb = ({ wheresb }) => {
     const theme = createTheme();
     const [update, setUpdate] = useState(false);
     const [unlocked, setUnlocked] = useState(false);
@@ -154,15 +155,15 @@ const TableAsistenciaSb = ({wheresb}) => {
 
     useEffect(() => {
         async function fetchData() {
-            const selectdata1 = await GetPrimaryData("detaillocationzone","*");
+            const selectdata1 = await GetPrimaryData("detaillocationzone", "*");
             setLocation(selectdata1);
-            const selectdata2 = await GetPrimaryData("subdepartamentdetail","*",wheresb);
+            const selectdata2 = await GetPrimaryData("subdepartamentdetail", "*", wheresb);
             setSubdepartament(selectdata2);
-            const selectdata3 = await GetPrimaryData("occupationdetail","*",wheresb);
+            const selectdata3 = await GetPrimaryData("occupationdetail", "*", wheresb);
             setOccupation(selectdata3);
-            const selectdata4 = await GetPrimaryData("workdetail","*",wheresb);
+            const selectdata4 = await GetPrimaryData("workdetail", "*", wheresb);
             setWork(selectdata4);
-            const selectdata5 = await GetPrimaryData("cecodetail","*",wheresb);
+            const selectdata5 = await GetPrimaryData("cecodetail", "*", wheresb);
             setceco(selectdata5);
         }
         fetchData();
@@ -194,15 +195,15 @@ const TableAsistenciaSb = ({wheresb}) => {
     }
     const [data, setData] = useState([]);
     useEffect(() => {
-        
-        GetPrimaryData("user", "cod,name,lastname,lcdtcod,ocptdtcod,wdtcod,cecodtcod,sdptdtcod",wheresb).then((res) => {
+        const combinedobject = { state: "ACTIVO", ...wheresb }
+        GetPrimaryData("user", "cod,name,lastname,lcdtcod,ocptdtcod,wdtcod,cecodtcod,sdptdtcod,state", combinedobject).then((res) => {
             setData(res);
 
         });
         setUpdate(false);
     }, []);
     useEffect(() => {
-        const combinedobject = {dateas: currentdate,...wheresb}
+        const combinedobject = { dateas: currentdate, ...wheresb }
         GetPrimaryData("assistence", "cod,user(name,lastname),stateas,lcdtcod,ocptdtcod,wdtcod,cecodtcod,intime,sdptdtcod,asdesc", combinedobject).then((res) => {
             setAsistencedata(res);
             console.log(wheresb.sdptdtcod)
@@ -273,18 +274,23 @@ const TableAsistenciaSb = ({wheresb}) => {
                                     cod: newData.cod,
                                     dateas: currentdate,
                                     stateas: newData.stateas,
-                                    intime: (((newData.intime == null || newData.intime == "") && (newData.stateas == "ASISTENCIA" || newData.stateas == "ASISTENCIA FERIADO")) ? "06:00" : newData.intime),
+                                    intime: (
+                                        (newData.intime === null || newData.intime === "") &&
+                                        (newData.stateas === "ASISTENCIA" || newData.stateas === "ASISTENCIA FERIADO")
+                                    ) ? "06:00" :
+                                        (newData.stateas === "ASISTENCIA" || newData.stateas === "ASISTENCIA FERIADO") ? newData.intime : null
+                                    ,
                                     asdesc: newData.asdesc,
                                     lcdtcod: newData.lcdtcod,
                                     sdptdtcod: newData.sdptdtcod,
                                     ocptdtcod: newData.ocptdtcod,
                                     wdtcod: newData.wdtcod,
                                     cecodtcod: newData.cecodtcod,
-                                    outtime:(((newData.stateas == "ASISTENCIA" || newData.stateas == "ASISTENCIA FERIADO")) ? "14:00" : null),
-                                    workinghours:((newData.stateas == "ASISTENCIA") ? 8 : 0),
-                                    doubletime:((newData.stateas == "ASISTENCIA FERIADO") ? 8 : 0)
-
-
+                                    extratime25: (newData.stateas == "DXHA") ? -8:null,
+                                    extratime35: (newData.stateas != "ASISTENCIA") && null,
+                                    outtime: (((newData.stateas == "ASISTENCIA" || newData.stateas == "ASISTENCIA FERIADO")) ? "14:45" : null),
+                                    workinghours: ((newData.stateas == "ASISTENCIA") ? 8 : null),
+                                    doubletime: ((newData.stateas == "ASISTENCIA FERIADO") ? 8 : null)
                                 }
                                 checkassistance(newData2.codas, newData2)
                                 resolve();

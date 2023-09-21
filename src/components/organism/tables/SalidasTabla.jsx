@@ -158,7 +158,7 @@ const TableSalidasSb = ({wheresb}) => {
                                     workinghours: (newData.workinghours !== null && newData.workinghours !== "") ? newData.workinghours : calcularJornada(newData.intime, newData.outtime, newData.user.jobtime,newData.stateas),
                                     extratime25: (newData.extratime25 !== null && newData.extratime25 !== "") ? newData.extratime25 : horasextras25(newData.outtime, newData.user.jobtime,newData.stateas),
                                     extratime35: (newData.extratime35 !== null && newData.extratime35 !== "") ? newData.extratime35 : horasextras35(newData.outtime, newData.user.jobtime,newData.stateas),
-                                    doubletime: (newData.doubletime !== null && newData.doubletime !== "") ? newData.doubletime : Horasdobles(newData.outtime,newData.stateas),
+                                    doubletime:  (newData.doubletime !== null && newData.doubletime !== "") ? newData.doubletime : Horasdobles(newData.outtime,newData.stateas),
                                     asdesc: newData.asdesc
                         
                                 }
