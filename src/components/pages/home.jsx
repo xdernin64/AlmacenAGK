@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { AiOutlineAreaChart } from 'react-icons/ai'
-import LineChart from "../charts/vchart";
+import Examplechart from "../charts/vchart";
+import EjemploEx from "../charts/PieChartAs";
+
 
 const Home = () => {
     const getQuincena = () => {
@@ -113,12 +115,13 @@ const Home = () => {
                         <input className="border-2 border-gray-300 p-2 rounded-lg m-2" type="date" value={enddatequincena} disabled />
                     </div>
                 </div>
-                <div className="flex justify-center">
-                    <div className="flex flex-col">
+                <div className="">
+                    <div className="">
                         <div className="bg-red-600 rounded-md p-5 text-white font-bold">
                             <h2>Faltas de la quincena</h2>
                         </div>
-                        <LineChart />
+                        <Examplechart />
+                        
                         
 
                     </div>
