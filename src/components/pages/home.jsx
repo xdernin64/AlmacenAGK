@@ -1,27 +1,40 @@
 import { useEffect, useState } from "react";
 import { AiOutlineAreaChart } from 'react-icons/ai'
-import Examplechart from "../charts/vchart";
-import EjemploEx from "../charts/PieChartAs";
+import { GetPrimaryDataBetweenDates } from "../../helpers/CRUD/READ/GetDataSb";
+import { countByStateAs, countFaltasBySubdepartament, getQuincena, transformDataForBarChart, transformDataForRecharts } from "../charts/chartshelpers/functionhelpers";
+import Exampleforpie from "../charts/vchart";
 
 
 const Home = () => {
-    const getQuincena = () => {
-        const day = new Date().getDate();
-        if (day >= 25 || day <= 10) {
-            return 1;
-        } else {
-            return 2;
-        }
-    }
+
     const [selectedquincena, setSelectedquincena] = useState(getQuincena());
     const [selectedmes, setSelectedmes] = useState(new Date().getMonth() + 1);
     const [selectedyear, setSelectedyear] = useState(new Date().getFullYear());
     const [startdatequincena, setStartdatequincena] = useState([]);
     const [enddatequincena, setEnddatequincena] = useState([]);
-    //thats the instruction to get the start and end date of the quincena if quiencena is 1 then estart date is from the 26 of the last month to the 10 of the current month if quincena is 2 then start date is from the 11 of the current month to the 25 of the current month and gt the format yyyy-mm-dd and console log
+    const [data, setData] = useState([]);
+    const [search, setSearch] = useState(false);
+
+    //primera vez que se carga la pagina se ejecuta el useeffect para obtener la fecha de inicio y fin de la quincena
+    useEffect(() => {
+        getStartandEndDate(selectedyear, selectedmes, selectedquincena);
+    }, []);
+
+    useEffect(() => {
+        if (search) {
+            GetPrimaryDataBetweenDates(
+                'assistence',
+                'cod, dateas, stateas, user(name, lastname), subdepartamentdetail(subdepartament(subdepartamentname) )', {}, startdatequincena, enddatequincena
+            ).then((r) => {
+                console.log(r);
+                setData(r);
+                console.log(countFaltasBySubdepartament(r));
+            });
+            setSearch(false);
+        }
+    }, [search, startdatequincena, enddatequincena]);
+
     const getStartandEndDate = (year, month, quincena) => {
-        // Convierte los valores de entrada a números
-        // Convierte los valores de entrada a números
         year = Number(year);
         month = Number(month);
         quincena = Number(quincena);
@@ -60,17 +73,15 @@ const Home = () => {
         } else {
             console.log("El valor de quincena debe ser 1 o 2");
         }
+        setSearch(true);
     };
-    useEffect(() => {
-        getStartandEndDate(selectedyear, selectedmes, selectedquincena);
-    }, [    ]);
-    
+
+
+
     return (
         <>
             <div className="pagina">
-                <div className="text-center w-full flex justify-center mt-2">
-                    <h1 className=" font-bold font-sans text-2xl bg-light-blue-600 border rounded-xl pl-10 pr-10 text-gray-100 " > <p className="flex pl-2 ml-3">    Dashboard de SisRa <AiOutlineAreaChart className="text-orange-200 m-1" /></p></h1>
-                </div>
+                <div className="text-center w-full flex justify-center mt-2">                </div>
                 <div className="group">
                     <div className="flex justify-center">
                         <div className="flex flex-col">
@@ -117,12 +128,8 @@ const Home = () => {
                 </div>
                 <div className="">
                     <div className="">
-                        <div className="bg-red-600 rounded-md p-5 text-white font-bold">
-                            <h2>Faltas de la quincena</h2>
-                        </div>
-                        <Examplechart />
                         
-                        
+                        <Exampleforpie datos={countFaltasBySubdepartament(data)} linedata={transformDataForRecharts(data)}  statepiedata={countByStateAs(data)} barchardata={transformDataForBarChart(data,"dateas","stateas","stateas")} />
 
                     </div>
                 </div>
