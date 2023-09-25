@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+ import { useEffect, useState } from "react";
 import { AiOutlineAreaChart } from 'react-icons/ai'
 import { GetPrimaryDataBetweenDates } from "../../helpers/CRUD/READ/GetDataSb";
 import { countByStateAs, countFaltasBySubdepartament, getQuincena, transformDataForBarChart, transformDataForRecharts } from "../charts/chartshelpers/functionhelpers";
@@ -26,9 +26,7 @@ const Home = () => {
                 'assistence',
                 'cod, dateas, stateas, user(name, lastname), subdepartamentdetail(subdepartament(subdepartamentname) )', {}, startdatequincena, enddatequincena
             ).then((r) => {
-                console.log(r);
                 setData(r);
-                console.log(countFaltasBySubdepartament(r));
             });
             setSearch(false);
         }
@@ -53,21 +51,15 @@ const Home = () => {
                 startDateMonth -= 1;
             }
             const startDate = `${startDateYear}-${formatNumber(startDateMonth)}-26`;
-
             // Calcula la fecha de fin para la primera quincena
             const endDate = `${year}-${formatNumber(month)}-10`;
-
-            console.log("Primera quincena:", startDate, endDate);
             setStartdatequincena(startDate);
             setEnddatequincena(endDate);
         } else if (quincena === 2) {
             // Calcula la fecha de inicio para la segunda quincena
             const startDate = `${year}-${formatNumber(month)}-11`;
-
             // Calcula la fecha de fin para la segunda quincena
             const endDate = `${year}-${formatNumber(month)}-25`;
-
-            console.log("Segunda quincena:", startDate, endDate);
             setStartdatequincena(startDate);
             setEnddatequincena(endDate);
         } else {
@@ -76,23 +68,19 @@ const Home = () => {
         setSearch(true);
     };
 
-
-
     return (
         <>
-            <div className="pagina">
+            <div className=" pt-0 mt-0">
                 <div className="text-center w-full flex justify-center mt-2">                </div>
                 <div className="group">
                     <div className="flex justify-center">
                         <div className="flex flex-col">
-                            <label className="text-center text-gray-700 text-xl font-bold">Quincena</label>
                             <select className="border-2 border-gray-300 p-2 rounded-lg m-2" onChange={(e) => setSelectedquincena(e.target.value)} value={selectedquincena}>
-                                <option value="1">Primera</option>
-                                <option value="2">Segunda</option>
+                                <option value="1">Quincena 1</option>
+                                <option value="2">Quincena 2</option>
                             </select>
                         </div>
                         <div className="flex flex-col">
-                            <label className="text-center text-gray-700 text-xl font-bold">Mes</label>
                             <select className="border-2 border-gray-300 p-2 rounded-lg m-2" onChange={(e) => setSelectedmes(e.target.value)} value={selectedmes}>
                                 <option value="1">Enero</option>
                                 <option value="2">Febrero</option>
@@ -109,11 +97,9 @@ const Home = () => {
                             </select>
                         </div>
                         <div className="flex flex-col">
-                            <label className="text-center text-gray-700 text-xl font-bold">Año</label>
                             <input className="border-2 border-gray-300 p-2 rounded-lg m-2" type="number" onChange={(e) => setSelectedyear(e.target.value)} value={selectedyear} />
                         </div>
                         <div className="flex flex-col">
-                            <label className="text-center text-gray-700 text-xl font-bold">Buscar</label>
                             <button className="border-2 border-gray-300 text-gray-800 p-2 rounded-lg m-2" onClick={() => getStartandEndDate(selectedyear, selectedmes, selectedquincena)}>Buscar</button>
                         </div>
                     </div>
@@ -128,9 +114,7 @@ const Home = () => {
                 </div>
                 <div className="">
                     <div className="">
-                        
-                        <Exampleforpie datos={countFaltasBySubdepartament(data)} linedata={transformDataForRecharts(data)}  statepiedata={countByStateAs(data)} barchardata={transformDataForBarChart(data,"dateas","stateas","stateas")} />
-
+                        <Exampleforpie datos={countFaltasBySubdepartament(data)} linedata={transformDataForRecharts(data)}  statepiedata={countByStateAs(data)} barchardata={transformDataForBarChart(data,"dateas","stateas")} />
                     </div>
                 </div>
             </div>

@@ -41,7 +41,7 @@ export function countFaltasBySubdepartament(data) {
     });
 
     const result = Object.entries(countBySubdepartament).map(([name, value]) => ({ name, value }));
-    console.log(result);
+
     return result;
 }
 export function transformDataForRecharts(data) {
@@ -81,37 +81,42 @@ export function countByStateAs(data) {
     return result;
 }
 //DATA FOR BARCHAR 
-export function transformDataForBarChart(data, x, y, values) {
+export function transformDataForBarChart(data, x, values) {
     const groupedData = {};
 
     data.forEach(item => {
         const xValue = item[x];
-        const yValue = item[y];
         const value = item[values];
 
-        if (xValue && yValue && value) {
+        if (xValue && value) {
             if (!groupedData[xValue]) {
-                groupedData[xValue] = [];
+                groupedData[xValue] = {};
             }
 
-            let existingEntry = groupedData[xValue].find(entry => entry[y] === yValue);
-
-            if (!existingEntry) {
-                existingEntry = { [x]: xValue, [y]: yValue };
-                groupedData[xValue].push(existingEntry);
-            }
-
-            existingEntry[value] = (existingEntry[value] || 0) + 1;
+            // Asegúrate de que las categorías se formateen adecuadamente
+            const category = value.replace(/\s+/g, ''); // Elimina espacios en blanco
+            groupedData[xValue][category] = (groupedData[xValue][category] || 0) + 1;
         }
+    });
+
+    // Agrega categorías faltantes con un valor de 0
+    const allCategories = ["ASISTENCIA", "FALTA", "DSO", "DXHA", "LICENCIA", "ASISTENCIA FERIADO", "DSO FERIADO"];
+    Object.keys(groupedData).forEach(key => {
+        allCategories.forEach(category => {
+            if (groupedData[key][category] === undefined) {
+                groupedData[key][category] = 0;
+            }
+        });
     });
 
     const transformedData = [];
 
     Object.keys(groupedData).forEach(key => {
-        groupedData[key].forEach(entry => {
-            transformedData.push(entry);
-        });
+        const entry = { date: key, ...groupedData[key] };
+        transformedData.push(entry);
     });
 
+    console.log(transformedData);
     return transformedData;
 }
+
