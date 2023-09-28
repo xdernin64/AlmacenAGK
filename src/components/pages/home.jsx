@@ -1,12 +1,11 @@
- import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineAreaChart } from 'react-icons/ai'
 import { GetPrimaryDataBetweenDates } from "../../helpers/CRUD/READ/GetDataSb";
 import { countByStateAs, countFaltasBySubdepartament, getQuincena, transformDataForBarChart, transformDataForRecharts } from "../charts/chartshelpers/functionhelpers";
 import Exampleforpie from "../charts/vchart";
 
 
-const Home = () => {
-
+const Home = ({ subdepartament }) => {
     const [selectedquincena, setSelectedquincena] = useState(getQuincena());
     const [selectedmes, setSelectedmes] = useState(new Date().getMonth() + 1);
     const [selectedyear, setSelectedyear] = useState(new Date().getFullYear());
@@ -17,14 +16,37 @@ const Home = () => {
 
     //primera vez que se carga la pagina se ejecuta el useeffect para obtener la fecha de inicio y fin de la quincena
     useEffect(() => {
-        getStartandEndDate(selectedyear, selectedmes, selectedquincena);
+        const fechaActual = new Date();
+        const dia = fechaActual.getDate();
+        //get number of month
+        const mes = fechaActual.getMonth() + 1;
+        const anio = fechaActual.getFullYear();
+        if (dia > 10 && dia <= 25) {
+            setSelectedquincena(2)
+            setSelectedmes(mes)
+            setSelectedyear(anio)
+            getStartandEndDate(anio, mes, 2)
+        } else {
+            if (mes == 12) {
+                setSelectedmes(1)
+                setSelectedyear(anio+1)
+                setSelectedquincena(1)
+            getStartandEndDate(anio+1, 1, 1)
+            } else {
+                setSelectedmes(mes+1)
+                setSelectedyear(anio)
+                setSelectedquincena(1)
+            getStartandEndDate(anio, mes+1, 1)
+            }
+        }
+
     }, []);
 
     useEffect(() => {
         if (search) {
             GetPrimaryDataBetweenDates(
                 'assistence',
-                'cod, dateas, stateas, user(name, lastname), subdepartamentdetail(subdepartament(subdepartamentname) )', {}, startdatequincena, enddatequincena
+                'cod, dateas, stateas, user(name, lastname),sdptdtcod, subdepartamentdetail(subdepartament(subdepartamentname,subdepartamentcode) )', {}, startdatequincena, enddatequincena
             ).then((r) => {
                 setData(r);
             });
@@ -71,7 +93,7 @@ const Home = () => {
     return (
         <>
             <div className=" pt-0 mt-0">
-                <div className="text-center w-full flex justify-center mt-2">                </div>
+                <div className="text-center w-full flex justify-center mt-2"></div>
                 <div className="group">
                     <div className="flex justify-center">
                         <div className="flex flex-col">
@@ -114,7 +136,7 @@ const Home = () => {
                 </div>
                 <div className="">
                     <div className="">
-                        <Exampleforpie datos={countFaltasBySubdepartament(data)} linedata={transformDataForRecharts(data)}  statepiedata={countByStateAs(data)} barchardata={transformDataForBarChart(data,"dateas","stateas")} />
+                        <Exampleforpie datos={countFaltasBySubdepartament(data)} linedata={transformDataForRecharts(data, subdepartament)} statepiedata={countByStateAs(data, subdepartament)} barchardata={transformDataForBarChart(data, "dateas", "stateas", subdepartament)} />
                     </div>
                 </div>
             </div>

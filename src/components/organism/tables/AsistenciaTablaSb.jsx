@@ -87,12 +87,12 @@ const ColumnTotal = (location, subdepartament, occupation, work, ceco, callbackn
             },
         },
         {
-            title: 'Subdepartamento', field: 'sdptdtcod',
+            title: 'Sub-Área', field: 'sdptdtcod',
             editComponent: props => {
                 const initialValue = props.value || '';
                 return (
                     <AutoCompleteRemote db="subdepartamentdetail"
-                        title="SubDepartamento" dataprops={["sdptdtcod", "sdptdtdesc"]}
+                        title="Sub-Área" dataprops={["sdptdtcod", "sdptdtdesc"]}
                         value={initialValue} onChange={props.onChange} qstate={true} qdata={subdepartament} />
 
                 );

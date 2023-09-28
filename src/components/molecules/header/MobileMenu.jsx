@@ -101,8 +101,8 @@ const navListCreate = [
     {
         color: "green",
         icon: BuildingLibraryIcon,
-        title: "Areas",
-        description: "Aqui podras ver y agregar las areas",
+        title: "Gerencias",
+        description: "Aqui podras ver y agregar las Gerencias",
         link: "/areas"
 
     },
@@ -116,15 +116,15 @@ const navListCreate = [
     {
         color: "green",
         icon: BuildingOfficeIcon,
-        title: "Departamentos",
-        description: "Aqui podras ver y agregar los departamentos",
+        title: "Áreas",
+        description: "Aqui podras ver y agregar los Áreas",
         link: "/departaments"
     },
     {
         color: "green",
         icon: BuildingStorefrontIcon,
-        title: "Sub-departamentos",
-        description: "Aqui podras ver y agregar los puestos",
+        title: "Sub-areas",
+        description: "Aqui podras ver y agregar las Sub-areas",
         link: "/subdepartaments"
     },
     {
@@ -154,8 +154,8 @@ const navListAssign = [
     {
         color: "orange",
         icon: BuildingLibraryIcon,
-        title: "Asignacion de areas",
-        description: "Asigna las areas en las Zonas de la empresa.",
+        title: "Asignacion de Gerencias",
+        description: "Asigna las Gerencias en las Zonas de la empresa.",
         link: "/zone-area",
 
     },
@@ -170,17 +170,17 @@ const navListAssign = [
     {
         color: "orange",
         icon: BuildingOfficeIcon,
-        title: "Asignacion de departamentos",
+        title: "Asignacion de Áreas",
         description:
-            "Asigna los departamentos en las areas de la empresa.",
+            "Asigna las Áreas en las Gerencias de la empresa.",
         link: "/area-departament",
     },
     {
         color: "orange",
         icon: BuildingStorefrontIcon,
-        title: "Asignacion de sub-departamentos",
+        title: "Asignacion de Sub-áreas",
         description:
-            "Asigna los sub-departamentos en los departamentos de la empresa.",
+            "Asigna las Sub-áreas en las Áreas de la empresa.",
         link: "/departament-subdepartament",
     },
     {
@@ -188,7 +188,7 @@ const navListAssign = [
         icon: DocumentMinusIcon,
         title: "Asignacion de ocupaciones",
         description:
-            "Asigna las ocupaciones en los sub-departamentos de la empresa.",
+            "Asigna las ocupaciones en las Áreas  de la empresa.",
         link: "/subdepartament-occupation",
     },
     {
@@ -196,7 +196,7 @@ const navListAssign = [
         icon: BriefcaseIcon,
         title: "Asignacion de labores",
         description:
-            "Asigna las labores en los sub-departamentos de la empresa.",
+            "Asigna las labores en las Áreas  de la empresa.",
         link: "/subdepartament-work",
     },
     {
@@ -204,7 +204,7 @@ const navListAssign = [
         icon: CurrencyDollarIcon,
         title: "asignacion de centros de costo",
         description:
-            "Asigna los centros de costo en los sub-departamentos de la empresa.",
+            "Asigna los centros de costo en las Áreas de la empresa.",
         link: "/subdepartament-ceco",
     }
 

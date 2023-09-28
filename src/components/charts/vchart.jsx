@@ -40,7 +40,7 @@ const Exampleforpie = ({ datos, linedata, statepiedata, barchardata }) => {
                     </figure>
                     <figure className="flex flex-col items-center justify-center lg:p-8 text-center bg-white border-b border-gray-200 rounded-tr-lg dark:bg-gray-800 dark:border-gray-700">
                         <div className="chart-container w-full h-96 lg:pl-10 lg:pr-10 pb-6 mb-2" >
-                            <h3 className='font-extrabold text-indigo-700 text-2xl'>Resumen personal</h3>
+                            <h3 className='font-extrabold text-indigo-700 text-2xl'>Resumen Diario</h3>
 
                             <ResponsiveContainer width="100%" height="100%" className='bg-indigo-700 w-full  rounded-lg text-white'>
                                 <BarChart data={barchardata}>
@@ -62,7 +62,7 @@ const Exampleforpie = ({ datos, linedata, statepiedata, barchardata }) => {
                         </div>
                     </figure>
                     <figure className="flex flex-col items-center justify-center p-8 text-center bg-white border-b border-gray-200 rounded-bl-lg md:border-b-0 md:border-r dark:bg-gray-800 dark:border-gray-700">
-                        <h3 className='font-extrabold text-indigo-700 text-2xl'>Faltas por subdepartamento</h3>
+                        <h3 className='font-extrabold text-indigo-700 text-2xl'>Faltas por Sub-Área</h3>
                         <div className="chart-container w-full h-96  pl-10 pr-10" >
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart >
@@ -80,6 +80,8 @@ const Exampleforpie = ({ datos, linedata, statepiedata, barchardata }) => {
                     </figure>
                     <figure className="flex flex-col items-center justify-center p-8 text-center bg-white border-gray-200 rounded-b-lg md:rounded-br-lg dark:bg-gray-800 dark:border-gray-700">
                         <div className="chart-container w-full h-96  pl-10 pr-10" >
+                        <h3 className='font-extrabold text-indigo-700 text-2xl'>Resumen Total</h3>
+
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart width={200} height={400}>
                                     <Pie data={statepiedata} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} fill="#8884d8" label>

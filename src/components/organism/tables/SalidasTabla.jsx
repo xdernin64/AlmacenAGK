@@ -65,7 +65,7 @@ const ColumnTotal = () => {
         { title: 'Observaciones', field: 'asdesc' },
         { title: 'Sede', field: 'lcdtcod', editable: 'never' },
         {
-            title: 'Subdepartamento', field: 'sdptdtcod', editable: 'never',
+            title: 'Sub-Área', field: 'sdptdtcod', editable: 'never',
         },
         {
             title: 'Ocupacion', field: 'ocptdtcod', editable: 'never',

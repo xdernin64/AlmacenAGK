@@ -47,9 +47,9 @@ const Routers = ({ state, rol, area, departament, subdepartament }) => {
                 <Route
                     path="/areas"
                     element={state && rol == "ADMINISTRADOR" ? <PrimaryDataPage tittle={"Gestión de áreas"} dtname={"area"} colsnames={[
-                        { title: 'Codigo De Area', field: 'areacod', editable: 'onAdd' }, // Hacer editable al agregar
-                        { title: 'Nombre De Area', field: 'areaname', editable: 'always' }, // Hacer editable siempre
-                        { title: 'Descripcion de Area', field: 'areadesc', editable: 'always' }, // Hacer editable siempre
+                        { title: 'Codigo De Gerencia', field: 'areacod', editable: 'onAdd' }, // Hacer editable al agregar
+                        { title: 'Nombre De Gerencia', field: 'areaname', editable: 'always' }, // Hacer editable siempre
+                        { title: 'Descripcion de Gerencia', field: 'areadesc', editable: 'always' }, // Hacer editable siempre
                     ]} /> : <Navigate replace to="/login" />}
                 />
                 <Route
@@ -63,17 +63,17 @@ const Routers = ({ state, rol, area, departament, subdepartament }) => {
                 <Route
                     path="/departaments"
                     element={state && rol == "ADMINISTRADOR" ? <PrimaryDataPage tittle={"Gestión de Departamentos"} dtname={"departament"} colsnames={[
-                        { title: 'Codigo De Departamento', field: 'departamentcod', editable: 'onAdd' }, // Hacer editable al agregar
-                        { title: 'Nombre De Departamento', field: 'departamentname', editable: 'always' }, // Hacer editable siempre
-                        { title: 'Descripcion de Departamento', field: 'departamentdesc', editable: 'always' }, // Hacer editable siempre
+                        { title: 'Codigo De Área', field: 'departamentcod', editable: 'onAdd' }, // Hacer editable al agregar
+                        { title: 'Nombre De Área', field: 'departamentname', editable: 'always' }, // Hacer editable siempre
+                        { title: 'Descripcion de Área', field: 'departamentdesc', editable: 'always' }, // Hacer editable siempre
                     ]} /> : <Navigate replace to="/login" />}
                 />
                 <Route
                     path="/subdepartaments"
                     element={state && rol == "ADMINISTRADOR" ? <PrimaryDataPage tittle={"Gestión de Sub-departamentos"} dtname={"subdepartament"} colsnames={[
-                        { title: 'Codigo De Sub-departamento', field: 'subdepartamentcode', editable: 'onAdd' }, // Hacer editable al agregar
-                        { title: 'Nombre De Sub-departamento', field: 'subdepartamentname', editable: 'always' }, // Hacer editable siempre
-                        { title: 'Descripcion de Sub-departamento', field: 'subdepartamentdesc', editable: 'always' }, // Hacer editable siempre
+                        { title: 'Codigo De Sub-Área', field: 'subdepartamentcode', editable: 'onAdd' }, // Hacer editable al agregar
+                        { title: 'Nombre De Sub-Área', field: 'subdepartamentname', editable: 'always' }, // Hacer editable siempre
+                        { title: 'Descripcion de Sub-Área', field: 'subdepartamentdesc', editable: 'always' }, // Hacer editable siempre
                     ]} /> : <Navigate replace to="/login" />}
                 />
                 <Route
@@ -199,7 +199,7 @@ const Routers = ({ state, rol, area, departament, subdepartament }) => {
 
                 <Route
                     path="/"
-                    element={state ? <Home /> : <Navigate replace to="/login" />}
+                    element={state ? <Home   subdepartament={subdepartament}/> : <Navigate replace to="/login" />}
                 />
                 <Route
                     path="*"

@@ -31,7 +31,7 @@ const Usuarios = ({ area, departament, subdepartament, rol }) => {
                 <h1 className="tittlepage">Gestion de usuarios</h1>
             </div>
             <div>
-                <UserTableSb rol={rol} wheresb={querysb} dbtable={"user"} dbsl1={"detaillocationzone"} dbsl2={"subdepartamentdetail"} titlearray={["Codigo", "Apellidos", "Nombres", "dni", "Genero", "Tipo de horario", "Sede", "Subdepartamento", "Estado"]} fieldarray={["cod", "lastname", "name", "dni", "gender", "jobtime", "lcdtcod", "sdptdtcod", "state"]} selectname={["lcdtdesc", "sdptdtdesc"]}></UserTableSb>
+                <UserTableSb rol={rol} wheresb={querysb} dbtable={"user"} dbsl1={"detaillocationzone"} dbsl2={"subdepartamentdetail"} titlearray={["Codigo", "Apellidos", "Nombres", "dni", "Genero", "Tipo de horario", "Sede", "Sub-Área", "Estado"]} fieldarray={["cod", "lastname", "name", "dni", "gender", "jobtime", "lcdtcod", "sdptdtcod", "state"]} selectname={["lcdtdesc", "sdptdtdesc"]}></UserTableSb>
             </div>
             <div className="w-full">
 
