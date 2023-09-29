@@ -129,6 +129,43 @@ export function transformDataForBarChart(data, x, values, sdptdtcodFilter) {
     transformedData.sort((a, b) => new Date(a.date) - new Date(b.date));
     return transformedData;
 }
+export function hoursdata(data, subdepartamentname) {
+    // Filtrar por subdepartamentname si subdepartamentname no es null
+    const filteredData = subdepartamentname
+        ? data.filter(item => item.subdepartamentdetail.subdepartament.subdepartamentname === subdepartamentname)
+        : data;
+
+    const userTotals = {};
+
+    filteredData.forEach(item => {
+        const userName = item.user.name + " " + item.user.lastname;
+        const extratime25 = parseFloat(item.extratime25 || 0);
+        const extratime35 = parseFloat(item.extratime35 || 0);
+
+        if (!userTotals[userName]) {
+            userTotals[userName] = {
+                name: userName,
+                totalHours: 0,
+                extratime25: 0,
+                extratime35: 0,
+                doubletime: 0,
+            };
+        }
+
+        userTotals[userName].extratime25 += extratime25;
+        userTotals[userName].extratime35 += extratime35;
+        userTotals[userName].totalHours += extratime25 + extratime35;
+        userTotals[userName].doubletime += parseFloat(item.doubletime || 0);
+    });
+
+    // Convertir el objeto en un arreglo
+    const userTotalsArray = Object.values(userTotals);
+
+    // Ordenar de mayor a menor según el total de horas
+    userTotalsArray.sort((a, b) => b.totalHours - a.totalHours);
+
+    return userTotalsArray;
+}
 
 
 

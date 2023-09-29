@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AiOutlineAreaChart } from 'react-icons/ai'
 import { GetPrimaryDataBetweenDates } from "../../helpers/CRUD/READ/GetDataSb";
-import { countByStateAs, countFaltasBySubdepartament, getQuincena, transformDataForBarChart, transformDataForRecharts } from "../charts/chartshelpers/functionhelpers";
+import { countByStateAs, countFaltasBySubdepartament, getQuincena, hoursdata, transformDataForBarChart, transformDataForRecharts } from "../charts/chartshelpers/functionhelpers";
 import Exampleforpie from "../charts/vchart";
 
 
@@ -46,7 +46,7 @@ const Home = ({ subdepartament }) => {
         if (search) {
             GetPrimaryDataBetweenDates(
                 'assistence',
-                'cod, dateas, stateas, user(name, lastname),sdptdtcod, subdepartamentdetail(subdepartament(subdepartamentname,subdepartamentcode) )', {}, startdatequincena, enddatequincena
+                'cod, dateas, stateas, user(name, lastname),sdptdtcod,extratime25 , extratime35, doubletime , subdepartamentdetail(subdepartament(subdepartamentname,subdepartamentcode))', {}, startdatequincena, enddatequincena
             ).then((r) => {
                 setData(r);
             });
@@ -136,7 +136,7 @@ const Home = ({ subdepartament }) => {
                 </div>
                 <div className="">
                     <div className="">
-                        <Exampleforpie datos={countFaltasBySubdepartament(data)} linedata={transformDataForRecharts(data, subdepartament)} statepiedata={countByStateAs(data, subdepartament)} barchardata={transformDataForBarChart(data, "dateas", "stateas", subdepartament)} />
+                        <Exampleforpie hoursdata={hoursdata(data)} datos={countFaltasBySubdepartament(data)} linedata={transformDataForRecharts(data, subdepartament)} statepiedata={countByStateAs(data, subdepartament)} barchardata={transformDataForBarChart(data, "dateas", "stateas", subdepartament)}  />
                     </div>
                 </div>
             </div>
