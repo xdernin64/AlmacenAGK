@@ -1,11 +1,15 @@
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, AreaChart, Area, BarChart, Bar, Label } from 'recharts';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, AreaChart, Area, BarChart, Bar, Label, LabelList } from 'recharts';
 import { convertirFecha } from './chartshelpers/functionhelpers';
 import { useState } from 'react';
+import { button } from '@material-tailwind/react';
 const Exampleforpie = ({ datos, linedata, statepiedata, barchardata, hoursdata }) => {
     const [searchText, setSearchText] = useState('');
-    const filteredData = hoursdata.filter(item =>
-        item.name.toLowerCase().includes(searchText.toLowerCase())
-    );
+    const sortedData = hoursdata
+        .filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()))
+        .sort((a, b) => b.totalHours - a.totalHours); // Ordena por totalHours de mayor a menor
+
+    const chartWidth = Math.max(500, sortedData.length * 300); // Calcula el ancho del gráfico basado en la cantidad de datos filtrados y ordenados
+
     const handleSearchChange = (e) => {
         setSearchText(e.target.value);
     };
@@ -16,7 +20,7 @@ const Exampleforpie = ({ datos, linedata, statepiedata, barchardata, hoursdata }
                 <li className='decoration-black font-extrabold' key={index}>- {person}</li>
             ));
             return (
-                <div className="custom-tooltip bg-indigo-80 runde0 rounded-lg bg-opacity-25">
+                <div className="custom-tooltip bg-indigo-800 rounded-lg bg-opacity-25">
                     <p className="label font-extrabold">{`${convertirFecha(date)}`}</p>
                     <p className="label">Personas que faltaron:</p>
                     <ul className='text-start'>{missingPersons}</ul>
@@ -28,7 +32,6 @@ const Exampleforpie = ({ datos, linedata, statepiedata, barchardata, hoursdata }
     return (
         <div className='w-100 m-0 p-0'>
             <div className='grid-cols-2'>
-
                 <div className="grid mb-8 border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 md:mb-12 md:grid-cols-2">
                     <figure className="flex flex-col items-center justify-center  text-center bg-white border-b border-gray-200 rounded-t-lg md:rounded-t-none md:rounded-tl-lg md:border-r dark:bg-gray-800 dark:border-gray-700 p-2">
                         <div className="chart-container w-full h-96 lg:pl-10 lg:pr-10 pb-5 mb-2" >
@@ -104,38 +107,54 @@ const Exampleforpie = ({ datos, linedata, statepiedata, barchardata, hoursdata }
                                 </PieChart></ResponsiveContainer></div>
                     </figure>
                 </div>
-                <div>
+                <div className='m-2' style={{ maxWidth: '100%' }}>
                     <input
                         type="text"
                         placeholder="Buscar por nombre"
                         value={searchText}
                         onChange={handleSearchChange}
                     />
-                    <BarChart width={2500} height={300} data={hoursdata}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="extratime25" fill="#82ca9d" stackId="a" />
-                        <Bar dataKey="extratime35" fill="#ffc658" stackId="a" />
-                        {hoursdata.map((entry, index) => (
-                            <text
-                                key={index}
-                                x={index * 60 + 30} // Ajusta la posición horizontal
-                                y={280} // Ajusta la posición vertical
-                                textAnchor="middle"
-                                dominantBaseline="middle"
-                                fill="#000" // Color del texto
-                            >
-                                {entry.totalHours}
-                            </text>
-                        ))}
-                    </BarChart>
+                    <div style={{ width: '100%', overflowX: 'auto', padding: '' }}>
+                        <BarChart width={chartWidth} height={400} data={sortedData}>
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend
+                                align='left'
+                                verticalAlign='top'
+                                className='bg-black'
+                                wrapperStyle={{
+                                    marginBottom: '20px', // Ajusta el valor según tus preferencias
+                                    padding: '10px',
+                                    margin: '1px',
+                                    borderRadius: '10px',
+                                    paddingLeft: '50px',
+                                    
+                                }}
+                            />
+
+                            <Bar dataKey="totalHours" fill="#82ca9d" name='Horas totales'>
+                                <LabelList dataKey="totalHours" position="top" />
+                            </Bar>
+                            <Bar dataKey="extratime25" fill="#008afe" stackId="a" name='Horas extras al 25%'>
+                                <LabelList dataKey="extratime25" position="center" fill='#d8e6f2' />
+                            </Bar>
+                            <Bar dataKey="extratime35" fill="#ffc658" stackId="a" name='Horas extras al 35%'>
+                                <LabelList dataKey="extratime35" position="center" />
+                            </Bar>
+                            <Bar dataKey="discounthours" fill="#d93f35" name='Horas descontadas'>
+                                <LabelList dataKey="discounthours" position="top" />
+                            </Bar>
+                            <Bar dataKey="doubletime" fill="#8884d8" name='Horas dobles'>
+                                <LabelList dataKey="doubletime" position="top" />
+                            </Bar>
+                        </BarChart>
+                    </div>
                 </div>
+
 
             </div>
         </div>
     );
 }
-export default Examplefor
+export default Exampleforpie;

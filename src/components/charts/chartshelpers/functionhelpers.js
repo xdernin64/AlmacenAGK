@@ -141,6 +141,7 @@ export function hoursdata(data, subdepartamentname) {
         const userName = item.user.name + " " + item.user.lastname;
         const extratime25 = parseFloat(item.extratime25 || 0);
         const extratime35 = parseFloat(item.extratime35 || 0);
+        const discounthours = parseFloat(item.discounthours || 0);
 
         if (!userTotals[userName]) {
             userTotals[userName] = {
@@ -149,13 +150,16 @@ export function hoursdata(data, subdepartamentname) {
                 extratime25: 0,
                 extratime35: 0,
                 doubletime: 0,
+                discounthours: 0
             };
         }
 
         userTotals[userName].extratime25 += extratime25;
         userTotals[userName].extratime35 += extratime35;
-        userTotals[userName].totalHours += extratime25 + extratime35;
+        userTotals[userName].discounthours += discounthours;
+        userTotals[userName].totalHours += extratime25 + extratime35- discounthours;
         userTotals[userName].doubletime += parseFloat(item.doubletime || 0);
+        
     });
 
     // Convertir el objeto en un arreglo

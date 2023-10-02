@@ -173,20 +173,14 @@ const TableAsistenciaSb = ({ wheresb }) => {
     const handleDateChange = (event) => {
         const newDate = event.target.value;
         setCurrentdate(newDate);
-        console.log(`Formatted Date: ${newDate}`);
     };
     async function checkassistance(codas, newData2) {
         const data = await GetSpecificData("assistence", "codas", codas);
         if (data.length == 0) {
             await CreateFromObject("assistence", newData2).then(() => {
                 setUpdate(true);
-
-
             });
-
-
         } else {
-            console.log("si existe")
             await UpdateDataSb("assistence", "codas", codas, newData2).then(() => {
                 setUpdate(true);
             });
@@ -206,7 +200,6 @@ const TableAsistenciaSb = ({ wheresb }) => {
         const combinedobject = { dateas: currentdate, ...wheresb }
         GetPrimaryData("assistence", "cod,user(name,lastname),stateas,lcdtcod,ocptdtcod,wdtcod,cecodtcod,intime,sdptdtcod,asdesc", combinedobject).then((res) => {
             setAsistencedata(res);
-            console.log(wheresb.sdptdtcod)
         });
         setUpdate(false);
     }, [update]);
@@ -286,8 +279,9 @@ const TableAsistenciaSb = ({ wheresb }) => {
                                     ocptdtcod: newData.ocptdtcod,
                                     wdtcod: newData.wdtcod,
                                     cecodtcod: newData.cecodtcod,
-                                    extratime25: (newData.stateas == "DXHA") ? -8:null,
-                                    extratime35: (newData.stateas != "ASISTENCIA") && null,
+                                    discounthours: (newData.stateas == "DXHA") ? 8 : null,
+                                    extratime25: null,
+                                    extratime35: null,
                                     outtime: (((newData.stateas == "ASISTENCIA" || newData.stateas == "ASISTENCIA FERIADO")) ? "14:45" : null),
                                     workinghours: ((newData.stateas == "ASISTENCIA") ? 8 : null),
                                     doubletime: ((newData.stateas == "ASISTENCIA FERIADO") ? 8 : null)

@@ -89,7 +89,6 @@ const TableSalidasSb = ({wheresb}) => {
     const handleDateChange = (event) => {
         const newDate = event.target.value;
         setCurrentdate(newDate);
-        console.log(`Formatted Date: ${newDate}`);
     };
     useEffect(() => {
         const combinedobject = {dateas: currentdate,...wheresb}
@@ -160,12 +159,9 @@ const TableSalidasSb = ({wheresb}) => {
                                     extratime35: (newData.extratime35 !== null && newData.extratime35 !== "") ? newData.extratime35 : horasextras35(newData.outtime, newData.user.jobtime,newData.stateas),
                                     doubletime:  (newData.doubletime !== null && newData.doubletime !== "") ? newData.doubletime : Horasdobles(newData.outtime,newData.stateas),
                                     asdesc: newData.asdesc
-                        
                                 }
                                 UpdateDataSb("assistence","codas",newData.cod + currentdate, newData2);
                                 setUpdate(true);
-                                console.log(newData2);
-                                console.log(newData)
                                 /*  
                                 */resolve();
                             }, 1500)

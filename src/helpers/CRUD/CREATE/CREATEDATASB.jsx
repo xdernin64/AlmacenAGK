@@ -66,6 +66,8 @@ export const CreateFromObject = async (dtname, newData) => {
     const { error } = await supabase
         .from(dtname)
         .insert(newData)
+
+    console.log(error)
     if (error) {
         errorMessage('Error al agregar el registro');
         return { error: true, message: 'Error al agregar el registro' };

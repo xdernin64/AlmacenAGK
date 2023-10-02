@@ -29,14 +29,20 @@ const Home = ({ subdepartament }) => {
         } else {
             if (mes == 12) {
                 setSelectedmes(1)
-                setSelectedyear(anio+1)
+                setSelectedyear(anio + 1)
                 setSelectedquincena(1)
-            getStartandEndDate(anio+1, 1, 1)
+                getStartandEndDate(anio + 1, 1, 1)
             } else {
-                setSelectedmes(mes+1)
+                
                 setSelectedyear(anio)
                 setSelectedquincena(1)
-            getStartandEndDate(anio, mes+1, 1)
+                if (dia>0 && dia<=10) {
+                setSelectedmes(mes )
+                getStartandEndDate(anio, mes, 1)
+                }else{
+                setSelectedmes(mes +1)
+                getStartandEndDate(anio, mes+1, 1)
+                }
             }
         }
 
@@ -46,7 +52,7 @@ const Home = ({ subdepartament }) => {
         if (search) {
             GetPrimaryDataBetweenDates(
                 'assistence',
-                'cod, dateas, stateas, user(name, lastname),sdptdtcod,extratime25 , extratime35, doubletime , subdepartamentdetail(subdepartament(subdepartamentname,subdepartamentcode))', {}, startdatequincena, enddatequincena
+                'cod, dateas, stateas, user(name, lastname),sdptdtcod,extratime25 , extratime35, doubletime ,discounthours, subdepartamentdetail(subdepartament(subdepartamentname,subdepartamentcode))', {}, startdatequincena, enddatequincena
             ).then((r) => {
                 setData(r);
             });
@@ -136,7 +142,7 @@ const Home = ({ subdepartament }) => {
                 </div>
                 <div className="">
                     <div className="">
-                        <Exampleforpie hoursdata={hoursdata(data)} datos={countFaltasBySubdepartament(data)} linedata={transformDataForRecharts(data, subdepartament)} statepiedata={countByStateAs(data, subdepartament)} barchardata={transformDataForBarChart(data, "dateas", "stateas", subdepartament)}  />
+                        <Exampleforpie hoursdata={hoursdata(data,subdepartament)} datos={countFaltasBySubdepartament(data)} linedata={transformDataForRecharts(data, subdepartament)} statepiedata={countByStateAs(data, subdepartament)} barchardata={transformDataForBarChart(data, "dateas", "stateas", subdepartament)} />
                     </div>
                 </div>
             </div>
