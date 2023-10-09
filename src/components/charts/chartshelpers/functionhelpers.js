@@ -132,7 +132,7 @@ export function transformDataForBarChart(data, x, values, sdptdtcodFilter) {
 export function hoursdata(data, subdepartamentname) {
     // Filtrar por subdepartamentname si subdepartamentname no es null
     const filteredData = subdepartamentname
-        ? data.filter(item => item.subdepartamentdetail.subdepartament.subdepartamentname === subdepartamentname)
+        ? data.filter(item => item.sdptdtcod === subdepartamentname)
         : data;
 
     const userTotals = {};
