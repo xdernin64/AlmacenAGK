@@ -3,6 +3,7 @@ import { AiOutlineAreaChart } from 'react-icons/ai'
 import { GetPrimaryDataBetweenDates } from "../../helpers/CRUD/READ/GetDataSb";
 import { countByStateAs, countFaltasBySubdepartament, getQuincena, hoursdata, transformDataForBarChart, transformDataForRecharts } from "../charts/chartshelpers/functionhelpers";
 import Exampleforpie from "../charts/vchart";
+import RtAsistence from "./RtAsistence";
 
 
 const Home = ({ subdepartament }) => {
@@ -142,7 +143,8 @@ const Home = ({ subdepartament }) => {
                 </div>
                 <div className="">
                     <div className="">
-                        <Exampleforpie hoursdata={hoursdata(data,subdepartament)} datos={countFaltasBySubdepartament(data)} linedata={transformDataForRecharts(data, subdepartament)} statepiedata={countByStateAs(data, subdepartament)} barchardata={transformDataForBarChart(data, "dateas", "stateas", subdepartament)} />
+                        {/**<Exampleforpie hoursdata={hoursdata(data,subdepartament)} datos={countFaltasBySubdepartament(data)} linedata={transformDataForRecharts(data, subdepartament)} statepiedata={countByStateAs(data, subdepartament)} barchardata={transformDataForBarChart(data, "dateas", "stateas", subdepartament)} /> */}
+                        <RtAsistence />
                     </div>
                 </div>
             </div>
