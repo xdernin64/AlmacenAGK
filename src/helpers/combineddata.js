@@ -67,12 +67,12 @@ export function mergeDatauseras2(data, asistencia) {
             cod: item.cod,
             name: item.name,
             lastname: item.lastname,
+            jobtime: item.jobtime ,
             stateas: matchingAsistencia ? matchingAsistencia.stateas : '',
             dateas: matchingAsistencia ? matchingAsistencia.dateas : '',
             codas: matchingAsistencia ? matchingAsistencia.codas : '',
             intime: matchingAsistencia ? matchingAsistencia.intime : '',
             outtime: matchingAsistencia ? matchingAsistencia.outtime : '',
-            jobtime: item.jobtime ,
             workinghours: matchingAsistencia ? matchingAsistencia.workinghours : '',
             extratime25: matchingAsistencia ? matchingAsistencia.extratime25 : '',
             extratime35: matchingAsistencia ? matchingAsistencia.extratime35 : '',
@@ -191,9 +191,8 @@ export const getStatusBackgroundColor = (status) => {
             return orange[700];
         case 'LICENCIA':
             return blue[100];
-        case 'FALTA JUSTIFICADA':
-            return red[300];
-        case 'FALTA INJUSTIFICADA':
+        
+        case 'FALTA':
             return red[900];
         default:
             return 'inherit'; // Color predeterminado
@@ -211,9 +210,7 @@ export const getStatusColor = (status) => {
             return grey[100];
         case 'LICENCIA':
             return grey[800];
-        case 'FALTA JUSTIFICADA':
-            return grey[100];
-        case 'FALTA INJUSTIFICADA':
+        case 'FALTA':
             return grey[100];
         default:
             return 'inherit'; // Color predeterminado

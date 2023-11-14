@@ -171,5 +171,9 @@ export function hoursdata(data, subdepartamentname) {
     return userTotalsArray;
 }
 
+export function convertirHoraEnDecimal(hora) {
+    const [horas, minutos] = hora.split(":");
+    return parseFloat(horas) + parseFloat(minutos) / 60;
+}
 
 
