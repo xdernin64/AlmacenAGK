@@ -11,6 +11,8 @@ import Typography from '@mui/material/Typography';
 import { Container, Paper } from '@mui/material';
 import { convertirHoraEnDecimal } from '../../charts/chartshelpers/functionhelpers';
 import { getStatusBackgroundColor, getStatusColor } from '../../../helpers/combineddata';
+import AutoCompleteRemote from '../../molecules/fields/AutoCompleteRemote';
+import SimpleAutocomplete from '../../molecules/fields/SimpleAutocomplete';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -21,7 +23,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     },
 }));
 
-export default function CustomizedDialogs({ open, handleClose, rowData }) {
+export default function CustomizedDialogs({ open, handleClose, rowData,occupation,work,ceco }) {
 
     const [intime, setIntime] = React.useState(rowData?.intime || '');
     const [outtime, setOuttime] = React.useState(rowData?.outtime || '');
@@ -49,6 +51,8 @@ export default function CustomizedDialogs({ open, handleClose, rowData }) {
     const [dateas, setDateAs] = React.useState(rowData?.dateas || '');
     const [hiden, setHiden] = React.useState(false);
     const [bgcolor, setBgcolor] = React.useState('bg-gray-200');
+    
+   
 
     React.useEffect(() => {
         setIntime(rowData?.intime || '');
@@ -296,6 +300,10 @@ export default function CustomizedDialogs({ open, handleClose, rowData }) {
                         <label className='text-gray-500 text-bold'>Labor</label>
                         <input id="wdtcod" type="text" placeholder='Labor' value={wdtcod} onChange={(e) => setWdtcod(e.target.value)} />
                         <label className='text-gray-500 text-bold'>Ceco</label>
+                        <SimpleAutocomplete data={occupation} onChange={(e) => setOcptdtcod(e.target.value)} textField={ocptdtcod}  valueField={ocptdtcod}/>
+                        
+
+
                         <input id="cecodtcod" type="text" placeholder='Ceco' value={cecodtcod} onChange={(e) => setCecodtcod(e.target.value)} />
                     </Typography>
                 </DialogContent>

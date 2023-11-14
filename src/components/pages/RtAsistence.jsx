@@ -24,7 +24,7 @@ const RtAsistence = () => {
                 
                 const userData = await GetPrimaryData("user", '*', { state: "ACTIVO" });
                 const asistenceData = await GetPrimaryData("assistence", '*', { dateas: "2023-11-10" });
-                const occupationData = await GetPrimaryData("occupationdetail", 'ocptdtcod, occupation(occupationname)', {});
+                const occupationData = await GetPrimaryData("occupationdetail", 'ocptdtcod,ocptdtdesc, occupation(occupationname)', {});
                 const workData = await GetPrimaryData("workdetail", 'wdtcod , work(workname)', {});
                 const cecoData = await GetPrimaryData("cecodetail", '*', {});
                 setOccupationdata(occupationData);
@@ -73,7 +73,7 @@ const RtAsistence = () => {
             
             <div>
                 <button onClick={handleOpen}>Editar datos</button>
-                <CustomizedDialogs open={open} handleClose={handleClose} rowData={selectedRow} />
+                <CustomizedDialogs open={open} handleClose={handleClose} rowData={selectedRow} occupation={occupationdata} work={workData}  ceco={cecoData}/>
             </div>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650, borderWidth: 'solid' }} aria-label="simple table">
@@ -102,7 +102,7 @@ const RtAsistence = () => {
                                 sx={{ '&:hover': { backgroundColor: 'hsla(207, 100%, 36%, 0.2)' } }} // add hover effect
                                 
                             >
-                               
+                            
                                 <TableCell sx={{ bgcolor: 'hsla(207, 100%, 36%, 0.2)', border: 'solid 1px', borderColor: 'hsla(211, 100%, 36%, 0.10)' }} align="center">{row.cod}</TableCell>
                                 <TableCell sx={{ bgcolor: 'hsla(207, 100%, 36%, 0.2)', border: 'solid 1px', borderColor: 'hsla(211, 100%, 36%, 0.10)' }} align="center">{row.lastname} {row.name}</TableCell>
                                 <TableCell sx={{ bgcolor: 'hsla(207, 100%, 36%, 0.2)', border: 'solid 1px', borderColor: 'hsla(211, 100%, 36%, 0.10)' }} align="center">{row.jobtime}</TableCell>
