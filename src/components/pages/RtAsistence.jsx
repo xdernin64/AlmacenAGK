@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { GetPrimaryData } from "../../helpers/CRUD/READ/GetDataSb";
-import { mergeDatauseras2 } from "../../helpers/combineddata";
-import { Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { getPropertyByIdAndPropName, getStatusBackgroundColor, getStatusColor, mergeDatauseras2 } from "../../helpers/combineddata";
+import { Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
 import CustomizedDialogs from "../organism/modals/ModalAsistence";
+import { convertDateFormat, dateToString } from "../../helpers/dateconverter";
+import { supabase } from "../../supabaseClient";
 
-const RtAsistence = () => {
+const RtAsistence = ({ wheresb }) => {
     const [combinedData, setCombinedData] = useState([]);
     const [Userdata, setUserdata] = useState([]);
     const [Asistancedata, setAsistancedata] = useState([]);
+    const [locationdata, setLocationdata] = useState([]);
+    const [subdepartamentdata, setSubdepartamentdata] = useState([]);
     const [occupationdata, setOccupationdata] = useState([]);
     const [workData, setWorkData] = useState([]);
     const [cecoData, setCecoData] = useState([]);
@@ -16,22 +20,47 @@ const RtAsistence = () => {
     const [isEditMode, setEditMode] = useState(false);
     const [editedValue, setEditedValue] = useState('');
     const [selectedRow, setSelectedRow] = useState(null); // add state to keep track of selected row
+    const [orderBy, setOrderBy] = useState('cod');
+    const [order, setOrder] = useState('asc');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [currentdate, setCurrentdate] = useState(dateToString(new Date()));
+    const handleDateChange = (event) => {
+        const newDate = event.target.value;
+        setCurrentdate(newDate);
+    };
+    async function checkassistance(codas, newData2) {
+        const data = await GetSpecificData("assistence", "codas", codas);
+        if (data.length == 0) {
+            await CreateFromObject("assistence", newData2).then(() => {
+                setUpdate(true);
+            });
+        } else {
+            await UpdateDataSb("assistence", "codas", codas, newData2).then(() => {
+                setUpdate(true);
+            });
+
+        }
+    }
 
     //efect to charge te data in the start
     useEffect(() => {
         async function getMaindata() {
             try {
-                
-                const userData = await GetPrimaryData("user", '*', { state: "ACTIVO" });
-                const asistenceData = await GetPrimaryData("assistence", '*', { dateas: "2023-11-10" });
-                const occupationData = await GetPrimaryData("occupationdetail", 'ocptdtcod,ocptdtdesc, occupation(occupationname)', {});
-                const workData = await GetPrimaryData("workdetail", 'wdtcod , work(workname)', {});
-                const cecoData = await GetPrimaryData("cecodetail", '*', {});
+                const combinedobject = { state: "ACTIVO", ...wheresb }
+                const combinedobjectdate = { dateas: currentdate, ...wheresb }
+                const userData = await GetPrimaryData("user", '*', combinedobject);
+                const asistenceData = await GetPrimaryData("assistence", '*', combinedobjectdate);
+                const occupationData = await GetPrimaryData("occupationdetail", '*', wheresb);
+                const locationdata = await GetPrimaryData("detaillocationzone", '*');
+                const subdepartamentdata = await GetPrimaryData("subdepartamentdetail", '*', wheresb);
+                const workData = await GetPrimaryData("workdetail", '*', wheresb);
+                const cecoData = await GetPrimaryData("cecodetail", '*', wheresb);
                 setOccupationdata(occupationData);
                 setWorkData(workData);
                 setCecoData(cecoData);
                 setUserdata(userData);
-                console.log(occupationData);
+                setLocationdata(locationdata);
+                setSubdepartamentdata(subdepartamentdata);
                 setAsistancedata(asistenceData);
                 setCombinedData(mergeDatauseras2(userData, asistenceData))
             }
@@ -41,20 +70,26 @@ const RtAsistence = () => {
         }
         getMaindata();
     }, []);
-    //efect to charge updated data
     useEffect(() => {
-        GetPrimaryData('assistence', '*', { dateas: "2023-11-10" }).then((data) => {
-            setAsistancedata(data);
+        if (update) {
+            const combinedobjectdate = { dateas: currentdate, ...wheresb }
+            GetPrimaryData('assistence', '*', combinedobjectdate).then((data) => {
+                setAsistancedata(data);
+                setCombinedData(mergeDatauseras2(Userdata, Asistancedata));
+                setUpdate(false);
+            });
+        } else {
             setCombinedData(mergeDatauseras2(Userdata, Asistancedata));
-            setUpdate(false);
-        });
-    }, [update]);
+            console.log("Escuchando");
+        }
+
+    }, [update, Asistancedata]);
+
 
     const handleOpen = (e, row) => {
         if (e.ctrlKey) {
             setSelectedRow(row); // set selected row
             setOpen(true);
-            console.log(row); // print row props to console
         }
     };
 
@@ -68,59 +103,219 @@ const RtAsistence = () => {
         handleClose();
     };
 
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
+
+    const sortedData = combinedData.sort((a, b) => {
+        const isAsc = order === 'asc';
+        let result = 0;
+        if (a[orderBy] < b[orderBy]) {
+            result = -1;
+        } else if (a[orderBy] > b[orderBy]) {
+            result = 1;
+        }
+        return isAsc ? result : -result;
+    });
+
+    const searched = combinedData
+        .filter((row) => {
+            const searchString = `${row.cod} ${row.lastname} ${row.jobtime} ${row.dateas} ${row.stateas} ${row.intime} ${row.outtime} ${row.lcdtcod} ${row.ocptdtcod} ${row.ocptdtdesc} ${row.wdtcod} ${row.cecodtcod}`.toLowerCase();
+            return searchString.includes(searchTerm.toLowerCase());
+        })
+        .sort((a, b) => {
+            const isAsc = order === 'asc';
+            let result = 0;
+            if (a[orderBy] < b[orderBy]) {
+                result = -1;
+            } else if (a[orderBy] > b[orderBy]) {
+                result = 1;
+            }
+            return isAsc ? result : -result;
+        });
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////REALTIME-SUPABASE//////////////////////////////////////////////////////////////////////////////////
+    const handleRecordInserted = (payload) => {
+        console.log('Change received!', payload);
+        // Actualiza el estado con el nuevo registro.
+        setAsistancedata(prevData => [...prevData, payload.new]);
+    }
+    const handleRecordDeleted = (payload) => {
+        console.log('Change received!', payload);
+        // Filtra el registro eliminado del estado.
+        setAsistancedata(prevData => prevData.filter(item => item.codas !== payload.old.codas));
+    }
+
+    const handleRecordUpdated = (payload) => {
+        console.log('Change received!', payload);
+        // Encuentra y actualiza el registro modificado en el estado.
+        setAsistancedata(prevData => prevData.map(item => item.codas === payload.new.codas ? payload.new : item));
+    }
+
+    ///this is the suscription to the realtime changes
+    let channel = supabase
+        .channel(wheresb.sdptdtcod);
+
+    if (wheresb.sdptdtcod !== undefined) {
+        let filter = 'sdptdtcod=eq.' + wheresb.sdptdtcod;
+        channel
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'assistence', filter }, handleRecordInserted)
+            .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'assistence', filter }, handleRecordDeleted)
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'assistence', filter }, handleRecordUpdated);
+    } else {
+        channel
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'assistence' }, handleRecordInserted)
+            .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'assistence' }, handleRecordDeleted)
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'assistence' }, handleRecordUpdated);
+    }
+
+    channel.subscribe();
+
+
     return (
-        <Container>
-            
+        <div >
+            <div className="text-center flex items-center w-2/4 cursor-pointer">
+
+                <input value={currentdate} onChange={handleDateChange} className="text-center text-2xl mx-auto bg-gray-100 border-gray-300 rounded-md py-2 px-3" type="date" />
+                <button onClick={() => setUpdate(true)} className="text-center text-2xl mx-auto bg-gray-100 text-gray-800 border-gray-300 rounded-md py-2 px-3" type="button">Buscar</button>
+            </div>
+            <TextField
+                label="Buscar"
+                variant="outlined"
+                onChange={(e) => { setSearchTerm(e.target.value) }}
+            />
+
+
             <div>
-                <button onClick={handleOpen}>Editar datos</button>
-                <CustomizedDialogs open={open} handleClose={handleClose} rowData={selectedRow} occupation={occupationdata} work={workData}  ceco={cecoData}/>
+
+                <CustomizedDialogs currentdateinput={currentdate} open={open} handleClose={handleClose} rowData={selectedRow} occupation={occupationdata} work={workData} ceco={cecoData} location={locationdata} subdepartamentdata={subdepartamentdata} />
             </div>
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650, borderWidth: 'solid' }} aria-label="simple table">
+                <Table sx={{ minWidth: 650, borderWidth: 'solid' }} >
                     <TableHead className="rounded ">
                         <TableRow className="bg-blue-800 text-gray-500 font-bold" sx={{ border: 'solid 1px', borderColor: 'gray' }}>
+
+                            <TableCell className="cursor-pointer" sx={{ color: 'white', fontWeight: 'bold' }} align="center" onClick={(event) => handleRequestSort(event, 'cod')}>
+                                Codigo
+                                {orderBy === 'cod' ? (
+                                    <span style={{ fontSize: '12px' }}>
+                                        {order === 'asc' ? ' ▲' : ' ▼'}
+                                    </span>
+                                ) : null}
+                            </TableCell>
+                            <TableCell className="cursor-pointer" sx={{ color: 'white', fontWeight: 'bold' }} align="center" onClick={(event) => handleRequestSort(event, 'lastname')}>
+                                Trabajador
+                                {orderBy === 'lastname' ? (
+                                    <span style={{ fontSize: '12px' }}>
+                                        {order === 'asc' ? ' ▲' : ' ▼'}
+                                    </span>
+                                ) : null}
+                            </TableCell>
+                            <TableCell className="cursor-pointer" sx={{ color: 'white', fontWeight: 'bold' }} align="center" onClick={(event) => handleRequestSort(event, 'jobtime')}>
+                                Horario
+                                {orderBy === 'jobtime' ? (
+                                    <span style={{ fontSize: '12px' }}>
+                                        {order === 'asc' ? ' ▲' : ' ▼'}
+                                    </span>
+                                ) : null}
+                            </TableCell>
+                            <TableCell className="cursor-pointer" sx={{ color: 'white', fontWeight: 'bold' }} align="center" onClick={(event) => handleRequestSort(event, 'dateas')}>
+                                Fecha
+                                {orderBy === 'dateas' ? (
+                                    <span style={{ fontSize: '12px' }}>
+                                        {order === 'asc' ? ' ▲' : ' ▼'}
+                                    </span>
+                                ) : null}
+                            </TableCell>
+                            <TableCell className="cursor-pointer" sx={{ color: 'white', fontWeight: 'bold' }} align="center" onClick={(event) => handleRequestSort(event, 'stateas')}>
+                                Estado
+                                {orderBy === 'stateas' ? (
+                                    <span style={{ fontSize: '12px' }}>
+                                        {order === 'asc' ? ' ▲' : ' ▼'}
+                                    </span>
+                                ) : null}
+                            </TableCell>
+                            <TableCell className="cursor-pointer" sx={{ color: 'white', fontWeight: 'bold' }} align="center" onClick={(event) => handleRequestSort(event, 'intime')}>
+                                Ingreso
+                                {orderBy === 'intime' ? (
+                                    <span style={{ fontSize: '12px' }}>
+                                        {order === 'asc' ? ' ▲' : ' ▼'}
+                                    </span>
+                                ) : null}
+                            </TableCell>
+                            <TableCell className="cursor-pointer" sx={{ color: 'white', fontWeight: 'bold' }} align="center" onClick={(event) => handleRequestSort(event, 'outtime')}>
+                                Salida
+                                {orderBy === 'outtime' ? (
+                                    <span style={{ fontSize: '12px' }}>
+                                        {order === 'asc' ? ' ▲' : ' ▼'}
+                                    </span>
+                                ) : null}
+                            </TableCell>
+                            <TableCell className="cursor-pointer" sx={{ color: 'white', fontWeight: 'bold' }} align="center" onClick={(event) => handleRequestSort(event, 'lcdtcod')}>
+                                Fundo
+                                {orderBy === 'lcdtcod' ? (
+                                    <span style={{ fontSize: '12px' }}>
+                                        {order === 'asc' ? ' ▲' : ' ▼'}
+                                    </span>
+                                ) : null}
+                            </TableCell>
+                            <TableCell className="cursor-pointer" sx={{ color: 'white', fontWeight: 'bold' }} align="center" onClick={(event) => handleRequestSort(event, 'ocptdtcod')}>
+                                Ocupación
+                                {orderBy === 'optdtcod' ? (
+                                    <span style={{ fontSize: '12px' }}>
+                                        {order === 'asc' ? ' ▲' : ' ▼'}
+                                    </span>
+                                ) : null}
+                                </TableCell>
                             
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Codigo</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Trabajador</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Horario</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center" >Fecha</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Estado</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Ingreso</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Salida</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Fundo</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Ocupación</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Labor</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Ceco</TableCell>
+                            <TableCell className="cursor-pointer" sx={{ color: 'white', fontWeight: 'bold' }} align="center" onClick={(event) => handleRequestSort(event, 'wdtcod')}>
+                            {orderBy === 'wdtcod' ? (
+                                    <span style={{ fontSize: '12px' }}>
+                                        {order === 'asc' ? ' ▲' : ' ▼'}
+                                    </span>
+                                ) : null}
+                                Labor
+                                </TableCell>
+                            <TableCell className="cursor-pointer" sx={{ color: 'white', fontWeight: 'bold' }} align="center" onClick={(event) => handleRequestSort(event, 'cecocod')}>
+                            {orderBy === 'cecocod' ? (
+                                    <span style={{ fontSize: '12px' }}>
+                                        {order === 'asc' ? ' ▲' : ' ▼'}
+                                    </span>
+                                ) : null}
+                                Ceco
+                                </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {combinedData.map((row, key) => (
+                        {searched.map((row, key) => (
                             <TableRow
                                 key={key}
                                 onClick={(e) => handleOpen(e, row)} // pass row to handleOpen
                                 onAuxClick={(e) => handleOpen(e, row)} // pass row to handleOpen
-                                sx={{ '&:hover': { backgroundColor: 'hsla(207, 100%, 36%, 0.2)' } }} // add hover effect
-                                
+                                sx={{
+                                    '&:hover': { backgroundColor: 'hsla(207, 100%, 36%, 0.2)' },
+
+                                }} // add hover effect
                             >
-                            
-                                <TableCell sx={{ bgcolor: 'hsla(207, 100%, 36%, 0.2)', border: 'solid 1px', borderColor: 'hsla(211, 100%, 36%, 0.10)' }} align="center">{row.cod}</TableCell>
-                                <TableCell sx={{ bgcolor: 'hsla(207, 100%, 36%, 0.2)', border: 'solid 1px', borderColor: 'hsla(211, 100%, 36%, 0.10)' }} align="center">{row.lastname} {row.name}</TableCell>
-                                <TableCell sx={{ bgcolor: 'hsla(207, 100%, 36%, 0.2)', border: 'solid 1px', borderColor: 'hsla(211, 100%, 36%, 0.10)' }} align="center">{row.jobtime}</TableCell>
-                                <TableCell sx={{ border: 'solid 1px', borderColor: 'hsla(211, 100%, 36%, 0.10)' }} align="center">{row.dateas}</TableCell>
-                                <TableCell sx={{ border: 'solid 1px', borderColor: 'hsla(211, 100%, 36%, 0.10)' }} align="center">{row.stateas}</TableCell>
-                                <TableCell sx={{ border: 'solid 1px', borderColor: 'hsla(211, 100%, 36%, 0.10)' }} align="center">{row.intime}</TableCell>
-                                <TableCell sx={{ border: 'solid 1px', borderColor: 'hsla(211, 100%, 36%, 0.10)' }} align="center">{row.outtime}</TableCell>
-                                <TableCell sx={{ border: 'solid 1px', borderColor: 'hsla(211, 100%, 36%, 0.10)' }} align="center">{row.lcdtcod}</TableCell>
-                                <TableCell sx={{ border: 'solid 1px', borderColor: 'hsla(211, 100%, 36%, 0.10)' }} align="center">{row.ocptdtcod}</TableCell>
-                                <TableCell sx={{ border: 'solid 1px', borderColor: 'hsla(211, 100%, 36%, 0.10)' }} align="center">{row.wdtcod}</TableCell>
-                                <TableCell sx={{ border: 'solid 1px', borderColor: 'hsla(211, 100%, 36%, 0.10)' }} align="center">{row.cecodtcod}</TableCell>
+                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.cod}</TableCell>
+                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.lastname} {row.name}</TableCell>
+                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.jobtime}</TableCell>
+                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{convertDateFormat(row.dateas)}</TableCell>
+                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.stateas}</TableCell>
+                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.intime}</TableCell>
+                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.outtime}</TableCell>
+                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.lcdtcod}</TableCell>
+                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{getPropertyByIdAndPropName(occupationdata, row.ocptdtcod, "ocptdtcod", "occupationcod")}<br /> {getPropertyByIdAndPropName(occupationdata, row.ocptdtcod, "ocptdtcod", "ocptdtdesc")} </TableCell>
+                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{getPropertyByIdAndPropName(workData, row.wdtcod, "wdtcod", "workcod")} <br /> {getPropertyByIdAndPropName(workData, row.wdtcod, "wdtcod", "wdtdesc")}</TableCell>
+                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{getPropertyByIdAndPropName(cecoData, row.cecodtcod, "cecodtcod", "cecocod")} <br /> {getPropertyByIdAndPropName(cecoData, row.cecodtcod, "cecodtcod", "cecodtdesc")}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
-
-        </Container>
+        </div>
     );
 }
 export default RtAsistence;

@@ -34,9 +34,22 @@ export const successMessage = (tittle) => {
 export const errorMessage = (tittle) => {
     Swal.fire({
         position: 'center',
-        icon: 'error',
+        icon: 'success',
         title: tittle,
         showConfirmButton: false,
         timer: 1500
     });
 }
+export const infomeMessage = (tittle) => {
+    Swal.fire({
+        position: 'center',
+        icon: 'info',
+        title: tittle,
+        html: `<div class="text-gray-700">
+            <p>This is a custom HTML message with Tailwind CSS classes.</p>
+            <p class="text-sm font-bold">You can include any HTML content here.</p>
+        </div>`,
+        showConfirmButton: false,
+        timer: 1500
+    });
+};

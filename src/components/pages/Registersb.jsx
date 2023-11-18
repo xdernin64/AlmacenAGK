@@ -17,7 +17,7 @@ const RegisterSb = () => {
     const [departament, setDepartament] = useState([]);
     const [area, setArea] = useState([]);
     const [showPassword, setShowPassword] = useState(false);
-
+    
 
 
 

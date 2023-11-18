@@ -213,6 +213,11 @@ export const getStatusColor = (status) => {
         case 'FALTA':
             return grey[100];
         default:
-            return 'inherit'; // Color predeterminado
+            return grey[500]; // Color predeterminado
     }
+}
+
+export function getPropertyByIdAndPropName(data, idValue, idPropName, propName) {
+    const item = data.find(item => item[idPropName] === idValue);
+    return item ? item[propName] : null;
 }

@@ -131,10 +131,8 @@ const ColumnTotal = (location, subdepartament, occupation, work, ceco, callbackn
                     <AutoCompleteRemote db="cecodetail"
                         title="Centro de Coste" dataprops={["cecodtcod", "cecodtdesc"]}
                         value={initialValue} onChange={props.onChange} qstate={true} qdata={ceco} />
-
                 );
             }
-
         }
     ]
 }
@@ -203,8 +201,6 @@ const TableAsistenciaSb = ({ wheresb }) => {
         });
         setUpdate(false);
     }, [update]);
-
-
     //getting the userslist with respective data
     return (
 
@@ -304,12 +300,6 @@ const TableAsistenciaSb = ({ wheresb }) => {
                     grouping: true
                 }}
             />
-
-
-
-
-
-
         </ThemeProvider>);
 
 }

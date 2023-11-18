@@ -1,20 +1,24 @@
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
+import React from 'react';
+import { Autocomplete, TextField } from "@mui/material";
 
-export default function SimpleAutocomplete({ data, textField, valueField, onChange }) {
-    console.log(data);
+const SimpleAutocomplete = ({ id, name, options, value, onChange }) => {
+    const selectedOption = options.find((option) => option.id === value);
+
     return (
         <Autocomplete
-            options={data}
-            getOptionLabel={(option) => option.ocptdtcod}
-            renderInput={(params) => <TextField {...params} label={textField} />}
-            onChange={(event, value) => onChange(value ? value.ocptdtcod : null)}
-            value={valueField ? data.find((option) => option[valueField] === valueField) : null}
-            renderOption={(props, option) => (
-                <li {...props}>
-                    {option.ocptdtcod}
-                </li>
+            id={id}
+            options={options}
+            getOptionLabel={(option) => option[name]}
+            value={selectedOption}
+            onChange={(event, newValue) => {
+                onChange(newValue.id);
+            }}
+            renderInput={(params) => (
+                <TextField {...params} label={name} variant="outlined" />
             )}
+            freeSolo // Add this prop to allow free text input
         />
     );
-}
+};
+
+export default SimpleAutocomplete;

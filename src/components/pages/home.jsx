@@ -143,8 +143,8 @@ const Home = ({ subdepartament }) => {
                 </div>
                 <div className="">
                     <div className="">
-                        {/**<Exampleforpie hoursdata={hoursdata(data,subdepartament)} datos={countFaltasBySubdepartament(data)} linedata={transformDataForRecharts(data, subdepartament)} statepiedata={countByStateAs(data, subdepartament)} barchardata={transformDataForBarChart(data, "dateas", "stateas", subdepartament)} /> */}
-                        <RtAsistence />
+                        <Exampleforpie hoursdata={hoursdata(data,subdepartament)} datos={countFaltasBySubdepartament(data)} linedata={transformDataForRecharts(data, subdepartament)} statepiedata={countByStateAs(data, subdepartament)} barchardata={transformDataForBarChart(data, "dateas", "stateas", subdepartament)} />
+                        
                     </div>
                 </div>
             </div>

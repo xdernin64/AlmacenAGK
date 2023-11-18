@@ -157,9 +157,9 @@ export function hoursdata(data, subdepartamentname) {
         userTotals[userName].extratime25 += extratime25;
         userTotals[userName].extratime35 += extratime35;
         userTotals[userName].discounthours += discounthours;
-        userTotals[userName].totalHours += extratime25 + extratime35- discounthours;
+        userTotals[userName].totalHours += extratime25 + extratime35 - discounthours;
         userTotals[userName].doubletime += parseFloat(item.doubletime || 0);
-        
+
     });
 
     // Convertir el objeto en un arreglo
@@ -177,3 +177,20 @@ export function convertirHoraEnDecimal(hora) {
 }
 
 
+export function flattenArray(arr) {
+    const result = [];
+
+    arr.forEach(item => {
+        if (item && typeof item === 'object' && !Array.isArray(item)) {
+            // If the item is an object and not an array, flatten it
+            Object.keys(item).forEach(key => {
+                result.push(item[key]);
+            });
+        } else {
+            // If the item is not an object, push it directly to the result array
+            result.push(item);
+        }
+    });
+
+    return result;
+}

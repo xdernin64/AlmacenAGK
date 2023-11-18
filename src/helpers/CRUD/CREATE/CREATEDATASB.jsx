@@ -1,5 +1,5 @@
 import { supabase } from "../../../supabaseClient";
-import { errorMessage } from "../../Alerts/alerts";
+import { errorMessage, successMessage } from "../../Alerts/alerts";
 
 export const createauthuser = async (id, email, props) => {
     const { error } = await supabase
@@ -71,6 +71,8 @@ export const CreateFromObject = async (dtname, newData) => {
     if (error) {
         errorMessage('Error al agregar el registro');
         return { error: true, message: 'Error al agregar el registro' };
+    } else {
+        successMessage('Registro agregado correctamente');
     }
     return { error: false, message: 'Registro agregado correctamente' };
 
