@@ -92,6 +92,12 @@ const RtAsistence = ({ wheresb }) => {
             setOpen(true);
         }
     };
+    const handleOpenbtn = (e, row) => {
+        
+            setSelectedRow(row); // set selected row
+            setOpen(true);
+        
+    };
 
     const handleClose = () => {
         setSelectedRow(null); // reset selected row
@@ -193,10 +199,10 @@ const RtAsistence = ({ wheresb }) => {
                 <CustomizedDialogs currentdateinput={currentdate} open={open} handleClose={handleClose} rowData={selectedRow} occupation={occupationdata} work={workData} ceco={cecoData} location={locationdata} subdepartamentdata={subdepartamentdata} />
             </div>
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650, borderWidth: 'solid' }} >
+                <Table  sx={{ minWidth: 650, borderWidth: 'solid' }} >
                     <TableHead className="rounded ">
                         <TableRow className="bg-blue-800 text-gray-500 font-bold" sx={{ border: 'solid 1px', borderColor: 'gray' }}>
-
+                            <TableCell  sx={{ color: 'white', fontWeight: 'bold' }} align="center" >Acción</TableCell>
                             <TableCell className="cursor-pointer" sx={{ color: 'white', fontWeight: 'bold' }} align="center" onClick={(event) => handleRequestSort(event, 'cod')}>
                                 Codigo
                                 {orderBy === 'cod' ? (
@@ -253,6 +259,14 @@ const RtAsistence = ({ wheresb }) => {
                                     </span>
                                 ) : null}
                             </TableCell>
+                            <TableCell className="cursor-pointer" sx={{ color: 'white', fontWeight: 'bold' }} align="center" onClick={(event) => handleRequestSort(event, 'outtime')}>
+                                Hor Extras
+                                {orderBy === 'outtime' ? (
+                                    <span style={{ fontSize: '12px' }}>
+                                        {order === 'asc' ? ' ▲' : ' ▼'}
+                                    </span>
+                                ) : null}
+                            </TableCell>
                             <TableCell className="cursor-pointer" sx={{ color: 'white', fontWeight: 'bold' }} align="center" onClick={(event) => handleRequestSort(event, 'lcdtcod')}>
                                 Fundo
                                 {orderBy === 'lcdtcod' ? (
@@ -299,17 +313,20 @@ const RtAsistence = ({ wheresb }) => {
 
                                 }} // add hover effect
                             >
-                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.cod}</TableCell>
-                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.lastname} {row.name}</TableCell>
-                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.jobtime}</TableCell>
-                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{convertDateFormat(row.dateas)}</TableCell>
-                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.stateas}</TableCell>
-                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.intime}</TableCell>
-                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.outtime}</TableCell>
-                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.lcdtcod}</TableCell>
-                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{getPropertyByIdAndPropName(occupationdata, row.ocptdtcod, "ocptdtcod", "occupationcod")}<br /> {getPropertyByIdAndPropName(occupationdata, row.ocptdtcod, "ocptdtcod", "ocptdtdesc")} </TableCell>
-                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{getPropertyByIdAndPropName(workData, row.wdtcod, "wdtcod", "workcod")} <br /> {getPropertyByIdAndPropName(workData, row.wdtcod, "wdtcod", "wdtdesc")}</TableCell>
-                                <TableCell sx={{ backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{getPropertyByIdAndPropName(cecoData, row.cecodtcod, "cecodtcod", "cecocod")} <br /> {getPropertyByIdAndPropName(cecoData, row.cecodtcod, "cecodtcod", "cecodtdesc")}</TableCell>
+                                <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas), fontWeight: 'bold' }} align="center">
+                                    <button className="bg-blue-600 p-1 m-0" onClick={(e) => handleOpenbtn(e, row)}>Editar</button></TableCell>
+                                <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.cod}</TableCell>
+                                <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.lastname} {row.name}</TableCell>
+                                <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.jobtime}</TableCell>
+                                <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{convertDateFormat(row.dateas)}</TableCell>
+                                <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.stateas}</TableCell>
+                                <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.intime}</TableCell>
+                                <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.outtime}</TableCell>
+                                <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.extratime25+row.extratime35+row.doubletime-row.discounthours}</TableCell>
+                                <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.lcdtcod}</TableCell>
+                                <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{getPropertyByIdAndPropName(occupationdata, row.ocptdtcod, "ocptdtcod", "occupationcod")}<br /> {getPropertyByIdAndPropName(occupationdata, row.ocptdtcod, "ocptdtcod", "ocptdtdesc")} </TableCell>
+                                <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{getPropertyByIdAndPropName(workData, row.wdtcod, "wdtcod", "workcod")} <br /> {getPropertyByIdAndPropName(workData, row.wdtcod, "wdtcod", "wdtdesc")}</TableCell>
+                                <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{getPropertyByIdAndPropName(cecoData, row.cecodtcod, "cecodtcod", "cecocod")} <br /> {getPropertyByIdAndPropName(cecoData, row.cecodtcod, "cecodtcod", "cecodtdesc")}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
