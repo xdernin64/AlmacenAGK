@@ -77,5 +77,19 @@ export const CreateFromObject = async (dtname, newData) => {
     return { error: false, message: 'Registro agregado correctamente' };
 
 }
+export const CreateOrUpdateFromObjectUpsert = async (dtname, newData) => {
+    const { error } = await supabase
+        .from(dtname)
+        .upsert(newData)
+
+    console.log(error)
+    if (error) {
+        errorMessage('Error al agregar o actualizar el registro');
+        return { error: true, message: 'Error al agregar o actualizar el registro' };
+    } else {
+        successMessage('Registro agregado o actualizado correctamente');
+    }
+    return { error: false, message: 'Registro agregado o actualizado correctamente' };
+}
 
 

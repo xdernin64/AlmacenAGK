@@ -18,5 +18,19 @@ export const dateToString = (date) => {
         const formattedDate = `${day}/${month}/${year.slice(-2)}`;
         return formattedDate;
     };
-
+    export function excelDateToJSDate(serial) {
+        var utc_days  = Math.floor(serial - 25569);
+        var utc_value = utc_days * 86400;                                        
+        var date_info = new Date(utc_value * 1000);
+    
+        var year = date_info.getUTCFullYear();
+        var month = date_info.getUTCMonth() + 1; // Los meses en JavaScript comienzan desde 0
+        var day = date_info.getUTCDate();
+    
+        // Asegurarse de que el mes y el día siempre tengan dos dígitos
+        month = month < 10 ? '0' + month : month;
+        day = day < 10 ? '0' + day : day;
+    
+        return year + '-' + month + '-' + day;
+    }
     

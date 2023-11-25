@@ -48,8 +48,8 @@ const RtAsistence = ({ wheresb }) => {
             try {
                 const combinedobject = { state: "ACTIVO", ...wheresb }
                 const combinedobjectdate = { dateas: currentdate, ...wheresb }
-                const userData = await GetPrimaryData("user", '*', combinedobject);
-                const asistenceData = await GetPrimaryData("assistence", '*', combinedobjectdate);
+                const userData = await GetPrimaryData("user",'*',{state: "ACTIVO", ...wheresb });
+                const asistenceData = await GetPrimaryData("assistence", 'cod,codas,user(name,lastname,jobtime),stateas,lcdtcod,intime,outtime,jobtime,ocptdtcod,wdtcod,cecodtcod,sdptdtcod,asdesc,dateas,extratime25,extratime35,doubletime,discounthours', combinedobjectdate);
                 const occupationData = await GetPrimaryData("occupationdetail", '*', wheresb);
                 const locationdata = await GetPrimaryData("detaillocationzone", '*');
                 const subdepartamentdata = await GetPrimaryData("subdepartamentdetail", '*', wheresb);
@@ -73,7 +73,7 @@ const RtAsistence = ({ wheresb }) => {
     useEffect(() => {
         if (update) {
             const combinedobjectdate = { dateas: currentdate, ...wheresb }
-            GetPrimaryData('assistence', '*', combinedobjectdate).then((data) => {
+            GetPrimaryData('assistence', 'cod,codas,user(name,lastname,jobtime),stateas,lcdtcod,intime,outtime,jobtime,ocptdtcod,wdtcod,cecodtcod,sdptdtcod,asdesc,dateas,extratime25,extratime35,doubletime,discounthours', combinedobjectdate).then((data) => {
                 setAsistancedata(data);
                 setCombinedData(mergeDatauseras2(Userdata, Asistancedata));
                 setUpdate(false);

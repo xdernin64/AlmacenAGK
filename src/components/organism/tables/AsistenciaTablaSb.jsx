@@ -185,6 +185,8 @@ const TableAsistenciaSb = ({ wheresb }) => {
 
         }
     }
+
+
     const [data, setData] = useState([]);
     useEffect(() => {
         const combinedobject = { state: "ACTIVO", ...wheresb }
