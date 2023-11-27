@@ -7,17 +7,42 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { supabase } from '../../../supabaseClient';
 
 
-const DetailDataTable = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray, selectname }) => {
+const DetailDataTable = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray, selectname, subdepartament }) => {
     const [dbdata, setDbdata] = useState([]); //table data
+    const [selectedsubdepartament, setSelectedsubdepartament] = useState(null);
+    const [subdepartamentoption, setSubdepartamentoption] = useState([]);
+    const [update, setUpdate] = useState(false);
+
     useEffect(() => {
+
         const fetchData = async () => {
+
             const response = await GetPrimaryData(dbtable);
             if (response) {
                 setDbdata(response);
             }
+            if (subdepartament) {
+                setSubdepartamentoption(await GetPrimaryData('subdepartamentdetail'));
+            }
         };
         fetchData();
     }, []);
+    useEffect(() => {
+
+
+        const fetchData = async () => {
+
+            const response = await GetPrimaryData(dbtable, "*", { sdptdtcod: selectedsubdepartament });
+            if (response) {
+                setDbdata(response);
+            }
+        };
+        if (subdepartament) {
+            fetchData();
+            setUpdate(false);
+        }
+
+    }, [selectedsubdepartament, update]);
 
     const theme = createTheme({
         //i want that width will alwais be 100% of the container
@@ -123,6 +148,22 @@ const DetailDataTable = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray
     ];
     return (
         <div className='p-0 m-0'>
+            {
+                subdepartament ? (
+                    <div className="flex justify-center">
+                        <div className="flex flex-col">
+                            <select className="border-2 border-gray-500 rounded-lg p-1 m-1" onChange={(e) => setSelectedsubdepartament(e.target.value)}>
+                                <option value="">Selecciona un subdepartamento</option>
+                                {subdepartamentoption.map((item) => (
+                                    <option key={item.sdptdtcod} value={item.sdptdtcod}>{item.sdptdtdesc}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                ) : (
+                    <></>
+                )
+            }
             <ThemeProvider theme={theme}>
                 <MaterialTable
                     title={tittle}
@@ -140,8 +181,8 @@ const DetailDataTable = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray
                             }
 
                         }
-                        
-                        
+
+
                     }
                     localization={{
                         pagination: {
@@ -181,6 +222,7 @@ const DetailDataTable = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray
                                         // ...
                                         resolve();
                                     });
+                                setUpdate(true);
                             }),
 
                         onRowUpdate: (newData, oldData) =>
@@ -193,6 +235,7 @@ const DetailDataTable = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray
                                     .then(() => {
                                         resolve();
                                     });
+                                setUpdate(true);
                             }),
                         onRowDelete: oldData =>
                             new Promise((resolve, reject) => {
@@ -204,6 +247,8 @@ const DetailDataTable = ({ tittle, dbtable, dbsl1, dbsl2, titlearray, fieldarray
                                     .then(() => {
                                         resolve();
                                     });
+                                setUpdate(true);
+
                             }),
                     }}
                 /></ThemeProvider></div>

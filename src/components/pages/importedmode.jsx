@@ -5,8 +5,15 @@ import { GetPrimaryData } from '../../helpers/CRUD/READ/GetDataSb';
 import { excelDateToJSDate } from '../../helpers/dateconverter';
 import { getifexist, transformData } from '../../helpers/combineddata';
 import { CreateFromObject, CreateOrUpdateFromObjectUpsert } from '../../helpers/CRUD/CREATE/CREATEDATASB';
+import { deleteDataSwal, errorMessage } from '../../helpers/Alerts/alerts';
+import { get } from 'firebase/database';
+import { Breadcrumbs } from "@material-tailwind/react";
+import { Link } from 'react-router-dom';
+import IconButton from '@material-ui/core/IconButton';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { FaFileExcel } from "react-icons/fa";
 
-const ExcelUploader = () => {
+const ExcelUploader = ({ area, departament, subdepartament, rol }) => {
     const [data, setData] = useState([]);
     const [fileName, setFileName] = useState('');
     //get userdata,get occupationdata,get workdata,get cecodata
@@ -15,16 +22,24 @@ const ExcelUploader = () => {
     const [workdata, setWorkData] = useState([]);
     const [cecodata, setCecoData] = useState([]);
     const [exceldata, setExcelData] = useState([]);
-    const [subdep, setSubdep] = useState("OHYE-OPPTAR");
+    const [subdep, setSubdep] = useState(subdepartament);
     const [key, setKey] = useState(0);
+    const [subdepoptions, setSubdepoptions] = useState([]);
     const clearFile = () => {
         setData([]);
         setExcelData([]);
         setFileName('');
     };
     useEffect(() => {
+        GetPrimaryData('subdepartamentdetail').then((r) => {
+            setSubdepoptions(r);
+        })
+    }, [rol == "ADMINISTRADOR"]);
 
-        GetPrimaryData('user', '*', { sdptdtcod: subdep }).then((r) => {
+
+    useEffect(() => {
+
+        GetPrimaryData('user', '*').then((r) => {
             setUserData(r);
         }
         );
@@ -40,11 +55,7 @@ const ExcelUploader = () => {
             setCecoData(r);
         }
         );
-        console.log('userdata', userdata);
-        console.log('occupationdata', occupationdata);
-        console.log('workdata', workdata);
-        console.log('cecodata', cecodata);
-        console.log('asistence', GetPrimaryData('assistence', '*', { codas: '4534362023-11-20' }));
+        
         clearFile();
     }, [subdep]);
 
@@ -95,8 +106,6 @@ const ExcelUploader = () => {
                 });
                 return obj;
             });
-
-            console.log('Array de objetos:', dataArray);
             setExcelData(dataArray.map(row => {
                 const mappedRow = {};
                 for (const header in row) {
@@ -105,30 +114,65 @@ const ExcelUploader = () => {
                 }
                 return mappedRow;
             }));
-
         };
-
         reader.readAsBinaryString(file);
     };
-    
 
     function transformDataArray(subdep, exceldataArray, userdata, occupationdata, workdata, cecodata) {
         const result = exceldataArray.map(exceldata => transformData(subdep, exceldata, userdata, occupationdata, workdata, cecodata));
-        console.log('result', result);
-        console.log('base', exceldata);
+
         //return result only where prop cdas is not nul
         return result.filter(r => r.codas !== 0);
-
-
     }
 
     return (
-        <div>
-            <input key={fileName} type="file" className='bg-gray-700 w-48 rounded-xl' onChange={handleFileUpload} accept=".xlsx, .xls" />
+
+        <div className='pagina'>
+            <Breadcrumbs>
+                <Link to="/home" className="breadcrumb">Home</Link>
+                <Link to="/asistencia" className="breadcrumb">Asistencias</Link>
+                <Link to="/importedmode" className="breadcrumb">Importar excel</Link>
+
+            </Breadcrumbs>
+            <div className='tittlepage'>Importar excel</div>
+
+            <IconButton
+                
+                component="label"
+                sx={{ color: "white" }}
+                key={fileName}
+            >   <div className='border border-green-400 flex p-2 rounded-md  hover:bg-green-100'>
+                <FaFileExcel className='text-green-600' /> <div className='text-green-400 text-lg pl-2 '>  Subir excel</div></div>
+                <input
+                    type="file"
+                    hidden
+                    onChange={handleFileUpload}
+                    accept=".xlsx, .xls"
+                />
+            </IconButton> 
+            <a href="../../../public/Jornales-OHYE.xlsx" download={`Plantilla de asistencia ${subdep} .xlsx`}>
+                <button className='bg-white text-blue-600 border hover:bg-blue-100 border-blue-600'>DESCARGAR PLANTILLA</button> </a>
             {fileName && <p>Archivo seleccionado: {fileName} <Button onClick={clearFile} className=''>Quitar archivo</Button></p>}
-            <button className='bg-black' onClick={() => {
-                CreateOrUpdateFromObjectUpsert("assistence", transformDataArray(subdep, exceldata, userdata, occupationdata, workdata, cecodata))
-            }}>CONSULTAR</button>
+            {rol === "ADMINISTRADOR" && (
+                <select className='bg-gray-100 rounded-xl' onChange={(e) => {
+                    setSubdep(e.target.value);
+                }}>
+                    <option value="">Seleccionar Subarea</option>
+                    {subdepoptions.map((subdepoption, index) => (
+                        <option key={index} value={subdepoption.sdptdtcod}>{subdepoption.sdptdtdesc}</option>
+                    ))}
+                </select>
+            )}
+            
+            
+            <button className='bg-blue-gray-800' onClick={() => {
+                deleteDataSwal(() => {
+                    CreateOrUpdateFromObjectUpsert("assistence", transformDataArray(subdep, exceldata, userdata, occupationdata, workdata, cecodata))
+                },
+                    "Antes de guardar revisar que no existan datos de color rojo en la tabla, consultar con 959077258 para validar los datos en rojo, si no hay datos en rojo, dar click en aceptar, si hay datos en rojo los datos se guardaran o actualizaran en caso ya exista un dato anterior. Solo subir asistencia de la subarea actual " + subdep,
+                    "Error al subir los datos",
+                    "Datos subidos correctamente");
+            }}>Guardar datos</button>
             {data.length > 0 && (
                 <TableContainer component={Paper} style={{ marginTop: '20px' }}>
                     <Table>
@@ -148,29 +192,26 @@ const ExcelUploader = () => {
                                         let content = cell;
                                         let style = ""
                                         if (cellIndex === 4) {
-                                            console.log('Fecha:', excelDateToJSDate(cell));
                                             content = excelDateToJSDate(cell);
                                         }
                                         if (cellIndex === 1 || cellIndex === 2) {
                                             content = cell;
-                                            return <TableCell className={getifexist(userdata, "cod", row[1] + "")} key={cellIndex}>{content}</TableCell>;
+                                            return <TableCell sx={{ color: "whitesmoke" }} className={getifexist(userdata, "cod", row[1] + "")} key={cellIndex}>{content}</TableCell>;
 
                                         } else if (cellIndex === 5 || cellIndex === 6) {
                                             content = cell;
-                                            return <TableCell className={getifexist(occupationdata, "occupationcod", row[5] + "")} key={cellIndex}>{content}</TableCell>;
+                                            return <TableCell sx={{ color: "whitesmoke" }} className={getifexist(occupationdata, "occupationcod", row[5] + "")} key={cellIndex}>{content}</TableCell>;
 
                                         } else if (cellIndex === 7 || cellIndex === 8) {
                                             content = cell;
-                                            return <TableCell className={getifexist(workdata, "workcod", row[7] + "")} key={cellIndex}>{content}</TableCell>;
+                                            return <TableCell sx={{ color: "whitesmoke" }} className={getifexist(workdata, "workcod", row[7] + "")} key={cellIndex}>{content}</TableCell>;
 
                                         } else if (cellIndex === 9 || cellIndex === 10) {
                                             content = cell;
-                                            return <TableCell className={getifexist(cecodata, "cecocod", row[9] + "")} key={cellIndex}>{content}</TableCell>;
+                                            return <TableCell sx={{ color: "whitesmoke" }} className={getifexist(cecodata, "cecocod", row[9] + "")} key={cellIndex}>{content}</TableCell>;
                                         } else {
                                             return <TableCell key={cellIndex}>{content}</TableCell>;
                                         }
-
-
                                     })}
                                 </TableRow>
 

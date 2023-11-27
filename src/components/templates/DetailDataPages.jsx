@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import DetailDataTable from "../organism/tables/DetailDataTable"
 import { useEffect, useState } from "react";
 
-const DetailDataPages = ({config}) => {
+const DetailDataPages = ({config,subdepartament}) => {
     const [key, setKey] = useState(0);
 
     const location = useLocation();
@@ -15,7 +15,7 @@ const DetailDataPages = ({config}) => {
         <div className="pagina">
             <h1 className="tittlepage">{config.tittle}</h1>
             <DetailDataTable 
-            {...config} key={key}
+            {...config} key={key} subdepartament={subdepartament}
             />
         </div>
     )

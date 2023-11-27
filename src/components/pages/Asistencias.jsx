@@ -12,6 +12,7 @@ import {
     PopoverContent,
     Button,
 } from "@material-tailwind/react";
+import { Link } from "react-router-dom";
 function PopoverCustomAnimation() {
     return (
         <Popover
@@ -80,8 +81,14 @@ const AsistenciaSb = ({ area, departament, subdepartament, rol }) => {
                     </div>
                 }
             />
+            
 
             <PopoverCustomAnimation />
+            <>
+                <Link to="/asistencia/import">
+                    <button className="btn btn-primary bg-green-700">Importar excel</button>
+                </Link>
+            </>
             {checked ? <RtAsistence wheresb={querysb} /> : <TableAsistenciaSb wheresb={querysb} />}
 
         </div>

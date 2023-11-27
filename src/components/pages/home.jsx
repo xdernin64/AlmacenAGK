@@ -15,6 +15,7 @@ const Home = ({ subdepartament }) => {
     const [enddatequincena, setEnddatequincena] = useState([]);
     const [data, setData] = useState([]);
     const [search, setSearch] = useState(false);
+    
 
     //primera vez que se carga la pagina se ejecuta el useeffect para obtener la fecha de inicio y fin de la quincena
     useEffect(() => {
@@ -145,8 +146,8 @@ const Home = ({ subdepartament }) => {
                 <div className="">
                     <div className="">
                         
-                        {/* <Exampleforpie hoursdata={hoursdata(data,subdepartament)} datos={countFaltasBySubdepartament(data)} linedata={transformDataForRecharts(data, subdepartament)} statepiedata={countByStateAs(data, subdepartament)} barchardata={transformDataForBarChart(data, "dateas", "stateas", subdepartament)} />*/}
-                        <ExcelUploader />
+                        <Exampleforpie hoursdata={hoursdata(data,subdepartament)} datos={countFaltasBySubdepartament(data)} linedata={transformDataForRecharts(data, subdepartament)} statepiedata={countByStateAs(data, subdepartament)} barchardata={transformDataForBarChart(data, "dateas", "stateas", subdepartament)} />
+                        
                     </div>
                 </div>
             </div>

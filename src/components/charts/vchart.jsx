@@ -3,6 +3,15 @@ import { convertirFecha } from './chartshelpers/functionhelpers';
 import { useState } from 'react';
 import { button } from '@material-tailwind/react';
 const Exampleforpie = ({ datos, linedata, statepiedata, barchardata, hoursdata }) => {
+    const coloresCategorias = {
+        ASISTENCIA: "#00C49F",
+        DXHA: "#FF8042",
+        FALTA: "#d93f35",
+        DSO: "#FFBB28",
+        'DSO FERIADO': "#92cddc",
+        'ASISTENCIA FERIADO': "#00C40F",
+        LICENCIA: "#8884d8"
+    };
     const [searchText, setSearchText] = useState('');
     const sortedData = hoursdata
         .filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()))
@@ -94,11 +103,19 @@ const Exampleforpie = ({ datos, linedata, statepiedata, barchardata, hoursdata }
 
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart width={200} height={400}>
-                                    <Pie data={statepiedata} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} fill="#8884d8" label>
-                                        <Cell key={`cell-${1}`} fill="#00C49F" />
-                                        <Cell key={`cell-${2}`} fill="#FFBB28" />
-                                        <Cell key={`cell-${3}`} fill="#FF8042" />
-                                        <Cell key={`cell-${4}`} fill="#d93f35" />
+                                    {console.log(statepiedata)}
+                                    <Pie
+                                        data={statepiedata}
+                                        dataKey="value"
+                                        nameKey="name"
+                                        cx="50%"
+                                        cy="50%"
+                                        outerRadius={80}
+                                        label
+                                    >
+                                        {statepiedata.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={coloresCategorias[entry.name]} />
+                                        ))}
                                     </Pie>
                                     <Tooltip
                                         formatter={(value, name) => [value, name]}
@@ -129,7 +146,7 @@ const Exampleforpie = ({ datos, linedata, statepiedata, barchardata, hoursdata }
                                     margin: '1px',
                                     borderRadius: '10px',
                                     paddingLeft: '50px',
-                                    
+
                                 }}
                             />
 

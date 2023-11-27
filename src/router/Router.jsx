@@ -17,6 +17,7 @@ import AsistenciaSb from "../components/pages/Asistencias";
 import ExtraTime from "../components/pages/Horas_extras";
 import React, { useState, useEffect, createContext, useContext, } from "react";
 import Consolidado from "../components/pages/Consolidado";
+import ExcelUploader from "../components/pages/importedmode";
 
 const Routers = ({ state, rol, area, departament, subdepartament }) => {
     const [isRolAvailable, setIsRolAvailable] = useState(false);
@@ -102,37 +103,41 @@ const Routers = ({ state, rol, area, departament, subdepartament }) => {
                 />
                 <Route
                     path="/zone-location"
-                    element={state && rol == "ADMINISTRADOR" ? <DetailDataPages config={dlocationzone} /> : <Navigate replace to="/login" />}
+                    element={state && rol == "ADMINISTRADOR" ? <DetailDataPages subdepartament={false} config={dlocationzone} /> : <Navigate replace to="/login" />}
                 />
                 <Route
                     path="/zone-area"
-                    element={state && rol == "ADMINISTRADOR" ? <DetailDataPages config={dareazone} /> : <Navigate replace to="/login" />}
+                    element={state && rol == "ADMINISTRADOR" ? <DetailDataPages subdepartament={false} config={dareazone} /> : <Navigate replace to="/login" />}
                 />
                 <Route
                     path="/area-departament"
-                    element={state && rol == "ADMINISTRADOR" ? <DetailDataPages config={ddepartamentarea} /> : <Navigate replace to="/login" />}
+                    element={state && rol == "ADMINISTRADOR" ? <DetailDataPages subdepartament={false} config={ddepartamentarea} /> : <Navigate replace to="/login" />}
                 />
                 <Route
                     path="/departament-subdepartament"
-                    element={state && rol == "ADMINISTRADOR" ? <DetailDataPages config={dsubdepartamentarea} /> : <Navigate replace to="/login" />}
+                    element={state && rol == "ADMINISTRADOR" ? <DetailDataPages subdepartament={false} config={dsubdepartamentarea} /> : <Navigate replace to="/login" />}
                 />
                 <Route
                     path="/subdepartament-occupation"
-                    element={state && rol == "ADMINISTRADOR" ? <DetailDataPages config={docupation} /> : <Navigate replace to="/login" />}
+                    element={state && rol == "ADMINISTRADOR" ? <DetailDataPages subdepartament={true} config={docupation} /> : <Navigate replace to="/login" />}
                 />
                 <Route
                     path="/subdepartament-work"
-                    element={state && rol == "ADMINISTRADOR" ? <DetailDataPages config={dwork} /> : <Navigate replace to="/login" />}
+                    element={state && rol == "ADMINISTRADOR" ? <DetailDataPages subdepartament={true} config={dwork} /> : <Navigate replace to="/login" />}
                 />
                 <Route
                     path="/subdepartament-ceco"
-                    element={state && rol == "ADMINISTRADOR" ? <DetailDataPages config={dceco} /> : <Navigate replace to="/login" />}
+                    element={state && rol == "ADMINISTRADOR" ? <DetailDataPages subdepartament={true} config={dceco} /> : <Navigate replace to="/login" />}
                 />
 
 
                 <Route
                     path="/asistencia"
                     element={state ? <AsistenciaSb area={area} departament={departament} subdepartament={subdepartament} rol={rol} /> : <Navigate replace to="/login" />}
+                />
+                <Route
+                    path="/asistencia/import"
+                    element={state ? <ExcelUploader area={area} departament={departament} subdepartament={subdepartament} rol={rol} /> : <Navigate replace to="/login" />}
                 />
                 <Route
                     path="/horas-extras"
