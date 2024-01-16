@@ -33,4 +33,8 @@ export const dateToString = (date) => {
     
         return year + '-' + month + '-' + day;
     }
-    
+    export function decimalToTime(decimal) {
+        var hours = Math.floor(decimal * 24);
+        var minutes = Math.floor((decimal * 24 - hours) * 60);
+        return hours.toString().padStart(2, '0') + ":" + minutes.toString().padStart(2, '0');
+    }

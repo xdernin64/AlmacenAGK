@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import * as XLSX from 'xlsx';
 import { GetPrimaryData } from '../../helpers/CRUD/READ/GetDataSb';
-import { excelDateToJSDate } from '../../helpers/dateconverter';
+import { decimalToTime, excelDateToJSDate } from '../../helpers/dateconverter';
 import { getifexist, transformData } from '../../helpers/combineddata';
 import { CreateFromObject, CreateOrUpdateFromObjectUpsert } from '../../helpers/CRUD/CREATE/CREATEDATASB';
 import { deleteDataSwal, errorMessage } from '../../helpers/Alerts/alerts';
@@ -55,7 +55,7 @@ const ExcelUploader = ({ area, departament, subdepartament, rol }) => {
             setCecoData(r);
         }
         );
-        
+
         clearFile();
     }, [subdep]);
 
@@ -94,6 +94,9 @@ const ExcelUploader = ({ area, departament, subdepartament, rol }) => {
                     if (header === 'FECHA') {
                         // Formatear la fecha si es la columna 'FECHA'
                         obj[header] = row[index] !== undefined ? excelDateToJSDate(row[index]) : null;
+                    } else if (header == "H.I." || header == "H.F.") {
+                        obj[header] = row[index] !== undefined ? decimalToTime(row[index]) : null;
+                        console.log("hora de entrada", obj[header]);
                     } else if (header === 'Cod Ocup.' || header === 'Cod. Labor' || header === 'CECO' || header === 'CODIGO') {
                         // Utilizar el valor sin cambios para otras columnas
                         obj[header] = row[index] !== undefined ? row[index] + '' : null;
@@ -137,20 +140,20 @@ const ExcelUploader = ({ area, departament, subdepartament, rol }) => {
             <div className='tittlepage'>Importar excel</div>
 
             <IconButton
-                
+
                 component="label"
                 sx={{ color: "white" }}
                 key={fileName}
             >   <div className='border border-green-400 flex p-2 rounded-md  hover:bg-green-100'>
-                <FaFileExcel className='text-green-600' /> <div className='text-green-400 text-lg pl-2 '>  Subir excel</div></div>
+                    <FaFileExcel className='text-green-600' /> <div className='text-green-400 text-lg pl-2 '>  Subir excel</div></div>
                 <input
                     type="file"
                     hidden
                     onChange={handleFileUpload}
                     accept=".xlsx, .xls"
                 />
-            </IconButton> 
-            <a href="../../../public/Jornales-OHYE.xlsx" download={`Plantilla de asistencia ${subdep} .xlsx`}>
+            </IconButton>
+            <a href="../../../public/Jornales-OHYE.xlsx">
                 <button className='bg-white text-blue-600 border hover:bg-blue-100 border-blue-600'>DESCARGAR PLANTILLA</button> </a>
             {fileName && <p>Archivo seleccionado: {fileName} <Button onClick={clearFile} className=''>Quitar archivo</Button></p>}
             {rol === "ADMINISTRADOR" && (
@@ -163,8 +166,8 @@ const ExcelUploader = ({ area, departament, subdepartament, rol }) => {
                     ))}
                 </select>
             )}
-            
-            
+
+
             <button className='bg-blue-gray-800' onClick={() => {
                 deleteDataSwal(() => {
                     CreateOrUpdateFromObjectUpsert("assistence", transformDataArray(subdep, exceldata, userdata, occupationdata, workdata, cecodata))
@@ -209,7 +212,10 @@ const ExcelUploader = ({ area, departament, subdepartament, rol }) => {
                                         } else if (cellIndex === 9 || cellIndex === 10) {
                                             content = cell;
                                             return <TableCell sx={{ color: "whitesmoke" }} className={getifexist(cecodata, "cecocod", row[9] + "")} key={cellIndex}>{content}</TableCell>;
-                                        } else {
+                                        } else if (cellIndex === 11 || cellIndex === 12) {
+                                            content = cell;
+                                            return <TableCell  key={cellIndex}>{decimalToTime(content)}</TableCell>;
+                                        }else {
                                             return <TableCell key={cellIndex}>{content}</TableCell>;
                                         }
                                     })}
