@@ -49,7 +49,7 @@ export const createuser = async (props, id) => {
     }
 };
 export const CreatePrimaryDataSb = async (dtname, newData) => {
-    
+
     try {
         const { data, error } = await supabase.from(dtname).insert([newData]);
         if (error) {
@@ -91,5 +91,44 @@ export const CreateOrUpdateFromObjectUpsert = async (dtname, newData) => {
     }
     return { error: false, message: 'Registro agregado o actualizado correctamente' };
 }
+export const InsertIfNotExists = async (tableName, newData) => {
+    let omitidos = 0;
+        let agregados = 0;
+    for (const dataItem of newData) {
+        const { data: existingData, error: fetchError } = await supabase
+            .from(tableName)
+            .select('*')
+            .eq('dateas', dataItem.dateas);  // Utiliza 'dateas' en lugar de 'campoUnico'
+
+        if (fetchError) {
+            console.error('Error al verificar la existencia del dato:', fetchError);
+            errorMessage('Error al verificar la existencia del dato');
+            return { error: true, message: 'Error al verificar la existencia del dato' };
+        }
+        
+
+        if (!(existingData && existingData.length > 0)) {
+            // El dato no existe, realizar la inserción
+            const { error: insertError } = await supabase
+                .from(tableName)
+                .upsert([dataItem]);
+
+            if (insertError) {
+                console.error('Error al insertar el dato:', insertError);
+                errorMessage('Error al insertar el dato');
+                return { error: true, message: 'Error al insertar el dato' };
+            }
+
+            agregados++;
+        } else {
+            // El dato ya existe, emitir un mensaje
+            omitidos++;
+        }
+
+    }
+    successMessage(`Proceso completado correctamente, ${agregados} registros agregados y ${omitidos} registros omitidos`);
+    return { error: false, message: 'Proceso completado correctamente' };
+};
+
 
 

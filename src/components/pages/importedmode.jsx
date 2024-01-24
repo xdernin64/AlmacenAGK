@@ -4,14 +4,15 @@ import * as XLSX from 'xlsx';
 import { GetPrimaryData } from '../../helpers/CRUD/READ/GetDataSb';
 import { decimalToTime, excelDateToJSDate } from '../../helpers/dateconverter';
 import { getifexist, transformData } from '../../helpers/combineddata';
-import { CreateFromObject, CreateOrUpdateFromObjectUpsert } from '../../helpers/CRUD/CREATE/CREATEDATASB';
-import { deleteDataSwal, errorMessage } from '../../helpers/Alerts/alerts';
+import { CreateFromObject, CreateOrUpdateFromObjectUpsert, InsertIfNotExists } from '../../helpers/CRUD/CREATE/CREATEDATASB';
+import { deleteDataSwal, errorMessage, successMessage } from '../../helpers/Alerts/alerts';
 import { get } from 'firebase/database';
 import { Breadcrumbs } from "@material-tailwind/react";
 import { Link } from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { FaFileExcel } from "react-icons/fa";
+import { set } from 'date-fns';
 
 const ExcelUploader = ({ area, departament, subdepartament, rol }) => {
     const [data, setData] = useState([]);
@@ -25,6 +26,8 @@ const ExcelUploader = ({ area, departament, subdepartament, rol }) => {
     const [subdep, setSubdep] = useState(subdepartament);
     const [key, setKey] = useState(0);
     const [subdepoptions, setSubdepoptions] = useState([]);
+    const [conflictlist, setConflictlist] = useState([]);
+    
     const clearFile = () => {
         setData([]);
         setExcelData([]);
@@ -83,6 +86,7 @@ const ExcelUploader = ({ area, departament, subdepartament, rol }) => {
             const sheetName = workbook.SheetNames[0];
             const sheet = workbook.Sheets[sheetName];
             const excelData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+            
             setData(excelData);
 
             // Convertir los datos de la tabla en un array de objetos e imprimir en la consola
@@ -96,7 +100,7 @@ const ExcelUploader = ({ area, departament, subdepartament, rol }) => {
                         obj[header] = row[index] !== undefined ? excelDateToJSDate(row[index]) : null;
                     } else if (header == "H.I." || header == "H.F.") {
                         obj[header] = row[index] !== undefined ? decimalToTime(row[index]) : null;
-                        console.log("hora de entrada", obj[header]);
+                        //console.log("hora de entrada", obj[header]);
                     } else if (header === 'Cod Ocup.' || header === 'Cod. Labor' || header === 'CECO' || header === 'CODIGO') {
                         // Utilizar el valor sin cambios para otras columnas
                         obj[header] = row[index] !== undefined ? row[index] + '' : null;
@@ -127,7 +131,11 @@ const ExcelUploader = ({ area, departament, subdepartament, rol }) => {
         //return result only where prop cdas is not nul
         return result.filter(r => r.codas !== 0);
     }
+    const [mostrarCoincidencias, setMostrarCoincidencias] = useState(true);
 
+    const toggleMostrarCoincidencias = () => {
+        setMostrarCoincidencias(!mostrarCoincidencias);
+    };
     return (
 
         <div className='pagina'>
@@ -149,6 +157,7 @@ const ExcelUploader = ({ area, departament, subdepartament, rol }) => {
                 <input
                     type="file"
                     hidden
+                    onClick={()=>set}
                     onChange={handleFileUpload}
                     accept=".xlsx, .xls"
                 />
@@ -158,7 +167,9 @@ const ExcelUploader = ({ area, departament, subdepartament, rol }) => {
             {fileName && <p>Archivo seleccionado: {fileName} <Button onClick={clearFile} className=''>Quitar archivo</Button></p>}
             {rol === "ADMINISTRADOR" && (
                 <select className='bg-gray-100 rounded-xl' onChange={(e) => {
+                    setConflictlist([]);
                     setSubdep(e.target.value);
+                    
                 }}>
                     <option value="">Seleccionar Subarea</option>
                     {subdepoptions.map((subdepoption, index) => (
@@ -172,10 +183,21 @@ const ExcelUploader = ({ area, departament, subdepartament, rol }) => {
                 deleteDataSwal(() => {
                     CreateOrUpdateFromObjectUpsert("assistence", transformDataArray(subdep, exceldata, userdata, occupationdata, workdata, cecodata))
                 },
-                    "Antes de guardar revisar que no existan datos de color rojo en la tabla, consultar con 959077258 para validar los datos en rojo, si no hay datos en rojo, dar click en aceptar, si hay datos en rojo los datos se guardaran o actualizaran en caso ya exista un dato anterior. Solo subir asistencia de la subarea actual " + subdep,
+                    "No guardar datos si hay celdas en color rojo, comunicarse con un administrador. Los datos existentes seran reemplazados" + subdep,
                     "Error al subir los datos",
                     "Datos subidos correctamente");
             }}>Guardar datos</button>
+            <button className='bg-deep-orange-900' onClick={() => {
+                deleteDataSwal(() => {
+                    InsertIfNotExists("assistence", transformDataArray(subdep, exceldata, userdata, occupationdata, workdata, cecodata))
+                },
+                    "No guardar datos si hay celdas en color rojo, comunicarse con un administrador. Los datos existentes NO seran reemplazados" + subdep,
+                    "Error al subir los datos",
+                    "Datos subidos correctamente");
+            }}>Guardar sin reemplazar datos</button>
+            <br />
+            <button className='bg-green-800' onClick={() => setMostrarCoincidencias(true)}>Mostrar Coincidencias</button>
+            <button className='bg-red-800' onClick={() => setData(conflictlist)}>Mostrar Sin Coincidencias</button>
             {data.length > 0 && (
                 <TableContainer component={Paper} style={{ marginTop: '20px' }}>
                     <Table>
@@ -187,31 +209,50 @@ const ExcelUploader = ({ area, departament, subdepartament, rol }) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {data.slice(1).map((row, rowIndex) => (
-
+                            {
+                            
+                            data.slice(1).map((row, rowIndex) => 
+                            
+                            {
+                                const [userstyle, userstate] = getifexist(userdata, "cod", row?.[1] + "");
+                                const [occupationstyle, occupationstate ] = getifexist(occupationdata, "occupationcod", row?.[5] + "");
+                                const [workstyle,  workstate ] = getifexist(workdata, "workcod", row?.[7] + "");
+                                const [cecostyle,  cecostate] = getifexist(cecodata, "cecocod", row?.[9] + "");
+                                if (userstate&&occupationstate&&workstate&&cecostate){
+                                    
+                                }else{
+                                
+                                    conflictlist.push(row)
+                                }
+                            return(
                                 <TableRow key={rowIndex}>
+                                    
 
-                                    {row.map((cell, cellIndex) => {
+                                    {
+                                    
+
+                                    row.map((cell, cellIndex) => {
                                         let content = cell;
                                         let style = ""
+
                                         if (cellIndex === 4) {
                                             content = excelDateToJSDate(cell);
                                         }
                                         if (cellIndex === 1 || cellIndex === 2) {
                                             content = cell;
-                                            return <TableCell sx={{ color: "whitesmoke" }} className={getifexist(userdata, "cod", row[1] + "")} key={cellIndex}>{content}</TableCell>;
+                                            return <TableCell className={userstyle}  sx={{ color: "whitesmoke" }}  key={cellIndex}>{content}</TableCell>;
 
                                         } else if (cellIndex === 5 || cellIndex === 6) {
                                             content = cell;
-                                            return <TableCell sx={{ color: "whitesmoke" }} className={getifexist(occupationdata, "occupationcod", row[5] + "")} key={cellIndex}>{content}</TableCell>;
+                                            return <TableCell className={occupationstyle} sx={{ color: "whitesmoke" }}  key={cellIndex}>{content}</TableCell>;
 
                                         } else if (cellIndex === 7 || cellIndex === 8) {
                                             content = cell;
-                                            return <TableCell sx={{ color: "whitesmoke" }} className={getifexist(workdata, "workcod", row[7] + "")} key={cellIndex}>{content}</TableCell>;
+                                            return <TableCell className={workstyle} sx={{ color: "whitesmoke" }}  key={cellIndex}>{content}</TableCell>;
 
                                         } else if (cellIndex === 9 || cellIndex === 10) {
                                             content = cell;
-                                            return <TableCell sx={{ color: "whitesmoke" }} className={getifexist(cecodata, "cecocod", row[9] + "")} key={cellIndex}>{content}</TableCell>;
+                                            return <TableCell className={cecostyle} sx={{ color: "whitesmoke" }}  key={cellIndex}>{content}</TableCell>;
                                         } else if (cellIndex === 11 || cellIndex === 12) {
                                             content = cell;
                                             return <TableCell  key={cellIndex}>{decimalToTime(content)}</TableCell>;
@@ -221,7 +262,7 @@ const ExcelUploader = ({ area, departament, subdepartament, rol }) => {
                                     })}
                                 </TableRow>
 
-                            ))}
+                            )})}
                         </TableBody>
                     </Table>
                 </TableContainer>

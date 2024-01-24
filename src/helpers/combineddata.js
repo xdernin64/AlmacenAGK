@@ -244,6 +244,7 @@ function calculatehours(intime, outtime, stateas, jobtime) {
     let extratime25, extratime35, doubletime, workinghours, discounthours, intimecor, outtimecor;
     intimecor = intime;
     outtimecor = outtime;
+    console.log(jobtime)
 
     if (stateas == 'ASISTENCIA') {
         doubletime = 0;
@@ -364,13 +365,16 @@ function calculatehours(intime, outtime, stateas, jobtime) {
 
 }
 export function getifexist(dataArray, searchKey, searchValue) {
-    // Busca en el array 'dataArray' un objeto donde el valor de la clave 'searchKey' sea igual a 'searchValue'
     const match = dataArray.find(item => item[searchKey] === searchValue);
 
-    // Si 'match' es verdadero (es decir, se encontró una coincidencia), retorna 'bg-green-800'
-    // Si 'match' es falso (es decir, no se encontró una coincidencia), retorna 'bg-red-800'
-    return match ? 'bg-green-800 text-gray-100' : 'bg-red-800 text-gray-100';
+    const style = match ? 'bg-green-800 text-gray-100' : 'bg-red-800 text-gray-100';
+    const state = Boolean(match);
+
+    return [style, state];
 }
+
+
+
 export function getifexisttwo(dataArray, searchKey1, searchValue1, searchKey2, searchValue2) {
     // Busca en el array 'dataArray' un objeto donde el valor de la clave 'searchKey1' sea igual a 'searchValue1'
     // y el valor de la clave 'searchKey2' sea igual a 'searchValue2'
@@ -383,7 +387,7 @@ export function getifexisttwo(dataArray, searchKey1, searchValue1, searchKey2, s
 
 
 export function transformData(sdptdtcod, exceldata, userdata, occupationdata, workdata, cecodata) {
-    const { workinghours, extratime25, extratime35, doubletime, discounthours, intimecor, outtimecor } = calculatehours(exceldata.intime, exceldata.outtime, exceldata.ESTADO, exceldata.jobtime);
+    const { workinghours, extratime25, extratime35, doubletime, discounthours, intimecor, outtimecor } = calculatehours(exceldata.intime, exceldata.outtime, exceldata.ESTADO, getMatchingValue2(userdata, "jobtime", "cod", exceldata.cod));
 
 
     const assistencedata = {

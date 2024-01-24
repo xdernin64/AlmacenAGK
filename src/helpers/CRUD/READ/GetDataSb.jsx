@@ -9,19 +9,19 @@ export const GetAuthDataUser = async (id) => {
     console.log(data, error);
     return data;
 };
-export const GetPrimaryData = async (tableName, select = '*', where = {}) => {
-    const { data, error } = await supabase
-        .from(tableName)
-        .select(select)
-        .match(where);
+    export const GetPrimaryData = async (tableName, select = '*', where = {}) => {
+        const { data, error } = await supabase
+            .from(tableName)
+            .select(select)
+            .match(where);
 
-    if (error) {
-        console.error(error);
-        return null;
-    }
+        if (error) {
+            console.error(error);
+            return null;
+        }
 
-    return data;
-};
+        return data;
+    };
 //get primary data between dates startdate and endate
 export const GetPrimaryDataBetweenDates = async (tableName, select = '*', where = {}, startdate, enddate) => {
     const { data, error } = await supabase
@@ -29,8 +29,11 @@ export const GetPrimaryDataBetweenDates = async (tableName, select = '*', where 
         .select(select)
         .match(where)
         .gte('dateas', startdate)
-        .lte('dateas', enddate);
-        console.log(error)
+        .lte('dateas', enddate)
+        //unlimite data
+            
+
+    console.log(data, error);
         
         
         return data;

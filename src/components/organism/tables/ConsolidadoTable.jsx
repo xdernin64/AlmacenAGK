@@ -44,6 +44,7 @@ const ConsolidadoTable = ({ wheresb }) => {
             }));
             setData(updatedData);
             setLoading(false);
+            
         });
         setSearch(false);
     }, [search]);
@@ -215,6 +216,9 @@ const ConsolidadoTable = ({ wheresb }) => {
                     }}
                     options={{
                         exportButton: true,
+                        //open dialog to eport file and save file
+                        
+
                         headerStyle: {
                             backgroundColor: '#95B3D7',
                             color: '#000',

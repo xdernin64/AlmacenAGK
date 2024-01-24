@@ -3,6 +3,7 @@ import { convertirFecha } from './chartshelpers/functionhelpers';
 import { useState } from 'react';
 import { button } from '@material-tailwind/react';
 const Exampleforpie = ({ datos, linedata, statepiedata, barchardata, hoursdata }) => {
+    console.log(datos); 
     const coloresCategorias = {
         ASISTENCIA: "#00C49F",
         DXHA: "#FF8042",
@@ -36,7 +37,7 @@ const Exampleforpie = ({ datos, linedata, statepiedata, barchardata, hoursdata }
                 </div>
             );
         }
-        return null;
+        return null;    
     };
     return (
         <div className='w-100 m-0 p-0'>
