@@ -92,13 +92,14 @@ export const CreateOrUpdateFromObjectUpsert = async (dtname, newData) => {
     return { error: false, message: 'Registro agregado o actualizado correctamente' };
 }
 export const InsertIfNotExists = async (tableName, newData) => {
+    console.log(newData)
     let omitidos = 0;
         let agregados = 0;
     for (const dataItem of newData) {
         const { data: existingData, error: fetchError } = await supabase
             .from(tableName)
             .select('*')
-            .eq('dateas', dataItem.dateas);  // Utiliza 'dateas' en lugar de 'campoUnico'
+            .eq('codas', dataItem.codas);  // Utiliza 'dateas' en lugar de 'campoUnico'
 
         if (fetchError) {
             console.error('Error al verificar la existencia del dato:', fetchError);
