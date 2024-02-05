@@ -18,6 +18,8 @@ import ExtraTime from "../components/pages/Horas_extras";
 import React, { useState, useEffect, createContext, useContext, } from "react";
 import Consolidado from "../components/pages/Consolidado";
 import ExcelUploader from "../components/pages/importedmode";
+import QrAistence from "../components/pages/QrAsistence";
+import AddAssistence from "../components/organism/AddAsistence";
 
 const Routers = ({ state, rol, area, departament, subdepartament }) => {
     const [isRolAvailable, setIsRolAvailable] = useState(false);
@@ -135,6 +137,14 @@ const Routers = ({ state, rol, area, departament, subdepartament }) => {
                     path="/asistencia"
                     element={state ? <AsistenciaSb area={area} departament={departament} subdepartament={subdepartament} rol={rol} /> : <Navigate replace to="/login" />}
                 />
+                <Route
+                    path="/jornales"
+                    element={state ? <QrAistence area={area} departament={departament} subdepartament={subdepartament} rol={rol} /> : <Navigate replace to="/login" />}
+                />
+                <Route
+                path="/addjornales"
+                element={state ? <AddAssistence area={area} departament={departament} subdepartament={subdepartament} rol={rol} /> : <Navigate replace to="/login" />}
+            />
                 <Route
                     path="/asistencia/import"
                     element={state ? <ExcelUploader area={area} departament={departament} subdepartament={subdepartament} rol={rol} /> : <Navigate replace to="/login" />}
