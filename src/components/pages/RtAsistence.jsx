@@ -6,6 +6,7 @@ import CustomizedDialogs from "../organism/modals/ModalAsistence";
 import { convertDateFormat, dateToString } from "../../helpers/dateconverter";
 import { supabase } from "../../supabaseClient";
 import { where } from "firebase/firestore";
+import { sumarDias } from "../charts/chartshelpers/functionhelpers";
 
 const RtAsistence = ({ wheresb }) => {
     const [combinedData, setCombinedData] = useState([]);
@@ -51,7 +52,7 @@ const RtAsistence = ({ wheresb }) => {
                 const combinedobjectdate = { dateas: currentdate, ...wheresb }
                 const userData = await GetPrimaryData("user",'*',{state: "ACTIVO", ...wheresb });
                 const asistenceData = await GetPrimaryData("assistence", 'cod,codas,user(name,lastname,jobtime),stateas,lcdtcod,intime,outtime,jobtime,ocptdtcod,wdtcod,cecodtcod,sdptdtcod,asdesc,dateas,extratime25,extratime35,doubletime,discounthours', combinedobjectdate);
-                const occupationData = await GetPrimaryData("occupationdetail", 'ocptdtcod,sdptdtcod,occupationcod,ocptdtdesc,state,state,state', wherestate);
+                const occupationData = await GetPrimaryData("occupationdetail", 'ocptdtcod,sdptdtcod,occupationcod,ocptdtdesc,stateasocpt', wherestate);
                 const locationdata = await GetPrimaryData("detaillocationzone", '*');
                 const subdepartamentdata = await GetPrimaryData("subdepartamentdetail", '*', wheresb);
                 const workData = await GetPrimaryData("workdetail", '*', wheresb);
@@ -71,6 +72,7 @@ const RtAsistence = ({ wheresb }) => {
         }
         getMaindata();
     }, []);
+
     useEffect(() => {
         if (update) {
             const combinedobjectdate = { dateas: currentdate, ...wheresb }
@@ -80,6 +82,7 @@ const RtAsistence = ({ wheresb }) => {
                 setUpdate(false);
             });
         } else {
+            
             setCombinedData(mergeDatauseras2(Userdata, Asistancedata));
             console.log("Escuchando");
         }

@@ -9,7 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import { convertirHoraEnDecimal } from '../../charts/chartshelpers/functionhelpers';
-import { getStatusBackgroundColor, getStatusColor } from '../../../helpers/combineddata';
+import { getMatchingValue2, getStatusBackgroundColor, getStatusColor } from '../../../helpers/combineddata';
 import AutoCompleteRemoForteForm from '../../molecules/fields/AutocompleteForFroms';
 import AutocompleteComponent from '../../molecules/fields/repeatedautocomplete';
 import SimpAutocomplete from '../../molecules/fields/AutoCReact.JSX';
@@ -54,7 +54,7 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
     const [dateas, setDateAs] = React.useState(rowData?.dateas || '');
     const [hiden, setHiden] = React.useState(false);
     const [bgcolor, setBgcolor] = React.useState('bg-gray-200');
-    
+
     React.useEffect(() => {
         setIntime(rowData?.intime || '');
         setOuttime(rowData?.outtime || '');
@@ -77,6 +77,23 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
         setLastname(rowData?.lastname || '');
         setDateAs(rowData?.dateas || '');
     }, [rowData]);
+
+    React.useEffect(() => {
+
+
+        if (open && rowData.cod !== '') {
+
+            
+            if (rowData.codas == "") {
+                rowData.wdtcod == undefined ? "" : handleWorkChange(rowData.wdtcod)
+                rowData.ocptdtcod == undefined ? "" : handlechangeocupation(rowData.ocptdtcod)
+            } else (rowData.codas != "")
+            {
+                
+            }
+        }
+
+    }, [open]);
 
 
     const handleSubmit = () => {
@@ -128,17 +145,34 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
             handleClose();
         }
     };
+
     const handleremove = () => {
-        
+
         if (codas == "") {
             errorMessage("No se puede eliminar un registro que no existe")
         } else {
             deleteDataSwal(() => {
                 DeleteDataSb("assistence", "codas", codas);
                 handleClose();
-        }, "¿Estás seguro de eliminar el registro?", "Error al eliminar el registro", "Registro eliminado correctamente")
+            }, "¿Estás seguro de eliminar el registro?", "Error al eliminar el registro", "Registro eliminado correctamente")
         }
     }
+    const handlechangeocupation = (e) => {
+        console.log(e)
+        setOcptdtcod(e)
+        setStateas(getMatchingValue2(occupation, "stateasocpt", "ocptdtcod", e))
+        setSdptdtcod(getMatchingValue2(occupation, "sdptdtcod", "ocptdtcod", e))
+        console.log(getMatchingValue2(occupation, "stateasocpt", "ocptdtcod", e))
+    }
+    const handleWorkChange = (e) => {
+        //here lctdtcod and ocptdtcod
+
+        setWdtcod(e)
+        setLcdtcod(getMatchingValue2(work, "lctdtcod", "wdtcod", e))
+        setCecodtcod(getMatchingValue2(work, "cecodtcod", "wdtcod", e))
+        console.log(getMatchingValue2(work, "lcdtcod", "wdtcod", e), getMatchingValue2(work, "cecodtcod", "wdtcod", e));
+    }
+
 
     React.useEffect(() => {
         //seteando para stateas ASISTENCIA
@@ -257,7 +291,7 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
         }
 
     }, [stateas, intime, outtime]);
-console.log(JSON.stringify(occupation))
+
 
     return (
         <React.Fragment>
@@ -294,8 +328,8 @@ console.log(JSON.stringify(occupation))
                     </Typography>
                     <Typography component={'div'}>
                         <div>
-                            
-                            <select  className="" id="stateas" value={stateas} onChange={(e) => setStateas(e.target.value)}>
+
+                            <select className="" id="stateas" value={stateas} onChange={(e) => setStateas(e.target.value)}>
                                 <option aria-label="None" value="" />
                                 <option value="ASISTENCIA">ASISTENCIA</option>
                                 <option value="ASISTENCIA FERIADO">ASISTENCIA FERIADO</option>
@@ -356,15 +390,15 @@ console.log(JSON.stringify(occupation))
                         <label className='text-gray-500 text-bold'>Sub departamento</label>
                         <AutoCompleteRemoForteForm required db="" dataprops={["sdptdtcod", "sdptdtdesc", "subdepartamentcode"]} local localdb={subdepartamentdata} value={sdptdtcod} onChange={(e) => setSdptdtcod(e)} />
                         <label className='text-gray-500 text-bold'>Ocupación</label>
-                        <AutoCompleteRemoForteForm required db="" dataprops={["ocptdtcod", "ocptdtdesc", "occupationcod"]} local localdb={occupation} value={ocptdtcod} onChange={(e) => setOcptdtcod(e)} />
+                        <AutoCompleteRemoForteForm required db="" dataprops={["ocptdtcod", "ocptdtdesc", "occupationcod"]} local localdb={occupation} value={ocptdtcod} onChange={(e) => handlechangeocupation(e)} />
                         <label className='text-gray-500 text-bold'>Labor</label>
-                        <AutoCompleteRemoForteForm required db="" dataprops={["wdtcod", "wdtdesc", "workcod"]} local localdb={work} value={wdtcod} onChange={(e) => setWdtcod(e)} />
+                        <AutoCompleteRemoForteForm required db="" dataprops={["wdtcod", "wdtdesc", "workcod"]} local localdb={work} value={wdtcod} onChange={(e) => handleWorkChange(e)} />
                         <label className='text-gray-500 text-bold'>Ceco</label>
                         <AutoCompleteRemoForteForm required db="" dataprops={["cecodtcod", "cecodtdesc", "cecocod"]} local localdb={ceco} value={cecodtcod} onChange={(e) => setCecodtcod(e)} />
                     </Typography>
                 </DialogContent>
                 <DialogActions style={{ backgroundColor: getStatusBackgroundColor(stateas), padding: '8px', color: getStatusColor(stateas) }}>
-                    
+
                     <button className='bg-red-300 text-gray-100' onClick={handleremove}>
                         Eliminar Registro
                     </button>

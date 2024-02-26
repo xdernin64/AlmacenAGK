@@ -70,7 +70,7 @@ export function transformDataForRecharts(data, sdptdtcodFilter) {
         const dateB = new Date(b.name);
         return dateA - dateB;
     });
-    
+
     return sortedData;
 }
 //count by state as 
@@ -195,4 +195,17 @@ export function flattenArray(arr) {
     });
 
     return result;
+}
+export function sumarDias(fecha, dias) {
+    // Convertir la fecha a un objeto Date
+    const fechaObj = new Date(fecha);
+
+    // Sumar o restar los días
+    fechaObj.setDate(fechaObj.getDate() + dias);
+
+    // Formatear la fecha a "yyyy-mm-dd"
+    const fechaFormateada = fechaObj.getFullYear() + '-' + (fechaObj.getMonth() + 1).toString().padStart(2, '0') + '-' + fechaObj.getDate().toString().padStart(2, '0');
+
+    // Devolver la fecha formateada
+    return fechaFormateada;
 }

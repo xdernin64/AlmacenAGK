@@ -232,9 +232,11 @@ function getMatchingValue(dataArray, resultKey, searchKey1, searchValue1, search
     const match = dataArray.find(item => item[searchKey1] === searchValue1 && item[searchKey2] === searchValue2);
     return match ? match[resultKey] : null;
 }
-function getMatchingValue2(dataArray, resultKey, searchKey, searchValue) {
+export function getMatchingValue2(dataArray, resultKey, searchKey, searchValue) {
+    
     const match = dataArray.find(item => item[searchKey] === searchValue);
-    return match ? match[resultKey] : null;
+    console.log(match[resultKey]);
+    return match ? match[resultKey] : "";
 }
 function ifmatchingexist(dataArray, resultKey, searchKey, searchValue) {
     const match = dataArray.find(item => item[searchKey] === searchValue);
