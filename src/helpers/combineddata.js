@@ -48,7 +48,7 @@ export function mergeDatauseras(data, asistencia) {
             result.push(resultItem);
         }
     }
-    console.log(data,asistencia,result);
+    
     return result;
 }
 //second 
@@ -119,7 +119,7 @@ export function mergeDatauseras2(data, asistencia) {
     }
     // Ordenar el array result por lastname
     result.sort((a, b) => a.lastname.localeCompare(b.lastname));
-    console.log(result);
+    
     return result;
 }
 
@@ -244,7 +244,7 @@ function calculatehours(intime, outtime, stateas, jobtime) {
     let extratime25, extratime35, doubletime, workinghours, discounthours, intimecor, outtimecor;
     intimecor = intime;
     outtimecor = outtime;
-    console.log(jobtime)
+   
 
     if (stateas == 'ASISTENCIA') {
         doubletime = 0;

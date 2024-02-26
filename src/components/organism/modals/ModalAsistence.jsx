@@ -18,6 +18,7 @@ import { CreateFromObject } from '../../../helpers/CRUD/CREATE/CREATEDATASB';
 import { UpdateDataSb } from '../../../helpers/CRUD/UPDATE/UpdateDataSb';
 import { DeleteDataSb } from '../../../helpers/CRUD/DELETE/DeleteDataSb';
 import { deleteDataSwal, errorMessage } from '../../../helpers/Alerts/alerts';
+import { oc, ro } from 'date-fns/locale';
 
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -53,7 +54,7 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
     const [dateas, setDateAs] = React.useState(rowData?.dateas || '');
     const [hiden, setHiden] = React.useState(false);
     const [bgcolor, setBgcolor] = React.useState('bg-gray-200');
-
+    
     React.useEffect(() => {
         setIntime(rowData?.intime || '');
         setOuttime(rowData?.outtime || '');
@@ -76,6 +77,7 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
         setLastname(rowData?.lastname || '');
         setDateAs(rowData?.dateas || '');
     }, [rowData]);
+
 
     const handleSubmit = () => {
         // TODO: Implement submit data logic here
@@ -255,6 +257,7 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
         }
 
     }, [stateas, intime, outtime]);
+console.log(JSON.stringify(occupation))
 
     return (
         <React.Fragment>
@@ -291,8 +294,8 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
                     </Typography>
                     <Typography component={'div'}>
                         <div>
-                            <label className='text-gray-500 text-bold'>Estado</label>
-                            <select id="stateas" value={stateas} onChange={(e) => setStateas(e.target.value)}>
+                            
+                            <select  className="" id="stateas" value={stateas} onChange={(e) => setStateas(e.target.value)}>
                                 <option aria-label="None" value="" />
                                 <option value="ASISTENCIA">ASISTENCIA</option>
                                 <option value="ASISTENCIA FERIADO">ASISTENCIA FERIADO</option>
@@ -316,7 +319,7 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
                             </div>
                         </div>
                         {/*div to calculate extra time difference between times*/}
-                        <div className={`grid grid-flow-row w-100 border-gray-300 bg-gray-200 border ${hiden ? 'hidden' : ''}`}>
+                        <div className={`grid grid-flow-row w-100 border-gray-300 bg-gray-200 border hidden`}>
                             <div className='grid grid-flow-col bg-gray-600 text-center rounded-lg'>
                                 <div>
                                     <label className='text-gray-300 text-bold '>HE totales</label>

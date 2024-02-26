@@ -5,6 +5,7 @@ import { Container, Paper, Table, TableBody, TableCell, TableContainer, TableHea
 import CustomizedDialogs from "../organism/modals/ModalAsistence";
 import { convertDateFormat, dateToString } from "../../helpers/dateconverter";
 import { supabase } from "../../supabaseClient";
+import { where } from "firebase/firestore";
 
 const RtAsistence = ({ wheresb }) => {
     const [combinedData, setCombinedData] = useState([]);
@@ -38,19 +39,19 @@ const RtAsistence = ({ wheresb }) => {
             await UpdateDataSb("assistence", "codas", codas, newData2).then(() => {
                 setUpdate(true);
             });
-
         }
     }
 
     //efect to charge te data in the start
     useEffect(() => {
+        const wherestate={state: "TRUE", ...wheresb};
         async function getMaindata() {
             try {
                 const combinedobject = { state: "ACTIVO", ...wheresb }
                 const combinedobjectdate = { dateas: currentdate, ...wheresb }
                 const userData = await GetPrimaryData("user",'*',{state: "ACTIVO", ...wheresb });
                 const asistenceData = await GetPrimaryData("assistence", 'cod,codas,user(name,lastname,jobtime),stateas,lcdtcod,intime,outtime,jobtime,ocptdtcod,wdtcod,cecodtcod,sdptdtcod,asdesc,dateas,extratime25,extratime35,doubletime,discounthours', combinedobjectdate);
-                const occupationData = await GetPrimaryData("occupationdetail", '*', wheresb);
+                const occupationData = await GetPrimaryData("occupationdetail", 'ocptdtcod,sdptdtcod,occupationcod,ocptdtdesc,state,state,state', wherestate);
                 const locationdata = await GetPrimaryData("detaillocationzone", '*');
                 const subdepartamentdata = await GetPrimaryData("subdepartamentdetail", '*', wheresb);
                 const workData = await GetPrimaryData("workdetail", '*', wheresb);
@@ -181,7 +182,7 @@ const RtAsistence = ({ wheresb }) => {
 
 
     return (
-        <div >
+        <div>
             <div className="text-center flex items-center w-2/4 cursor-pointer">
 
                 <input value={currentdate} onChange={handleDateChange} className="text-center text-2xl mx-auto bg-gray-100 border-gray-300 rounded-md py-2 px-3" type="date" />
