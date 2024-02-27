@@ -8,7 +8,7 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
-import { convertirHoraEnDecimal } from '../../charts/chartshelpers/functionhelpers';
+import { convertirHoraEnDecimal, sumarDias } from '../../charts/chartshelpers/functionhelpers';
 import { getMatchingValue2, getStatusBackgroundColor, getStatusColor } from '../../../helpers/combineddata';
 import AutoCompleteRemoForteForm from '../../molecules/fields/AutocompleteForFroms';
 import AutocompleteComponent from '../../molecules/fields/repeatedautocomplete';
@@ -19,6 +19,7 @@ import { UpdateDataSb } from '../../../helpers/CRUD/UPDATE/UpdateDataSb';
 import { DeleteDataSb } from '../../../helpers/CRUD/DELETE/DeleteDataSb';
 import { deleteDataSwal, errorMessage } from '../../../helpers/Alerts/alerts';
 import { oc, ro } from 'date-fns/locale';
+import { GetPrimaryData } from '../../../helpers/CRUD/READ/GetDataSb';
 
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -83,13 +84,23 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
 
         if (open && rowData.cod !== '') {
 
-            
+
             if (rowData.codas == "") {
-                rowData.wdtcod == undefined ? "" : handleWorkChange(rowData.wdtcod)
-                rowData.ocptdtcod == undefined ? "" : handlechangeocupation(rowData.ocptdtcod)
+                //consultar asistencia del dia anterior y colocala dentro de handle work change
+                const dianterior = rowData.cod + sumarDias(currentdateinput, 0)
+                console.log("este es el dia anterior: " , dianterior)
+                GetPrimaryData("assistence","*", {codas:dianterior}).then((res) => {
+                    console.log(res)
+                    rowData.wdtcod == undefined ? "" : handleWorkChange(res[0].wdtcod)
+                rowData.ocptdtcod == undefined ? "" : handlechangeocupation(res[0].ocptdtcod)
+                    
+                })
+
+
             } else (rowData.codas != "")
             {
-                
+                rowData.wdtcod == undefined ? "" : handleWorkChange(rowData.wdtcod)
+                rowData.ocptdtcod == undefined ? "" : handlechangeocupation(rowData.ocptdtcod)
             }
         }
 
