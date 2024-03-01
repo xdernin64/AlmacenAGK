@@ -55,7 +55,7 @@ const RtAsistence = ({ wheresb }) => {
                 const occupationData = await GetPrimaryData("occupationdetail", 'ocptdtcod,sdptdtcod,occupationcod,ocptdtdesc,stateasocpt', wherestate);
                 const locationdata = await GetPrimaryData("detaillocationzone", '*');
                 const subdepartamentdata = await GetPrimaryData("subdepartamentdetail", '*', wheresb);
-                const workData = await GetPrimaryData("workdetail", '*', wheresb);
+                const workData = await GetPrimaryData("workdetail", '*', wherestate);
                 const cecoData = await GetPrimaryData("cecodetail", '*', wheresb);
                 setOccupationdata(occupationData);
                 setWorkData(workData);
