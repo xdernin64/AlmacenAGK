@@ -233,11 +233,12 @@ function getMatchingValue(dataArray, resultKey, searchKey1, searchValue1, search
     return match ? match[resultKey] : null;
 }
 export function getMatchingValue2(dataArray, resultKey, searchKey, searchValue) {
-    
     const match = dataArray.find(item => item[searchKey] === searchValue);
-    console.log(match[resultKey]);
+  
+    // Access resultKey only if a match is found:
     return match ? match[resultKey] : "";
-}
+  }
+  
 function ifmatchingexist(dataArray, resultKey, searchKey, searchValue) {
     const match = dataArray.find(item => item[searchKey] === searchValue);
     return match ? match[resultKey] : null;

@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 import { GetPrimaryData } from "../../helpers/CRUD/READ/GetDataSb";
-import { getPropertyByIdAndPropName, getStatusBackgroundColor, getStatusColor, mergeDatauseras2 } from "../../helpers/combineddata";
+import { getMatchingValue2, getPropertyByIdAndPropName, getStatusBackgroundColor, getStatusColor, mergeDatauseras2 } from "../../helpers/combineddata";
 import { Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
 import CustomizedDialogs from "../organism/modals/ModalAsistence";
 import { convertDateFormat, dateToString } from "../../helpers/dateconverter";
 import { supabase } from "../../supabaseClient";
 import { where } from "firebase/firestore";
 import { sumarDias } from "../charts/chartshelpers/functionhelpers";
+import { Progress } from "@material-tailwind/react";
+
 
 const RtAsistence = ({ wheresb }) => {
     const [combinedData, setCombinedData] = useState([]);
+    const [copycombinedData, setCopyCombinedData] = useState([]);
+    const [numberofrecords, setNumberofrecords] = useState(0);
     const [Userdata, setUserdata] = useState([]);
     const [Asistancedata, setAsistancedata] = useState([]);
     const [locationdata, setLocationdata] = useState([]);
@@ -26,6 +30,7 @@ const RtAsistence = ({ wheresb }) => {
     const [order, setOrder] = useState('asc');
     const [searchTerm, setSearchTerm] = useState('');
     const [currentdate, setCurrentdate] = useState(dateToString(new Date()));
+    const [selecteddate, setSelecteddate] = useState(dateToString(new Date()));
     const handleDateChange = (event) => {
         const newDate = event.target.value;
         setCurrentdate(newDate);
@@ -72,7 +77,8 @@ const RtAsistence = ({ wheresb }) => {
         }
         getMaindata();
     }, []);
-
+    //actualizando la copia de combinedData
+    
     useEffect(() => {
         if (update) {
             const combinedobjectdate = { dateas: currentdate, ...wheresb }
@@ -80,6 +86,7 @@ const RtAsistence = ({ wheresb }) => {
                 setAsistancedata(data);
                 setCombinedData(mergeDatauseras2(Userdata, Asistancedata));
                 setUpdate(false);
+                setSelecteddate(currentdate);
             });
         } else {
             
@@ -183,13 +190,21 @@ const RtAsistence = ({ wheresb }) => {
 
     channel.subscribe();
 
-
+    useEffect(() => {
+        
+        setCopyCombinedData(combinedData);
+        setNumberofrecords(copycombinedData.filter(item => item.stateas !== "").length);
+        console.log("Actualizando la copia de combinedData" , numberofrecords/searched.length);
+        //constando la cantidad de registros con stateas difrente a null en copycombinedData
+        
+    }, [searched]);
     return (
         <div>
             <div className="text-center flex items-center w-2/4 cursor-pointer">
 
-                <input value={currentdate} onChange={handleDateChange} className="text-center text-2xl mx-auto bg-gray-100 border-gray-300 rounded-md py-2 px-3" type="date" />
+                <input value={currentdate}  onChange={handleDateChange} className="text-center text-2xl mx-auto bg-gray-100 border-gray-300 rounded-md py-2 px-3" type="date" />
                 <button onClick={() => setUpdate(true)} className="text-center text-2xl mx-auto bg-gray-100 text-gray-800 border-gray-300 rounded-md py-2 px-3" type="button">Buscar</button>
+                
             </div>
             <TextField
                 label="Buscar"
@@ -197,7 +212,10 @@ const RtAsistence = ({ wheresb }) => {
                 onChange={(e) => { setSearchTerm(e.target.value) }}
             />
 
-
+            <div className="grid">
+            <div className="text-center text-xl font-bold"> Asistencias del día  { selecteddate } ( {numberofrecords} / {combinedData.length})</div>
+            <Progress value={Math.round((numberofrecords/combinedData.length)*100)} size="lg" label={""} color="green"  className="m-2"/>
+            </div>
             <div>
 
                 <CustomizedDialogs currentdateinput={currentdate} open={open} handleClose={handleClose} rowData={selectedRow} occupation={occupationdata} work={workData} ceco={cecoData} location={locationdata} subdepartamentdata={subdepartamentdata} />
@@ -271,9 +289,9 @@ const RtAsistence = ({ wheresb }) => {
                                     </span>
                                 ) : null}
                             </TableCell>
-                            <TableCell className="cursor-pointer" sx={{ color: 'white', fontWeight: 'bold' }} align="center" onClick={(event) => handleRequestSort(event, 'lcdtcod')}>
-                                Fundo
-                                {orderBy === 'lcdtcod' ? (
+                            <TableCell className="cursor-pointer" sx={{ color: 'white', fontWeight: 'bold' }} align="center" onClick={(event) => handleRequestSort(event, 'sdptdtcod')}>
+                                Sub Area
+                                {orderBy === 'sdptdtcod' ? (
                                     <span style={{ fontSize: '12px' }}>
                                         {order === 'asc' ? ' ▲' : ' ▼'}
                                     </span>
@@ -319,6 +337,7 @@ const RtAsistence = ({ wheresb }) => {
                             >
                                 <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas), fontWeight: 'bold' }} align="center">
                                     <button className="bg-blue-600 p-1 m-0" onClick={(e) => handleOpenbtn(e, row)}>Editar</button></TableCell>
+                                    
                                 <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.cod}</TableCell>
                                 <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.lastname} {row.name}</TableCell>
                                 <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.jobtime}</TableCell>
@@ -327,7 +346,7 @@ const RtAsistence = ({ wheresb }) => {
                                 <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.intime}</TableCell>
                                 <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.outtime}</TableCell>
                                 <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.extratime25+row.extratime35+row.doubletime-row.discounthours}</TableCell>
-                                <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.lcdtcod}</TableCell>
+                                <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: "#"+getMatchingValue2(subdepartamentdata,'Color','sdptdtcod',row.sdptdtcod), color:"black"  }} align="center">{getMatchingValue2(subdepartamentdata,'sdptdtdesc','sdptdtcod',row.sdptdtcod)}</TableCell>
                                 <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{getPropertyByIdAndPropName(occupationdata, row.ocptdtcod, "ocptdtcod", "occupationcod")}<br /> {getPropertyByIdAndPropName(occupationdata, row.ocptdtcod, "ocptdtcod", "ocptdtdesc")} </TableCell>
                                 <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{getPropertyByIdAndPropName(workData, row.wdtcod, "wdtcod", "workcod")} <br /> {getPropertyByIdAndPropName(workData, row.wdtcod, "wdtcod", "wdtdesc")}</TableCell>
                                 <TableCell sx={{ fontSize:"12px",padding:"1px", margin:"1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{getPropertyByIdAndPropName(cecoData, row.cecodtcod, "cecodtcod", "cecocod")} <br /> {getPropertyByIdAndPropName(cecoData, row.cecodtcod, "cecodtcod", "cecodtdesc")}</TableCell>

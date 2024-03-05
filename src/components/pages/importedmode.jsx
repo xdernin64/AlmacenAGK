@@ -34,7 +34,7 @@ const ExcelUploader = ({ area, departament, subdepartament, rol }) => {
         setFileName('');
     };
     useEffect(() => {
-        GetPrimaryData('subdepartamentdetail').then((r) => {
+        GetPrimaryData('subdepartamentdetail','*',{State:"TRUE"}).then((r) => {
             setSubdepoptions(r);
         })
     }, [rol == "ADMINISTRADOR"]);

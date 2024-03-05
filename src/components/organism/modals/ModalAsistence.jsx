@@ -21,6 +21,7 @@ import { deleteDataSwal, errorMessage } from '../../../helpers/Alerts/alerts';
 import { oc, ro } from 'date-fns/locale';
 import { GetPrimaryData } from '../../../helpers/CRUD/READ/GetDataSb';
 import { LuHistory } from "react-icons/lu";
+import PopverHistorial from '../popvers/Historial';
 
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -92,7 +93,7 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
             if (rowData.codas == "") {
                 //consultar asistencia del dia anterior y colocala dentro de handle work change
                 const dianterior = rowData.cod + sumarDias(currentdateinput, 0)
-                console.log("este es el dia anterior: ", dianterior)
+                
                 GetPrimaryData("assistence", "*", { codas: dianterior }).then((res) => {
                     if (res.length == 0) {
                         console.log("no hay registros")
@@ -105,7 +106,7 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
 
                     } else {
 
-                        console.log("Este es el dia anterior: " , res)
+                        console.log("Este es el dia anterior: ", res)
                         console.log("este es el registro del dia anterior: ")
                         handleWorkChange(res[0].wdtcod)
                         handlechangeocupation(res[0].ocptdtcod)
@@ -319,6 +320,18 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
 
     }, [stateas, intime, outtime]);
 
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handlePopoverOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+    };
+
+    const openpopver = Boolean(anchorEl);
+
 
     return (
         <React.Fragment>
@@ -329,7 +342,7 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
                 fullWidth={true}
                 maxWidth={'md'}
             >
-                
+
                 <DialogTitle sx={{ m: 0, p: 0.5 }} id="customized-dialog-title" style={{ backgroundColor: getStatusBackgroundColor(stateas), padding: '8px', color: getStatusColor(stateas) }}>
                     {lastname} {name} ({jobtime})
                     <Typography style={{ backgroundColor: getStatusBackgroundColor(stateas), color: getStatusColor(stateas) }} className='text-gray-600'>
@@ -356,7 +369,7 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
                     <Typography component={'div'}>
                         <div>
 
-                
+
 
                         </div>
                         <div className={`grid grid-flow-col w-100 ${hiden ? 'hidden' : ''}`} >
@@ -402,14 +415,14 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
                             </div>
                         </div>
                         <label className='text-gray-500 text-bold'>Observaciones</label>
-                        
+
                         <input id="asdesc" type="text" placeholder='Observaciones' value={asdesc} onChange={(e) => setAsDesc(e.target.value)} />
                         <div className='text-end '>
-                        <div className='text-end '>
-                            <div className='text-blue-700 font-bold cursor-pointer ' >
-                            Abrir Historial</div> 
-                        </div></div>
-                        
+                            <div className='text-end '>
+                                    
+                                    <PopverHistorial anchorEl={anchorEl} handlePopoverOpen={handlePopoverOpen} handlePopoverClose={handlePopoverClose} open={openpopver} fecha={currentdateinput} codigo={rowData.cod} openmodal={open}/>
+                            </div></div>
+
                         <label className='text-gray-500 text-bold'>Ocupación</label>
                         <AutoCompleteRemoForteForm required db="" dataprops={["ocptdtcod", "ocptdtdesc", "occupationcod"]} local localdb={occupation} value={ocptdtcod} onChange={(e) => handlechangeocupation(e)} />
                         <label className='text-gray-500 text-bold'>Labor</label>

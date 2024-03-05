@@ -89,7 +89,7 @@ const AsistenciaSb = ({ area, departament, subdepartament, rol }) => {
                     <button className="btn btn-primary bg-green-700">Importar excel</button>
                 </Link>
             </>
-            {checked ? <RtAsistence wheresb={querysb} /> : <TableAsistenciaSb wheresb={querysb} />}
+            {checked ? <TableAsistenciaSb wheresb={querysb} /> : <RtAsistence wheresb={querysb} />  }
 
         </div>
     );

@@ -49,13 +49,7 @@ const colors = {
 };
 
 const navListMenuItems = [
-    {
-        color: "blue",
-        icon: UserGroupIcon,
-        title: "Agregar jornales",
-        description: "Aqui podras ver y agregar las asistencias,faltos,descansos,etc.",
-        link: "/jornales"
-    },
+    
     {
         color: "blue",
         icon: UserGroupIcon,

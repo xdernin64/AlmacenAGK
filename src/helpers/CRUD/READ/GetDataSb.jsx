@@ -29,7 +29,7 @@ export const GetPrimaryDataBetweenDates = async (tableName, select = '*', where 
         .select(select)
         .match(where)
         .gte('dateas', startdate)
-        .lte('dateas', enddate)
+        .lte('dateas', enddate).order('dateas', { ascending: true });
         //unlimite data
             
 
