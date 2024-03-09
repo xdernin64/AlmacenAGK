@@ -62,8 +62,7 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
         /*
         
         */
-        setIntime(rowData?.intime || '');
-        setOuttime(rowData?.outtime || '');
+        
         setExtratime25(rowData?.extratime25 || '');
         setExtratime35(rowData?.extratime35 || '');
         setWorkinghours(rowData?.workinghours || '');
@@ -105,6 +104,14 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
                         setStateas("")
 
                     } else {
+                        
+                        if(res.stateas =="ASISTENCIA" && rowData.jobtime=="CAMPO") {
+                            setIntime("06:00")
+                            setOuttime("14:45")
+                        } else if(res.stateas =="ASISTENCIA" && rowData.jobtime=="OFICINA") {
+                            setIntime("06:00")
+                            setOuttime("15:30")
+                        }
 
                         console.log("Este es el dia anterior: ", res)
                         console.log("este es el registro del dia anterior: ")
@@ -118,6 +125,7 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
 
             } else (rowData.codas != "")
             {
+                
                 rowData.wdtcod == undefined ? "" : handleWorkChange(rowData.wdtcod)
                 rowData.ocptdtcod == undefined ? "" : handlechangeocupation(rowData.ocptdtcod)
             }
@@ -368,9 +376,6 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
                     </Typography>
                     <Typography component={'div'}>
                         <div>
-
-
-
                         </div>
                         <div className={`grid grid-flow-col w-100 ${hiden ? 'hidden' : ''}`} >
                             <div>

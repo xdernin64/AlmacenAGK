@@ -30,7 +30,7 @@ const ConsolidadoTable = ({ wheresb }) => {
     useEffect(() => {
         GetPrimaryDataBetweenDates(
             'assistence',
-            'cod, dateas, user(name, lastname), cecodetail(ceco(cecocod, ceconame)), occupationdetail(occupation(occupationcod, occupationname)), workdetail(work(workcod, workname))', wheresb, startdate, enddate
+            'cod, dateas, user(name, lastname), cecodetail(ceco(cecocod, ceconame)), occupationdetail(occupation(occupationcod, occupationname)), workdetail(work(workcod, workname)) , asdesc', wheresb, startdate, enddate
 
         ).then((r) => {
             // Add 'day' property to each item in the data
@@ -130,6 +130,13 @@ const ConsolidadoTable = ({ wheresb }) => {
                 textAlign: 'center',
                 fontFamily: 'calibri'
             }
+        },
+        {
+            title: "Observaciones", field: "asdesc", editable: 'never',
+            cellStyle: {
+                textAlign: 'center',
+                fontFamily: 'calibri'
+            }
         }
     ]
     const exportToExcel = () => {
@@ -144,6 +151,7 @@ const ConsolidadoTable = ({ wheresb }) => {
             Labor: item.workdetail.work.workname,
             "Cod ceco": item.cecodetail.ceco.cecocod,
             "Centro de Coste": item.cecodetail.ceco.ceconame,
+            "Observaciones":item.asdesc
         }));
 
         const ws = xlsx.utils.json_to_sheet(dataToExport);

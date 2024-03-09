@@ -66,8 +66,10 @@ const AsistenciaSb = ({ area, departament, subdepartament, rol }) => {
         <div className="pagina">
             <h1 className="tittlepage">Asistencias</h1>
             <FormControlLabel
+                sx={{ display: rol != "ADMINISTRADOR" && "none"}}
                 control={
                     <Switch
+                        
                         checked={checked}
                         onChange={handleChange}
                         inputProps={{ "aria-label": "controlled" }}
@@ -89,7 +91,7 @@ const AsistenciaSb = ({ area, departament, subdepartament, rol }) => {
                     <button className="btn btn-primary bg-green-700">Importar excel</button>
                 </Link>
             </>
-            {checked ? <TableAsistenciaSb wheresb={querysb} /> : <RtAsistence wheresb={querysb} />  }
+            {checked ? <TableAsistenciaSb rol={rol} wheresb={querysb} /> : <RtAsistence rol={rol} wheresb={querysb} />  }
 
         </div>
     );

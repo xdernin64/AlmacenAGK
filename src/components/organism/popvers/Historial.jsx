@@ -55,7 +55,7 @@ const PopverHistorial = ({anchorEl,handlePopoverOpen,handlePopoverClose,open,cod
                 disableRestoreFocus
             >
                 <Typography sx={{ p: 1 }}>
-                    I use Popover . codigo: {codigo} desde:{sumarDias(fecha,-3)}  hasta:{fecha} 
+                codigo: {codigo} desde:{sumarDias(fecha,-3)}  hasta:{fecha} 
                     <div>
                         <thead>
                             <tr>

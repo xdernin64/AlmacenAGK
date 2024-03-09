@@ -23,7 +23,7 @@ const ExtraTime = ({ area, departament, subdepartament, rol }) => {
         <div className="pagina">
             <h1 className="tittlepage">Horas extras</h1>
 
-            <TableSalidasSb wheresb={querysb}></TableSalidasSb>
+            <TableSalidasSb wheresb={querysb} rol={rol}></TableSalidasSb>
         </div>)
 }
 export default ExtraTime;

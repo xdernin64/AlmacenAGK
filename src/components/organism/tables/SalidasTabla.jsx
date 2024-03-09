@@ -79,7 +79,7 @@ const ColumnTotal = () => {
     ];
 };
 
-const TableSalidasSb = ({wheresb}) => {
+const TableSalidasSb = ({wheresb,rol}) => {
     const theme = createTheme();
     const [update, setUpdate] = useState(false);
     const [asistencedata, setAsistencedata] = useState([]);

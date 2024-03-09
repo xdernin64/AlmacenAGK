@@ -136,7 +136,7 @@ const ColumnTotal = (location, subdepartament, occupation, work, ceco, callbackn
         }
     ]
 }
-const TableAsistenciaSb = ({ wheresb }) => {
+const TableAsistenciaSb = ({ wheresb, rol }) => {
     const theme = createTheme();
     const [update, setUpdate] = useState(false);
     const [unlocked, setUnlocked] = useState(false);
