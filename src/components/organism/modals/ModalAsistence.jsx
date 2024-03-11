@@ -128,6 +128,8 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
                 
                 rowData.wdtcod == undefined ? "" : handleWorkChange(rowData.wdtcod)
                 rowData.ocptdtcod == undefined ? "" : handlechangeocupation(rowData.ocptdtcod)
+                setIntime(rowData.intime)
+                setOuttime(rowData.outtime)
             }
         }
 
@@ -199,14 +201,14 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
         setOcptdtcod(e)
         setStateas(getMatchingValue2(occupation, "stateasocpt", "ocptdtcod", e))
         setSdptdtcod(getMatchingValue2(occupation, "sdptdtcod", "ocptdtcod", e))
-        console.log(getMatchingValue2(occupation, "stateasocpt", "ocptdtcod", e))
+        
     }
     const handleWorkChange = (e) => {
         //here lctdtcod and ocptdtcod
         setWdtcod(e)
         setLcdtcod(getMatchingValue2(work, "lctdtcod", "wdtcod", e))
         setCecodtcod(getMatchingValue2(work, "cecodtcod", "wdtcod", e))
-        console.log(getMatchingValue2(work, "lcdtcod", "wdtcod", e), getMatchingValue2(work, "cecodtcod", "wdtcod", e));
+        
     }
 
 

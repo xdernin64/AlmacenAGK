@@ -128,7 +128,7 @@ export function transformDataForBarChart(data, x, values, sdptdtcodFilter) {
     });
     // Ordenar por fecha
     transformedData.sort((a, b) => new Date(a.date) - new Date(b.date));
-    console.log(transformedData);
+    
     return transformedData;
 }
 export function hoursdata(data, subdepartamentname) {
