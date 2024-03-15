@@ -34,6 +34,7 @@ const RtAsistence = ({ wheresb,rol }) => {
     const handleDateChange = (event) => {
         const newDate = event.target.value;
         setCurrentdate(newDate);
+        setUpdate(true);
     };
     async function checkassistance(codas, newData2) {
         const data = await GetSpecificData("assistence", "codas", codas);
@@ -201,9 +202,15 @@ const RtAsistence = ({ wheresb,rol }) => {
     return (
         <div>
             <div className="text-center flex items-center w-2/4 cursor-pointer">
-
-                <input value={currentdate} onChange={handleDateChange} className="text-center text-2xl mx-auto bg-gray-100 border-gray-300 rounded-md py-2 px-3" type="date" />
-                <button onClick={() => setUpdate(true)} className="text-center text-2xl mx-auto bg-gray-100 text-gray-800 border-gray-300 rounded-md py-2 px-3" type="button">Buscar</button>
+                <input
+                    value={currentdate}
+                    onChange={handleDateChange}
+                    className="text-center text-2xl mx-auto bg-gray-100 border-gray-300 rounded-md py-2 px-3"
+                    type="date"
+                    onKeyDown={(e) => e.preventDefault()}
+                    onKeyPress={(e) => e.preventDefault()}
+                    onKeyUp={(e) => e.preventDefault()}
+                />
 
             </div>
             <TextField
@@ -323,6 +330,14 @@ const RtAsistence = ({ wheresb,rol }) => {
                                 ) : null}
                                 Ceco
                             </TableCell>
+                            <TableCell className="cursor-pointer" sx={{ color: 'white', fontWeight: 'bold' }} align="center" onClick={(event) => handleRequestSort(event, 'cecocod')}>
+                                {orderBy === 'cecocod' ? (
+                                    <span style={{ fontSize: '12px' }}>
+                                        {order === 'asc' ? ' ▲' : ' ▼'}
+                                    </span>
+                                ) : null}
+                                Observaciones
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -337,7 +352,7 @@ const RtAsistence = ({ wheresb,rol }) => {
                                 }} // add hover effect
                             >
                                 <TableCell sx={{ fontSize: "12px", padding: "1px", margin: "1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas), fontWeight: 'bold' }} align="center">
-                                    <div className={rol!="ADMINISTRADOR" && selecteddate!=dateToString(new Date()) ? "hidden" : "" }>
+                                    <div className={rol!="ADMINISTRADOR" && (selecteddate!=dateToString(new Date()) && selecteddate!=sumarDias(dateToString(new Date()),0))  ? "hidden" : "" }>
                                     <button className="bg-blue-600 p-1 m-0" onClick={(e) => handleOpenbtn(e, row)} >Editar</button></div></TableCell>
 
                                 <TableCell sx={{ fontSize: "12px", padding: "1px", margin: "1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.cod}</TableCell>

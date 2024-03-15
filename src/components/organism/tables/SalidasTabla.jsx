@@ -166,14 +166,7 @@ const TableSalidasSb = ({wheresb,rol}) => {
                                 */resolve();
                             }, 1500)
                         }),
-                    onRowDelete: oldData =>
-                        new Promise((resolve, reject) => {
-                            setTimeout(() => {
-                                DeleteDataSb("assistence", "codas", oldData.cod + currentdate);
-                                setUpdate(true);
-                                resolve()
-                            }, 1000)
-                        }),
+                    
                 }
                 }
             />

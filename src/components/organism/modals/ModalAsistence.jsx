@@ -35,34 +35,91 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 export default function CustomizedDialogs({ open, handleClose, rowData, occupation, work, ceco, location, subdepartamentdata, currentdateinput }) {
 
-    const [intime, setIntime] = React.useState(rowData?.intime || '');
-    const [outtime, setOuttime] = React.useState(rowData?.outtime || '');
-    const [extratime25, setExtratime25] = React.useState(rowData?.extratime25 || '');
-    const [extratime35, setExtratime35] = React.useState(rowData?.extratime35 || '');
-    const [workinghours, setWorkinghours] = React.useState(rowData?.workinghours || '');
-    const [doubletime, setDoubletime] = React.useState(rowData?.doubletime || '');
-    const [discountime, setDiscountime] = React.useState(rowData?.discountime || '');
-    const [asdesc, setAsDesc] = React.useState(rowData?.asdesc || '');
-    const [lcdtcod, setLcdtcod] = React.useState(rowData?.lcdtcod || '');
-    const [sdptdtcod, setSdptdtcod] = React.useState(rowData?.sdptdtcod || '');
-    const [ocptdtcod, setOcptdtcod] = React.useState(rowData?.ocptdtcod || '');
-    const [wdtcod, setWdtcod] = React.useState(rowData?.wdtcod || '');
-    const [cecodtcod, setCecodtcod] = React.useState(rowData?.cecodtcod || '');
-    const [stateas, setStateas] = React.useState(rowData?.stateas || '');
-    const [jobtime, setJobtime] = React.useState(rowData?.jobtime || '');
-    const [cod, setCod] = React.useState(rowData?.cod || '');
-    const [codas, setCodas] = React.useState(rowData?.codas || '');
-    const [name, setName] = React.useState(rowData?.name || '');
-    const [lastname, setLastname] = React.useState(rowData?.lastname || '');
-    const [dateas, setDateAs] = React.useState(rowData?.dateas || '');
+    const [intime, setIntime] = React.useState('');
+    const [outtime, setOuttime] = React.useState('');
+    const [extratime25, setExtratime25] = React.useState('');
+    const [extratime35, setExtratime35] = React.useState('');
+    const [workinghours, setWorkinghours] = React.useState('');
+    const [doubletime, setDoubletime] = React.useState('');
+    const [discountime, setDiscountime] = React.useState('');
+    const [asdesc, setAsDesc] = React.useState('');
+    const [lcdtcod, setLcdtcod] = React.useState('');
+    const [sdptdtcod, setSdptdtcod] = React.useState('');
+    const [ocptdtcod, setOcptdtcod] = React.useState('');
+    const [wdtcod, setWdtcod] = React.useState('');
+    const [cecodtcod, setCecodtcod] = React.useState('');
+    const [stateas, setStateas] = React.useState('');
+    const [jobtime, setJobtime] = React.useState('');
+    const [cod, setCod] = React.useState('');
+    const [codas, setCodas] = React.useState('');
+    const [name, setName] = React.useState('');
+    const [lastname, setLastname] = React.useState('');
+    const [dateas, setDateAs] = React.useState('');
     const [hiden, setHiden] = React.useState(false);
     const [bgcolor, setBgcolor] = React.useState('bg-gray-200');
     /* */
     React.useEffect(() => {
-        /*
-        
-        */
-        
+        if (open) {
+            setJobtime(rowData.jobtime)
+            GetPrimaryData("assistence", "*", { codas: rowData.cod + currentdateinput }).then((res) => {
+
+            
+                if (res.length == 0) {
+                    console.log("no hay registros!!!!!")
+                    const dianterior = rowData.cod + sumarDias(currentdateinput, 0)
+                    GetPrimaryData("assistence", "*", { codas: dianterior }).then((res) => {
+                        if (res.length == 0) {
+                            console.log("no hay registros")
+                            setWdtcod("")
+                            setLcdtcod("")
+                            setCecodtcod("")
+                            setOcptdtcod("")
+                            setSdptdtcod("")
+                            setStateas("")
+                        } else {
+                                
+                                if (res.stateas == "ASISTENCIA" && rowData.jobtime == "CAMPO") {
+                                    setIntime("06:00")
+                                    setOuttime("14:45")
+                                } else if (res.stateas == "ASISTENCIA" && rowData.jobtime == "OFICINA") {
+                                    setIntime("06:00")
+                                    setOuttime("15:30")
+                                }
+    
+                                console.log("Este es el dia anterior: ", res)
+                                console.log("este es el registro del dia anterior: ")
+                                handleWorkChange(res[0].wdtcod)
+                                handlechangeocupation(res[0].ocptdtcod)
+                        }
+
+                    })
+                } else {
+                    console.log("esta es la asistencia !!!", res)
+                    setExtratime25(res[0]?.extratime25 || '')
+                    setExtratime35(res[0]?.extratime35 || '')
+                    setWorkinghours(res[0]?.workinghours || '')
+                    setDoubletime(res[0]?.doubletime || '')
+                    setDiscountime(res[0]?.discountime || '')
+                    setAsDesc(res[0]?.asdesc || '')
+                    setLcdtcod(res[0]?.lcdtcod || '')
+                    setSdptdtcod(res[0?.sdptdtcod || ''])
+                    setOcptdtcod(res[0]?.ocptdtcod || '')
+                    setWdtcod(res[0]?.wdtcod || '')
+                    setCecodtcod(res[0]?.cecodtcod || '')
+                    setStateas(res[0]?.stateas || '')
+                    setCod(res[0]?.cod || '')
+                    setCodas(res[0]?.codas || '')
+                    setDateAs(res[0]?.dateas || '')
+                    setIntime(res[0]?.intime || '')
+                    setOuttime(res[0]?.outtime || '')
+
+                    
+                    
+
+                }
+            })
+        }
+
         setExtratime25(rowData?.extratime25 || '');
         setExtratime35(rowData?.extratime35 || '');
         setWorkinghours(rowData?.workinghours || '');
@@ -83,63 +140,12 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
         setDateAs(rowData?.dateas || '');
     }, [rowData]);
 
-    React.useEffect(() => {
-
-
-        if (open && rowData.cod !== '') {
-
-
-            if (rowData.codas == "") {
-                //consultar asistencia del dia anterior y colocala dentro de handle work change
-                const dianterior = rowData.cod + sumarDias(currentdateinput, 0)
-                
-                GetPrimaryData("assistence", "*", { codas: dianterior }).then((res) => {
-                    if (res.length == 0) {
-                        console.log("no hay registros")
-                        setWdtcod("")
-                        setLcdtcod("")
-                        setCecodtcod("")
-                        setOcptdtcod("")
-                        setSdptdtcod("")
-                        setStateas("")
-
-                    } else {
-                        
-                        if(res.stateas =="ASISTENCIA" && rowData.jobtime=="CAMPO") {
-                            setIntime("06:00")
-                            setOuttime("14:45")
-                        } else if(res.stateas =="ASISTENCIA" && rowData.jobtime=="OFICINA") {
-                            setIntime("06:00")
-                            setOuttime("15:30")
-                        }
-
-                        console.log("Este es el dia anterior: ", res)
-                        console.log("este es el registro del dia anterior: ")
-                        handleWorkChange(res[0].wdtcod)
-                        handlechangeocupation(res[0].ocptdtcod)
-                    }
-
-
-                })
-
-
-            } else (rowData.codas != "")
-            {
-                
-                rowData.wdtcod == undefined ? "" : handleWorkChange(rowData.wdtcod)
-                rowData.ocptdtcod == undefined ? "" : handlechangeocupation(rowData.ocptdtcod)
-                setIntime(rowData.intime)
-                setOuttime(rowData.outtime)
-            }
-        }
-
-    }, [open]);
 
 
     const handleSubmit = () => {
         // TODO: Implement submit data logic here
         if (codas == "") {
-            console.log("no hay codas")
+            //console.log("no hay codas")
             CreateFromObject("assistence", [{
                 intime,
                 outtime,
@@ -162,7 +168,7 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
             }])
             handleClose();
         } else {
-            console.log("si hay codas")
+            //console.log("si hay codas")
             UpdateDataSb("assistence", "codas", codas, [{
                 intime,
                 outtime,
@@ -201,14 +207,14 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
         setOcptdtcod(e)
         setStateas(getMatchingValue2(occupation, "stateasocpt", "ocptdtcod", e))
         setSdptdtcod(getMatchingValue2(occupation, "sdptdtcod", "ocptdtcod", e))
-        
+
     }
     const handleWorkChange = (e) => {
         //here lctdtcod and ocptdtcod
         setWdtcod(e)
         setLcdtcod(getMatchingValue2(work, "lctdtcod", "wdtcod", e))
         setCecodtcod(getMatchingValue2(work, "cecodtcod", "wdtcod", e))
-        
+
     }
 
 
@@ -373,7 +379,7 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
                 </IconButton>
 
                 <DialogContent dividers>
-                    <Typography className='text-gray-500 text-end text-bold relative'>
+                    <Typography className='text-gray-900 text-end text-bold relative'>
                         Fecha: {convertDateFormat(rowData.dateas)}
                     </Typography>
                     <Typography component={'div'}>
@@ -426,8 +432,8 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
                         <input id="asdesc" type="text" placeholder='Observaciones' value={asdesc} onChange={(e) => setAsDesc(e.target.value)} />
                         <div className='text-end '>
                             <div className='text-end '>
-                                    
-                                    <PopverHistorial anchorEl={anchorEl} handlePopoverOpen={handlePopoverOpen} handlePopoverClose={handlePopoverClose} open={openpopver} fecha={currentdateinput} codigo={rowData.cod} openmodal={open}/>
+
+                                <PopverHistorial anchorEl={anchorEl} handlePopoverOpen={handlePopoverOpen} handlePopoverClose={handlePopoverClose} open={openpopver} fecha={currentdateinput} codigo={rowData.cod} openmodal={open} />
                             </div></div>
 
                         <label className='text-gray-500 text-bold'>Ocupación</label>
