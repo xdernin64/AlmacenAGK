@@ -8,6 +8,7 @@ import { supabase } from "../../supabaseClient";
 import { where } from "firebase/firestore";
 import { sumarDias } from "../charts/chartshelpers/functionhelpers";
 import { Progress } from "@material-tailwind/react";
+import { Sync, UpdateRounded } from "@material-ui/icons";
 
 
 const RtAsistence = ({ wheresb,rol }) => {
@@ -62,7 +63,7 @@ const RtAsistence = ({ wheresb,rol }) => {
                 const locationdata = await GetPrimaryData("detaillocationzone", '*');
                 const subdepartamentdata = await GetPrimaryData("subdepartamentdetail", '*', wheresb);
                 const workData = await GetPrimaryData("workdetail", '*', wherestate);
-                const cecoData = await GetPrimaryData("cecodetail", '*', wheresb);
+                const cecoData = await GetPrimaryData("cecodetail", '*');
                 setOccupationdata(occupationData);
                 setWorkData(workData);
                 setCecoData(cecoData);
@@ -220,7 +221,7 @@ const RtAsistence = ({ wheresb,rol }) => {
             />
 
             <div className="grid">
-                <div className="text-center text-xl font-bold"> Asistencias del día  {selecteddate} ( {numberofrecords} / {combinedData.length})</div>
+                <div className="text-center text-xl font-bold"> Asistencias del día  {selecteddate} ( {numberofrecords} / {combinedData.length}) <button className="bg-blue-800 ml-6" onClick={()=>setUpdate(true)}>Actualizar<Sync />   </button></div>
                 <Progress value={Math.round((numberofrecords / combinedData.length) * 100)} size="lg" label={""} color="green" className="m-2" />
             </div>
             <div>
