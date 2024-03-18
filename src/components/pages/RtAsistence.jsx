@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
 import { GetPrimaryData } from "../../helpers/CRUD/READ/GetDataSb";
 import { getMatchingValue2, getPropertyByIdAndPropName, getStatusBackgroundColor, getStatusColor, mergeDatauseras2 } from "../../helpers/combineddata";
-import { Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
 import CustomizedDialogs from "../organism/modals/ModalAsistence";
 import { convertDateFormat, dateToString } from "../../helpers/dateconverter";
 import { supabase } from "../../supabaseClient";
-import { where } from "firebase/firestore";
 import { sumarDias } from "../charts/chartshelpers/functionhelpers";
 import { Progress } from "@material-tailwind/react";
-import { Sync, UpdateRounded } from "@material-ui/icons";
+import { Sync } from "@material-ui/icons";
 
 
-const RtAsistence = ({ wheresb,rol }) => {
+const RtAsistence = ({ wheresb, rol }) => {
     const [combinedData, setCombinedData] = useState([]);
     const [copycombinedData, setCopyCombinedData] = useState([]);
     const [numberofrecords, setNumberofrecords] = useState(0);
@@ -24,8 +23,6 @@ const RtAsistence = ({ wheresb,rol }) => {
     const [cecoData, setCecoData] = useState([]);
     const [update, setUpdate] = useState(false);
     const [open, setOpen] = useState(false);
-    const [isEditMode, setEditMode] = useState(false);
-    const [editedValue, setEditedValue] = useState('');
     const [selectedRow, setSelectedRow] = useState(null); // add state to keep track of selected row
     const [orderBy, setOrderBy] = useState('cod');
     const [order, setOrder] = useState('asc');
@@ -37,19 +34,6 @@ const RtAsistence = ({ wheresb,rol }) => {
         setCurrentdate(newDate);
         setUpdate(true);
     };
-    async function checkassistance(codas, newData2) {
-        const data = await GetSpecificData("assistence", "codas", codas);
-        if (data.length == 0) {
-            await CreateFromObject("assistence", newData2).then(() => {
-                setUpdate(true);
-            });
-        } else {
-            await UpdateDataSb("assistence", "codas", codas, newData2).then(() => {
-                setUpdate(true);
-            });
-        }
-    }
-
     //efect to charge te data in the start
     useEffect(() => {
         const wherestate = { state: "TRUE", ...wheresb };
@@ -100,7 +84,7 @@ const RtAsistence = ({ wheresb,rol }) => {
 
 
     const handleOpen = (e, row) => {
-    if (e.ctrlKey && (rol=="ADMINISTRADOR" || (rol!="ADMINISTRADOR" && selecteddate==dateToString(new Date())))) {
+        if (e.ctrlKey && (rol == "ADMINISTRADOR" || (rol != "ADMINISTRADOR" && selecteddate == dateToString(new Date())))) {
             setSelectedRow(row); // set selected row
             setOpen(true);
         }
@@ -116,28 +100,11 @@ const RtAsistence = ({ wheresb,rol }) => {
         setSelectedRow(null); // reset selected row
         setOpen(false);
     };
-
-    const handleSave = (newData) => {
-        setData(newData);
-        handleClose();
-    };
-
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
-
-    const sortedData = combinedData.sort((a, b) => {
-        const isAsc = order === 'asc';
-        let result = 0;
-        if (a[orderBy] < b[orderBy]) {
-            result = -1;
-        } else if (a[orderBy] > b[orderBy]) {
-            result = 1;
-        }
-        return isAsc ? result : -result;
-    });
 
     const searched = combinedData
         .filter((row) => {
@@ -159,18 +126,38 @@ const RtAsistence = ({ wheresb,rol }) => {
     const handleRecordInserted = (payload) => {
         console.log('Change received!', payload);
         // Actualiza el estado con el nuevo registro.
-        setAsistancedata(prevData => [...prevData, payload.new]);
+        console.log("Nuevo registro", payload.new);
+        if (payload.new.dateas == selecteddate) {
+            console.log("Actualizacion del dia");
+            setAsistancedata(prevData => [...prevData, payload.new]);
+        } else {
+            console.log("No actualizacion del dia");
+        }
+
     }
     const handleRecordDeleted = (payload) => {
         console.log('Change received!', payload);
         // Filtra el registro eliminado del estado.
+        //obtener las ultimas 10 letras del string
+        const ultimas = payload.old.codas.slice(-10);
+        if (ultimas == selecteddate) {
+            console.log("Actualizacion del dia");
+        } else {
+            console.log("No actualizacion del dia");
+        }
         setAsistancedata(prevData => prevData.filter(item => item.codas !== payload.old.codas));
     }
 
     const handleRecordUpdated = (payload) => {
         console.log('Change received!', payload);
+        if (payload.new.dateas == selecteddate) {
+            console.log("Actualizacion del dia");
+            setAsistancedata(prevData => prevData.map(item => item.codas === payload.new.codas ? payload.new : item));
+        } else {
+            console.log("No actualizacion del dia");
+        }
         // Encuentra y actualiza el registro modificado en el estado.
-        setAsistancedata(prevData => prevData.map(item => item.codas === payload.new.codas ? payload.new : item));
+
     }
 
     ///this is the suscription to the realtime changes
@@ -179,6 +166,7 @@ const RtAsistence = ({ wheresb,rol }) => {
 
     if (wheresb.sdptdtcod !== undefined) {
         let filter = 'sdptdtcod=eq.' + wheresb.sdptdtcod;
+
         channel
             .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'assistence', filter }, handleRecordInserted)
             .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'assistence', filter }, handleRecordDeleted)
@@ -196,7 +184,6 @@ const RtAsistence = ({ wheresb,rol }) => {
 
         setCopyCombinedData(combinedData);
         setNumberofrecords(copycombinedData.filter(item => item.stateas !== "").length);
-        console.log("Actualizando la copia de combinedData", numberofrecords / searched.length);
         //constando la cantidad de registros con stateas difrente a null en copycombinedData
 
     }, [searched]);
@@ -221,13 +208,13 @@ const RtAsistence = ({ wheresb,rol }) => {
             />
 
             <div className="grid">
-                <div className="text-center text-xl font-bold"> Asistencias del día  {selecteddate} ( {numberofrecords} / {combinedData.length}) <button className="bg-blue-800 ml-6" onClick={()=>setUpdate(true)}>Actualizar<Sync />   </button></div>
+                <div className="text-center text-xl font-bold"> Asistencias del día  {selecteddate} ( {numberofrecords} / {combinedData.length}) <button className="bg-blue-800 ml-6" onClick={() => setUpdate(true)}>Actualizar<Sync />   </button></div>
                 <Progress value={Math.round((numberofrecords / combinedData.length) * 100)} size="lg" label={""} color="green" className="m-2" />
             </div>
             <div>
 
-                <CustomizedDialogs 
-                currentdateinput={currentdate} open={open} handleClose={handleClose} rowData={selectedRow} occupation={occupationdata} work={workData} ceco={cecoData} location={locationdata} subdepartamentdata={subdepartamentdata} />
+                <CustomizedDialogs
+                    currentdateinput={currentdate} open={open} handleClose={handleClose} rowData={selectedRow} occupation={occupationdata} work={workData} ceco={cecoData} location={locationdata} subdepartamentdata={subdepartamentdata} />
             </div>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650, borderWidth: 'solid' }} >
@@ -353,8 +340,8 @@ const RtAsistence = ({ wheresb,rol }) => {
                                 }} // add hover effect
                             >
                                 <TableCell sx={{ fontSize: "12px", padding: "1px", margin: "1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas), fontWeight: 'bold' }} align="center">
-                                    <div className={rol!="ADMINISTRADOR" && (selecteddate!=dateToString(new Date()) && selecteddate!=sumarDias(dateToString(new Date()),0))  ? "hidden" : "" }>
-                                    <button className="bg-blue-600 p-1 m-0" onClick={(e) => handleOpenbtn(e, row)} >Editar</button></div></TableCell>
+                                    <div className={rol != "ADMINISTRADOR" && (selecteddate != dateToString(new Date()) && selecteddate != sumarDias(dateToString(new Date()), 0)) ? "hidden" : ""}>
+                                        <button className="bg-blue-600 p-1 m-0" onClick={(e) => handleOpenbtn(e, row)} >Editar</button></div></TableCell>
 
                                 <TableCell sx={{ fontSize: "12px", padding: "1px", margin: "1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.cod}</TableCell>
                                 <TableCell sx={{ fontSize: "12px", padding: "1px", margin: "1px", backgroundColor: getStatusBackgroundColor(row.stateas), color: getStatusColor(row.stateas) }} align="center">{row.lastname} {row.name}</TableCell>

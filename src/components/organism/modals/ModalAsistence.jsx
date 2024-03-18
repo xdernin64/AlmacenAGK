@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -11,16 +10,13 @@ import Typography from '@mui/material/Typography';
 import { convertirHoraEnDecimal, sumarDias } from '../../charts/chartshelpers/functionhelpers';
 import { getMatchingValue2, getStatusBackgroundColor, getStatusColor } from '../../../helpers/combineddata';
 import AutoCompleteRemoForteForm from '../../molecules/fields/AutocompleteForFroms';
-import AutocompleteComponent from '../../molecules/fields/repeatedautocomplete';
-import SimpAutocomplete from '../../molecules/fields/AutoCReact.JSX';
 import { convertDateFormat } from '../../../helpers/dateconverter';
 import { CreateFromObject } from '../../../helpers/CRUD/CREATE/CREATEDATASB';
 import { UpdateDataSb } from '../../../helpers/CRUD/UPDATE/UpdateDataSb';
 import { DeleteDataSb } from '../../../helpers/CRUD/DELETE/DeleteDataSb';
 import { deleteDataSwal, errorMessage } from '../../../helpers/Alerts/alerts';
-import { oc, ro } from 'date-fns/locale';
+
 import { GetPrimaryData } from '../../../helpers/CRUD/READ/GetDataSb';
-import { LuHistory } from "react-icons/lu";
 import PopverHistorial from '../popvers/Historial';
 
 
@@ -58,36 +54,41 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
     const [hiden, setHiden] = React.useState(false);
     const [bgcolor, setBgcolor] = React.useState('bg-gray-200');
     /* */
+    const setresetdata = () => {
+        setIntime('00:00');
+        setOuttime('00:00');
+        setExtratime25(0);
+        setExtratime35(0);
+        setWorkinghours(0);
+        setDoubletime(0);
+        setDiscountime(0);
+        setAsDesc('');
+        setLcdtcod('');
+        setSdptdtcod('');
+        setOcptdtcod('');
+        setWdtcod('');
+        setCecodtcod('');
+        setStateas('');
+    }	
     React.useEffect(() => {
         if (open) {
-            setJobtime(rowData.jobtime)
+            setJobtime(rowData?.jobtime || '');
             GetPrimaryData("assistence", "*", { codas: rowData.cod + currentdateinput }).then((res) => {
-
-            
                 if (res.length == 0) {
-                    console.log("no hay registros!!!!!")
+                    //Si no hay registros de asistencia para el dia actual
                     const dianterior = rowData.cod + sumarDias(currentdateinput, 0)
                     GetPrimaryData("assistence", "*", { codas: dianterior }).then((res) => {
                         if (res.length == 0) {
                             console.log("no hay registros")
-                            setWdtcod("")
-                            setLcdtcod("")
-                            setCecodtcod("")
-                            setOcptdtcod("")
-                            setSdptdtcod("")
-                            setStateas("")
+                            setresetdata()
                         } else {
-                                
-                                if (res.stateas == "ASISTENCIA" && rowData.jobtime == "CAMPO") {
+                                if (res[0].stateas == "ASISTENCIA" && rowData.jobtime == "CAMPO") {
                                     setIntime("06:00")
                                     setOuttime("14:45")
-                                } else if (res.stateas == "ASISTENCIA" && rowData.jobtime == "OFICINA") {
+                                } else if (res[0].stateas == "ASISTENCIA" && rowData.jobtime == "OFICINA") {
                                     setIntime("06:00")
                                     setOuttime("15:30")
                                 }
-    
-                                console.log("Este es el dia anterior: ", res)
-                                console.log("este es el registro del dia anterior: ")
                                 handleWorkChange(res[0].wdtcod)
                                 handlechangeocupation(res[0].ocptdtcod)
                         }
@@ -102,49 +103,37 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
                     setDiscountime(res[0]?.discountime || '')
                     setAsDesc(res[0]?.asdesc || '')
                     setLcdtcod(res[0]?.lcdtcod || '')
-                    setSdptdtcod(res[0?.sdptdtcod || ''])
+                    setSdptdtcod(res[0]?.sdptdtcod || '')
                     setOcptdtcod(res[0]?.ocptdtcod || '')
                     setWdtcod(res[0]?.wdtcod || '')
                     setCecodtcod(res[0]?.cecodtcod || '')
                     setStateas(res[0]?.stateas || '')
                     setCod(res[0]?.cod || '')
-                    setCodas(res[0]?.codas || '')
                     setDateAs(res[0]?.dateas || '')
                     setIntime(res[0]?.intime || '')
                     setOuttime(res[0]?.outtime || '')
-
-                    
-                    
-
+                    setAsDesc(res[0]?.asdesc || '')
+                    handleWorkChange(res[0].wdtcod)
+                    handlechangeocupation(res[0].ocptdtcod)
                 }
             })
         }
 
-        setExtratime25(rowData?.extratime25 || '');
-        setExtratime35(rowData?.extratime35 || '');
-        setWorkinghours(rowData?.workinghours || '');
-        setDoubletime(rowData?.doubletime || '');
-        setDiscountime(rowData?.discountime || '');
-        setAsDesc(rowData?.asdesc || '');
-        setLcdtcod(rowData?.lcdtcod || '');
-        setSdptdtcod(rowData?.sdptdtcod || '');
-        setOcptdtcod(rowData?.ocptdtcod || '');
-        setWdtcod(rowData?.wdtcod || '');
-        setCecodtcod(rowData?.cecodtcod || '');
-        setStateas(rowData?.stateas || '');
-        setJobtime(rowData?.jobtime || '');
+        
+        
         setCod(rowData?.cod || '');
         setCodas(rowData?.codas || '');
         setName(rowData?.name || '');
         setLastname(rowData?.lastname || '');
         setDateAs(rowData?.dateas || '');
+
     }, [rowData]);
 
 
 
     const handleSubmit = () => {
         // TODO: Implement submit data logic here
-        if (codas == "") {
+        if (codas === "") {
             //console.log("no hay codas")
             CreateFromObject("assistence", [{
                 intime,
@@ -168,7 +157,7 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
             }])
             handleClose();
         } else {
-            //console.log("si hay codas")
+            
             UpdateDataSb("assistence", "codas", codas, [{
                 intime,
                 outtime,
@@ -216,7 +205,6 @@ export default function CustomizedDialogs({ open, handleClose, rowData, occupati
         setCecodtcod(getMatchingValue2(work, "cecodtcod", "wdtcod", e))
 
     }
-
 
     React.useEffect(() => {
         //seteando para stateas ASISTENCIA
